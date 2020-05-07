@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Rosetta UI Extensions
+Bundle-SymbolicName: io.opencaesar.oml.rosetta.ui;singleton:=true
+Bundle-Version: 0.1.0
+Automatic-Module-Name: io.opencaesar.oml.rosetta.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.ui.ide;bundle-version="[3.17.0,4.0.0)",
+ org.eclipse.ui;bundle-version="[3.116.0,4.0.0)",
+ org.eclipse.core.resources;bundle-version="[3.13.700,4.0.0)",
+ org.eclipse.core.runtime;bundle-version="[3.17.100,4.0.0)",
+ io.opencaesar.oml;bundle-version="[0.6.0,0.7.0)",
+ io.opencaesar.oml.dsl;bundle-version="[0.6.0,0.7.0)",
+ io.opencaesar.oml.dsl.ide;bundle-version="[0.6.0,0.7.0)",
+ io.opencaesar.oml.dsl.ui;bundle-version="[0.6.0,0.7.0)",
+ io.opencaesar.oml.edit;bundle-version="[0.6.0,0.7.0)",
+ io.opencaesar.oml.editor;bundle-version="[0.6.0,0.7.0)"
+Bundle-Vendor: OpenCAESAR

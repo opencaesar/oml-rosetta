@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Rosetta RCP
+Bundle-SymbolicName: io.opencaesar.oml.rosetta.rcp;singleton:=true
+Bundle-Version: 0.1.0
+Automatic-Module-Name: io.opencaesar.oml.rosetta.rcp
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.ui;bundle-version="[3.116.0,4.0.0)",
+ org.eclipse.core.runtime;bundle-version="[3.17.100,4.0.0)"
+Bundle-Vendor: OpenCAESAR

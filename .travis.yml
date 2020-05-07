@@ -1,0 +1,20 @@
+language: java
+install: true
+
+jdk:
+  - openjdk8
+
+before_script:
+  - cd oml-rosetta
+
+script:
+  - mvn verify
+
+deploy:
+  - provider: script
+    script: io.opencaesar.oml.rosetta.repository/deploy.sh
+    skip_cleanup: true
+    dry-run: false
+    on:
+      tags: true
+      branch: master
