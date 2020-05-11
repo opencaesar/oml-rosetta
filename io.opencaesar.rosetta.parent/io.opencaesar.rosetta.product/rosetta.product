@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="Rosetta" uid="rosetta" id="io.opencaesar.rosetta.rcp.product" application="org.eclipse.ui.ide.workbench" version="0.1.0" useFeatures="true" includeLaunchers="true">
+
+   <aboutInfo>
+      <image path="/io.opencaesar.rosetta.rcp/images/about.png"/>
+      <text>
+         Rosetta: Native OML Integration in Eclipse
+
+		Copyright © 2020 California Institute of Technology. Government Sponsorship Acknowledged.
+      </text>
+   </aboutInfo>
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
+      </vmArgsMac>
+   </launcherArgs>
+
+   <windowImages/>
+
+   <windowImages i16="/io.opencaesar.rosetta.rcp/images/eclipse16.png" i32="/io.opencaesar.rosetta.rcp/images/eclipse32.png" i48="/io.opencaesar.rosetta.rcp/images/eclipse48.png" i64="/io.opencaesar.rosetta.rcp/images/eclipse64.png" i128="/io.opencaesar.rosetta.rcp/images/eclipse128.png" i256="/io.opencaesar.rosetta.rcp/images/eclipse256.png"/>
+  
+   <splash
+      location="io.opencaesar.rosetta.rcp" />
+   <launcher name="Rosetta">
+      <linux icon="/icons/eclipse.xpm"/>
+      <macosx icon="/icons/eclipse.icns"/>
+      <win useIco="true">
+         <ico path="/icons/eclipse.ico"/>
+         <bmp/>
+      </win>
+   </launcher>
+
+   <vm>
+      <linux include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</linux>
+      <macos include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</macos>
+      <windows include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</windows>
+   </vm>
+
+   <license>
+        <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        <text>
+   Copyright © 2020 California Institute of Technology. Government Sponsorship Acknowledged.
+
+Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+         </text>
+   </license>
+
+   <plugins>
+   </plugins>
+
+   <features>
+      <feature id="io.opencaesar.rosetta.feature" installMode="root"/>
+      <feature id="io.opencaesar.rosetta.rcp.feature" installMode="root"/>
+   </features>
+
+   <configurations>
+      <plugin id="org.apache.felix.scr" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+   </configurations>
+
+   <repositories>
+      <repository location="https://dl.bintray.com/opencaesar/p2/oml-rosetta/releases/0.1.0/" enabled="true" />
+   </repositories>
+
+   <preferencesInfo>
+      <targetfile overwrite="false"/>
+   </preferencesInfo>
+
+   <cssInfo>
+   </cssInfo>
+
+</product>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?>
+<target name="io.opencaesar.rosetta.target">
+	<locations>
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.emf.compare.diagram.sirius.source.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.emf.compare.egit.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.emf.compare.ide.ui.source.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.emf.ecore.xcore.lib.source.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.pde.source.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.platform.sdk" version="0.0.0"/>
+			<unit id="org.eclipse.sirius.properties.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.sirius.runtime.ide.ui.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.sirius.runtime.ide.xtext.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.sirius.specifier.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.xtext.runtime.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.jgit.ssh.apache.feature.group" version="0.0.0"/>
+			<repository location="http://download.eclipse.org/releases/2020-03"/>
+		</location>
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<unit id="io.opencaesar.oml.ui.feature.feature.group" version="0.0.0"/>
+			<unit id="io.opencaesar.oml.dsl.ui.feature.feature.group" version="0.0.0"/>
+			<repository location="https://dl.bintray.com/opencaesar/p2/oml/releases/0.6.2/"/>
+		</location>
+	</locations>
+</target>
