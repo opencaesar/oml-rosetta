@@ -1,2 +1,2 @@
 # oml-rosetta
-An Eclipse extension to support OML natively
+An Eclipse RCP and p2 updatesite that support OML natively

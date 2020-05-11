@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>io.opencaesar.oml.rosetta</groupId>
+	<groupId>io.opencaesar.rosetta</groupId>
 	<version>0.1.0</version>
-	<artifactId>io.opencaesar.oml.rosetta.parent</artifactId>
+	<artifactId>io.opencaesar.rosetta.parent</artifactId>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -14,12 +14,13 @@
 	</properties>
 	
 	<modules>
-		<module>io.opencaesar.oml.rosetta.feature</module>
-		<module>io.opencaesar.oml.rosetta.product</module>
-		<module>io.opencaesar.oml.rosetta.rcp</module>
-		<module>io.opencaesar.oml.rosetta.ui</module>
-		<module>io.opencaesar.oml.rosetta.target</module>
-		<module>io.opencaesar.oml.rosetta.repository</module>
+		<module>io.opencaesar.rosetta.ui</module>
+		<module>io.opencaesar.rosetta.feature</module>
+		<module>io.opencaesar.rosetta.rcp</module>
+		<module>io.opencaesar.rosetta.rcp.feature</module>
+		<module>io.opencaesar.rosetta.product</module>
+		<module>io.opencaesar.rosetta.target</module>
+		<module>io.opencaesar.rosetta.repository</module>
 	</modules>
 	
 	<build>
@@ -37,8 +38,8 @@
 				<configuration>
 					<target>
 						<artifact>
-							<groupId>io.opencaesar.oml.rosetta</groupId>
-							<artifactId>io.opencaesar.oml.rosetta.target</artifactId>
+							<groupId>io.opencaesar.rosetta</groupId>
+							<artifactId>io.opencaesar.rosetta.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>
 					</target>

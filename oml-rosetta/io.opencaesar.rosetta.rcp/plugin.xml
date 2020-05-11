@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.ui.ide.workbench"
+            name="Rosetta">
+         <property
+               name="appName"
+               value="Rosetta">
+         </property>
+         <property
+               name="aboutText"
+               value="Rosetta: Native OML Integration in Eclipse&#x0A;&#x0A;		Copyright © 2020 California Institute of Technology. Government Sponsorship Acknowledged.">
+         </property>
+      </product>
+   </extension>
+
+</plugin>
