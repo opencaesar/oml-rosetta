@@ -38,6 +38,6 @@ You can install the Rosetta update site into an existing ```Eclipse``` using (He
 
 ## Install RCP
 
-You can install the Rosetta RCP by downloading a rosetta-<platform>.zip from the following URL:
+You can install the Rosetta RCP by downloading a ```rosetta-<platform>.zip``` from the following URL:
 
 ```https://dl.bintray.com/opencaesar/rcp/oml-rosetta/releases/<version>```
