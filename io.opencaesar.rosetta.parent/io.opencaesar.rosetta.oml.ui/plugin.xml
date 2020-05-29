@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.emf.compare.rcp.matchEngine">
+      <engineFactory
+            class="io.opencaesar.rosetta.oml.ui.compare.OmlMatchEngineFactory"
+            label="OML Match Engine Factory"
+            ranking="42">
+      </engineFactory>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.ide.ui.modelResolvers">
+      <resolver
+            class="io.opencaesar.rosetta.oml.ui.compare.OmlModelResolver"
+            label="OML Model Resolver"
+            ranking="42">
+      </resolver>
+   </extension>
+
+</plugin>
