@@ -37,7 +37,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
-import com.google.common.base.Objects;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -46,6 +45,7 @@ import com.google.common.collect.Iterables;
 import io.opencaesar.oml.Annotation;
 import io.opencaesar.oml.ConceptInstanceReference;
 import io.opencaesar.oml.ConceptTypeAssertion;
+import io.opencaesar.oml.Element;
 import io.opencaesar.oml.Import;
 import io.opencaesar.oml.LinkAssertion;
 import io.opencaesar.oml.Literal;
@@ -206,25 +206,25 @@ public class OmlMatchEngine extends DefaultMatchEngine {
 			return "Import " + escapeForIdString(((Import)eObject).getUri());
 		}
 		if (eObject instanceof Annotation) {
-			return baseId + getIdInScope(eObject, Annotation.class, Annotation::getProperty);
+			return baseId + getIdInScope(Annotation.class, eObject, Annotation::getProperty);
 		}
 		if (eObject instanceof ScalarPropertyValueAssertion) {
-			return baseId + getIdInScope(eObject, ScalarPropertyValueAssertion.class, ScalarPropertyValueAssertion::getProperty);
+			return baseId + getIdInScope(ScalarPropertyValueAssertion.class, eObject, ScalarPropertyValueAssertion::getProperty);
 		}
 		if (eObject instanceof StructuredPropertyValueAssertion) {
-			return baseId + getIdInScope(eObject, StructuredPropertyValueAssertion.class, StructuredPropertyValueAssertion::getProperty);
+			return baseId + getIdInScope(StructuredPropertyValueAssertion.class, eObject, StructuredPropertyValueAssertion::getProperty);
 		}
 		if (eObject instanceof LinkAssertion) {
-			return baseId + getIdInScope(eObject, LinkAssertion.class, LinkAssertion::getRelation);
+			return baseId + getIdInScope(LinkAssertion.class, eObject, LinkAssertion::getRelation);
 		}
 		if (eObject instanceof ConceptTypeAssertion) {
-			return baseId + getIdInScope(eObject, ConceptTypeAssertion.class, ConceptTypeAssertion::getType);
+			return baseId + getIdInScope(ConceptTypeAssertion.class, eObject, ConceptTypeAssertion::getType);
 		}
 		if (eObject instanceof ConceptInstanceReference) {
-			return baseId + getIdInScope(eObject, ConceptInstanceReference.class, ConceptInstanceReference::getInstance);
+			return baseId + getIdInScope(ConceptInstanceReference.class, eObject, ConceptInstanceReference::getInstance);
 		}
 		if (eObject instanceof RelationInstanceReference) {
-			return baseId + getIdInScope(eObject, RelationInstanceReference.class, RelationInstanceReference::getInstance);
+			return baseId + getIdInScope(RelationInstanceReference.class, eObject, RelationInstanceReference::getInstance);
 		}
 		
 		return baseId + "EObject " + eObject.eContainer().eContents().indexOf(eObject);
@@ -241,7 +241,8 @@ public class OmlMatchEngine extends DefaultMatchEngine {
 	 * full URI changes but the fragment is the same it will still show up as a difference
 	 * in the end, but as a change on the same object rather than as different objects).
 	 */
-	private static <T> String getIdInScope(EObject object, Class<T> type, Function<T, Member> getIdentifyingObject) {
+	@SuppressWarnings("unchecked")
+	private static <T extends Element> String getIdInScope(Class<T> type, EObject object, Function<T, Member> getIdentifyingObject) {
 		Member identifiedBy = getIdentifyingObject.apply((T)object);
 		String identifiedByFragment = identifiedBy != null ? EcoreUtil.getURI(identifiedBy).fragment() : null;
 		int index = 0;
@@ -326,11 +327,16 @@ public class OmlMatchEngine extends DefaultMatchEngine {
 	 */
 	static class AbsoluteUriComparingEqualityHelper extends EqualityHelper {
 	
-		LoadingCache<EObject, URI> cache = CacheBuilder
+		private LoadingCache<EObject, URI> cache = CacheBuilder
 				.newBuilder()
 				.maximumSize(DefaultMatchEngine.DEFAULT_EOBJECT_URI_CACHE_MAX_SIZE)
 				.build(CacheLoader.from(AbsoluteUri::get));
 		
+		@SuppressWarnings("deprecation")
+		public AbsoluteUriComparingEqualityHelper() {
+			super();
+		}
+				
 		@Override
 		public boolean matchingEObjects(EObject object1, EObject object2) {
 			if (object1.eIsProxy() || object2.eIsProxy()) {
@@ -350,7 +356,7 @@ public class OmlMatchEngine extends DefaultMatchEngine {
 			return uri1.equals(uri2);
 		}
 		
-		static boolean isUncontained(EObject o) {
+		private static boolean isUncontained(EObject o) {
 			return o.eContainer() == null && o.eResource() == null;
 		}
 		
