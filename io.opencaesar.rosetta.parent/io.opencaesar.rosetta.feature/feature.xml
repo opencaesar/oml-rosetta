@@ -2,7 +2,7 @@
 <feature
       id="io.opencaesar.rosetta.feature"
       label="%featureName"
-      version="0.1.0"
+      version="0.2.0"
       provider-name="%providerName">
 
    <description url="http://www.example.com/description">
@@ -30,16 +30,16 @@ limitations under the License.
    </license>
 
    <requires>
-      <import plugin="io.opencaesar.oml" version="0.6.0" match="equivalent"/>
-      <import plugin="io.opencaesar.oml.dsl" version="0.6.0" match="equivalent"/>
-      <import plugin="io.opencaesar.oml.dsl.ide" version="0.6.0" match="equivalent"/>
-      <import plugin="io.opencaesar.oml.dsl.ui" version="0.6.0" match="equivalent"/>
-      <import plugin="io.opencaesar.oml.edit" version="0.6.0" match="equivalent"/>
-      <import plugin="io.opencaesar.oml.editor" version="0.6.0" match="equivalent"/>
-      <import plugin="org.eclipse.ui.ide" version="3.17.0" match="compatible"/>
-      <import plugin="org.eclipse.ui" version="3.116.0" match="compatible"/>
-      <import plugin="org.eclipse.core.resources" version="3.13.700" match="compatible"/>
-      <import plugin="org.eclipse.core.runtime" version="3.17.100" match="compatible"/>
+      <import plugin="io.opencaesar.oml"/>
+      <import plugin="io.opencaesar.oml.dsl"/>
+      <import plugin="io.opencaesar.oml.dsl.ide"/>
+      <import plugin="io.opencaesar.oml.dsl.ui"/>
+      <import plugin="io.opencaesar.oml.edit"/>
+      <import plugin="io.opencaesar.oml.editor"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.core.runtime"/>
    </requires>
 
    <plugin
