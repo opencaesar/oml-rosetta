@@ -41,3 +41,9 @@ You can install the Rosetta update site into an existing ```Eclipse``` using (He
 You can install the Rosetta RCP by downloading a ```rosetta-<platform>.zip``` from the following URL:
 
 ```https://dl.bintray.com/opencaesar/rcp/oml-rosetta/releases/<version>```
+
+## OML Version
+| Rosetta | OML   |
+|---------|-------|
+| 0.1     | 0.6.2 |
+| 0.2     | 0.7.0 |
