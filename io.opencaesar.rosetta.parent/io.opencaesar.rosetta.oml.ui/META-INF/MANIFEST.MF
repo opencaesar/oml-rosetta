@@ -23,5 +23,6 @@ Require-Bundle: org.eclipse.ui.ide,
  io.opencaesar.oml.dsl.ide,
  io.opencaesar.oml.dsl.ui,
  io.opencaesar.oml.edit,
- io.opencaesar.oml.editor
+ io.opencaesar.oml.editor,
+ org.eclipse.xtext.ui
 Bundle-Vendor: %providerName
