@@ -15,6 +15,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
@@ -27,15 +29,16 @@ import io.opencaesar.rosetta.oml.ui.project.OmlProjectBuilder;
  * Wizard for creating OML projects. Creates a "src" folder and configures
  * the project to have OML and Xtext natures.
  */
-public class OmlProjectWizard extends BasicNewResourceWizard {
+public class OmlProjectWizard extends Wizard implements INewWizard {
 		
+	private IWorkbench workbench;
 	private WizardNewProjectCreationPage mainPage = new WizardNewProjectCreationPage("Create OML Project");
 	private IProject newProject;
 	
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		super.init(workbench, selection);
 		setWindowTitle("Create OML Project");
+		this.workbench = workbench;
 	}
 	
 	@Override
@@ -54,8 +57,8 @@ public class OmlProjectWizard extends BasicNewResourceWizard {
 		if (newProject == null) {
 			try {
 				getContainer().run(true, false, monitor -> createProject(monitor, projectName, projectLocation));
-				getWorkbench().getWorkingSetManager().addToWorkingSets(newProject, mainPage.getSelectedWorkingSets());
-				selectAndReveal(newProject);
+				workbench.getWorkingSetManager().addToWorkingSets(newProject, mainPage.getSelectedWorkingSets());
+				BasicNewResourceWizard.selectAndReveal(newProject, workbench.getActiveWorkbenchWindow());
 				return true;
 			} catch (InvocationTargetException | InterruptedException e) {
 				OmlUiPlugin.log(new Status(IStatus.ERROR, OmlUiPlugin.BUNDLE_NAME, IStatus.ERROR, e.getMessage(), e));
