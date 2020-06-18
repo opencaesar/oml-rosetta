@@ -18,5 +18,51 @@
             ranking="42">
       </resolver>
    </extension>
+   <extension
+         id="nature"
+         name="OML Project"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="io.opencaesar.rosetta.oml.ui.project.OmlProject">
+         </run>
+      </runtime>
+      <builder
+            id="io.opencaesar.rosetta.oml.ui.builder">
+      </builder>
+   </extension>
+   <extension
+         id="builder"
+         name="OML Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            callOnEmptyDelta="true"
+            hasNature="true"
+            isConfigurable="false"
+            supportsConfigurations="false">
+         <run
+               class="io.opencaesar.rosetta.oml.ui.project.OmlProjectBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="io.opencaesar.rosetta.oml.ui.wizards.OmlProjectWizard"
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            class="io.opencaesar.rosetta.oml.wizards.OmlProjectWizard"
+            id="io.opencaesar.rosetta.oml.ui.wizards.OmlProjectWizard"
+            name="OML Project"
+            project="true">
+      </wizard>
+      <wizard
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            class="io.opencaesar.rosetta.oml.wizards.OmlOntologyWizard"
+            hasPages="true"
+            id="io.opencaesar.rosetta.oml.ui.wizard2"
+            name="OML Ontology"
+            project="false">
+      </wizard>
+   </extension>
 
 </plugin>
