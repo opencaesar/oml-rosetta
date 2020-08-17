@@ -2,7 +2,7 @@
 <feature
       id="io.opencaesar.rosetta.rcp.feature"
       label="%featureName"
-      version="0.2.0"
+      version="0.3.0"
       provider-name="%providerName">
 
    <description url="http://www.example.com/description">
@@ -139,6 +139,14 @@ limitations under the License.
 
    <includes
          id="io.opencaesar.oml.ui.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.jgit.ssh.jsch"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.buildship"
          version="0.0.0"/>
 
    <plugin

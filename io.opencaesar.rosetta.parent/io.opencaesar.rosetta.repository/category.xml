@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature id="io.opencaesar.rosetta.feature"/>
-   <repository-reference location="http://https://dl.bintray.com/opencaesar/p2/oml/releases/0.6.2/" enabled="true" />
+   <feature id="io.opencaesar.rosetta.feature">
+      <category name="Rosetta"/>
+   </feature>
+   <feature id="io.opencaesar.oml.feature">
+      <category name="OML"/>
+   </feature>
+   <feature id="io.opencaesar.oml.ui.feature">
+      <category name="OML"/>
+   </feature>
+   <feature id="io.opencaesar.oml.dsl.feature">
+      <category name="OML"/>
+   </feature>
+   <feature id="io.opencaesar.oml.dsl.ui.feature">
+      <category name="OML"/>
+   </feature>
+   <category-def name="Rosetta" label="Rosetta"/>
+   <category-def name="OML" label="OML"/>
+   <repository-reference location="http://https://dl.bintray.com/opencaesar/p2/oml/releases/0.7.2/" enabled="true" />
 </site>

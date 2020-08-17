@@ -2,7 +2,7 @@
 <feature
       id="io.opencaesar.rosetta.feature"
       label="%featureName"
-      version="0.2.0"
+      version="0.3.0"
       provider-name="%providerName">
 
    <description url="http://www.example.com/description">
@@ -29,18 +29,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
    </license>
 
-   <requires>
-      <import plugin="io.opencaesar.oml"/>
-      <import plugin="io.opencaesar.oml.dsl"/>
-      <import plugin="io.opencaesar.oml.dsl.ide"/>
-      <import plugin="io.opencaesar.oml.dsl.ui"/>
-      <import plugin="io.opencaesar.oml.edit"/>
-      <import plugin="io.opencaesar.oml.editor"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.core.runtime"/>
-   </requires>
+   <includes
+         id="io.opencaesar.oml.dsl.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="io.opencaesar.oml.dsl.ui.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="io.opencaesar.oml.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="io.opencaesar.oml.ui.feature"
+         version="0.0.0"/>
 
    <plugin
          id="io.opencaesar.rosetta.oml.ui"
