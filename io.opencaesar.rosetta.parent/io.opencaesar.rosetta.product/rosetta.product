@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Rosetta" uid="rosetta" id="io.opencaesar.rosetta.rcp.product" application="org.eclipse.ui.ide.workbench" version="0.2.0" useFeatures="true" includeLaunchers="true">
+<product name="Rosetta" uid="rosetta" id="io.opencaesar.rosetta.rcp.product" application="org.eclipse.ui.ide.workbench" version="0.3.0" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/io.opencaesar.rosetta.rcp/images/about.png"/>
@@ -20,10 +20,8 @@
       </vmArgsMac>
    </launcherArgs>
 
-   <windowImages/>
-
    <windowImages i16="/io.opencaesar.rosetta.rcp/images/eclipse16.png" i32="/io.opencaesar.rosetta.rcp/images/eclipse32.png" i48="/io.opencaesar.rosetta.rcp/images/eclipse48.png" i64="/io.opencaesar.rosetta.rcp/images/eclipse64.png" i128="/io.opencaesar.rosetta.rcp/images/eclipse128.png" i256="/io.opencaesar.rosetta.rcp/images/eclipse256.png"/>
-  
+
    <splash
       location="io.opencaesar.rosetta.rcp" />
    <launcher name="Rosetta">
@@ -77,7 +75,7 @@ limitations under the License.
    </configurations>
 
    <repositories>
-      <repository location="https://dl.bintray.com/opencaesar/p2/oml-rosetta/releases/0.1.0/" enabled="true" />
+      <repository location="http://https://dl.bintray.com/opencaesar/p2/oml-rosetta/releases/0.3.0/" enabled="true" />
    </repositories>
 
    <preferencesInfo>

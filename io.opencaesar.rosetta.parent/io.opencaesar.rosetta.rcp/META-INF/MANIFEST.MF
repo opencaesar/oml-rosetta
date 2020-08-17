@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: io.opencaesar.rosetta.rcp;singleton:=true
-Bundle-Version: 0.2.0
+Bundle-Version: 0.3.0
 Automatic-Module-Name: io.opencaesar.rosetta.rcp
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Localization: plugin
