@@ -21,15 +21,6 @@ Requirements: Java 8, maven 3.6+
   mvn verify
 ```
 
-## Release
-
-Replace \<version\> by the version, e.g., 1.2
-```
-  ./setversion <version>
-  git tag -a <version> -m "<version>"
-  git push origin <version>
-```
-
 ## Install Update Site
 
 You can install the Rosetta update site into an existing ```Eclipse``` using (Help->Install New Software->Add->Location):
@@ -45,5 +36,6 @@ You can install the Rosetta RCP by downloading a ```rosetta-<platform>.zip``` fr
 ## OML Version
 | Rosetta | OML   |
 |---------|-------|
-| 0.1     | 0.6.2 |
+| 0.3     | 0.7.3 |
 | 0.2     | 0.7.0 |
+| 0.1     | 0.6.2 |
