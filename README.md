@@ -33,7 +33,7 @@ You can install the Rosetta RCP by downloading a ```rosetta-<platform>.zip``` fr
 
 ```https://dl.bintray.com/opencaesar/rcp/oml-rosetta/releases/<version>```
 
-**Note**: on MacOS, the application is currently NOT signed, so you may get an error like the app "is damaged and can't be opened". To get around that, you can run the following command in terminal:
+**Note**: on MacOS, the application is currently NOT signed, so you may get an error like the app `is damaged and can't be opened`. To get around that, you can run the following command in terminal:
 ```
 xattr -cr /path/to/Rosetta.app
 ```
@@ -42,7 +42,7 @@ xattr -cr /path/to/Rosetta.app
 
 You can import existing OML projects or create new ones using the File->New or File->Import wizards.
 
-**Note**: When you have an OML project in the Project Explorer view, there is a filter that hides the Gradle `build` folder by default. To disable that filter, click on the view's menu (in top right corner), and select 'Filters and Customization' and then make sure 'Gradle Build Folder' is unselected.
+**Note**: When you have an OML project in the Project Explorer view, there is a filter that hides the Gradle `build` folder by default. To disable that filter, click on the view's menu (in top right corner), and select `Filters and Customization` and then make sure `Gradle Build Folder` is unselected.
 
 ## OML Version
 | Rosetta | OML   |
