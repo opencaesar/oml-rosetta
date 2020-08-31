@@ -45,6 +45,7 @@ You can import existing OML projects or create new ones using the File->New or F
 **Note**: When you have an OML project in the Project Explorer view, there is a filter that hides the Gradle `build` folder by default. To disable that filter, click on the view's menu (in top right corner), and select `Filters and Customization` and then make sure `Gradle Build Folder` is unselected.
 
 ## OML Version
+For a list of available Rosetta versions, click [here](https://bintray.com/beta/#/opencaesar/rcp/oml-rosetta?tab=overview)
 | Rosetta | OML   |
 |---------|-------|
 | 0.3.x   | 0.7.3 |
