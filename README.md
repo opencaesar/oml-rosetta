@@ -47,6 +47,6 @@ You can import existing OML projects or create new ones using the File->New or F
 ## OML Version
 | Rosetta | OML   |
 |---------|-------|
-| 0.3     | 0.7.3 |
-| 0.2     | 0.7.0 |
-| 0.1     | 0.6.2 |
+| 0.3.x   | 0.7.3 |
+| 0.2.x   | 0.7.0 |
+| 0.1.x   | 0.6.2 |
