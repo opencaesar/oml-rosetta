@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<contexts>
+	<context id="newProjectWizard">
+		<description>The OML Project Wizard helps you set up a new OML project.</description>
+		<topic href="help/oml-project-wizard.html" label="OML Project Wizard"/>
+	</context>
+</contexts>

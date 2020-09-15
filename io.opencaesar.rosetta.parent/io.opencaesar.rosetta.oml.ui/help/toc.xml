@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Rosetta User Guide">
+	<topic label="Wizards">
+		<topic label="OML Project Wizard" href="help/oml-project-wizard.html"/>
+	</topic>
+</toc>

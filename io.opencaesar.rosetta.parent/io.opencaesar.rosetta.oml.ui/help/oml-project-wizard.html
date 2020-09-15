@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<title>OML Project Wizard</title>
+</head>
+<body>
+
+<h1>OML Project Wizard</h1>
+
+<p>The OML Project Wizard helps you set up a new OML project.</p>
+
+<h2>Catalog</h2>
+
+<p>This section configures the <code>catalog.xml</code> file used to
+map abstract URI prefixes to concrete file paths.</p>
+
+<p>The <strong>Base URI</strong> field is used to specify an initial prefix URI to add to the catalog
+file. Directories corresponding to the host name and each path segment will be created under the <tt>src/oml</tt>
+folder and mapped to the specified Base URI. In addition to the specified prefix URI, a <tt>http://</tt> entry
+is added to the end, mapped to the vocabulary dependencies directory.</p>
+
+<p>After the project is created additional catalog entries may be added by editing <tt>catalog.xml</tt>.</p>
+
+<h2>Bundle</h2>
+
+<p>This section configures an initial project bundle. Additional bundles may
+be added with the <strong>OML Ontology Wizard</strong> after the project is
+created.</p>
+
+<p>The bundle may be either a <strong>description</strong> bundle or <strong>vocabulary</strong>
+bundle, specified with the <strong>Bundle Kind</strong> field.</p>
+
+<p>The <strong>Bundle IRI</strong> must be prefixed with the Base URI set in the Catalog section above to
+allow it to be mapped to a file in the <tt>src</tt> directory. The final path segment in the Bundle IRI is
+used as the filename (with a <tt>.oml</tt> extension) and the ontology prefix. The prefix (and separator, which
+defaults to <tt>#</tt> may both be changed by editing the <tt>.oml</tt> file after the project is created.</p>
+
+<h2>Gradle</h2>
+
+<p>This section specifies whether or not to create a <tt>build.gradle</tt> file (by selecting the <strong>Configure
+Gradle</strong> checkbox) and configures it for your project with tasks for loading dependencies, performing OWL
+reasoning, and generating Bikeshed documentation.
+
+<p>The <strong>Group ID</strong>, <strong>Version</strong>, and <strong>Description</strong> fields set the corresponding
+Gradle project properties. The <strong>Bikeshed Publish URL</strong> field sets the base publish URL when generating
+Bikeshed documentation.</p>
+
+<p>The <strong>Add Foundation Vocabulary Dependency</strong> checkbox specifies whether to include the standard
+Foundation vocabulary as a Gradle dependency of this project. If enabled, the Foundation vocabulary bundle will be
+included in the project bundle.</p>
+
+<p>The OWL Reasoning and Bikeshed documentation tasks will be configured to use the project bundle as their root ontologies.</p>
+
+</body>
+</html>
