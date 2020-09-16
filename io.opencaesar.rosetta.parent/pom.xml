@@ -7,10 +7,10 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<tycho.version>1.2.0</tycho.version>
+		<tycho.version>2.0.0</tycho.version>
 		<maven.resources.version>3.1.0</maven.resources.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtextVersion>2.16.0</xtextVersion>
+		<xtextVersion>2.23.0</xtextVersion>
 	</properties>
 	
 	<modules>

@@ -15,7 +15,7 @@ An Eclipse extension that supports [OML](https://opencaesar.github.io/oml-spec) 
 
 ## Build
 
-Requirements: Java 8, maven 3.6+
+Requirements: Java 11, maven 3.6+
 ```
   cd io.opencaesar.rosetta.parent
   mvn verify

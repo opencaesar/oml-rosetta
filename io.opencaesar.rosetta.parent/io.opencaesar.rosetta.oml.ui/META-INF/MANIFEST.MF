@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: io.opencaesar.rosetta.oml.ui;singleton:=true
 Bundle-Version: 0.3.1
 Automatic-Module-Name: io.opencaesar.rosetta.oml.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui,
