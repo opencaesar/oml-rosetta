@@ -75,12 +75,12 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 			} else if (selection.getFirstElement() instanceof IFolder) {
 				folderPath = ((IFolder)selection.getFirstElement()).getFullPath();
 			} else if (selection.getFirstElement() instanceof IProject) {
-				folderPath = ((IProject)selection.getFirstElement()).getFolder("src").getFullPath();
+				folderPath = ((IProject)selection.getFirstElement()).getFolder("src").getFolder("oml").getFullPath();
 			}
 		}
 		if (folderPath != null) {
-			if (folderPath.segmentCount() > 2 && folderPath.segment(1).equals("src")) {
-				ontologyNamespace = "http://" + Arrays.stream(folderPath.segments()).skip(2).collect(Collectors.joining("/")) + "/";
+			if (folderPath.segmentCount() > 3 && folderPath.segment(1).equals("src") && folderPath.segment(2).equals("oml")) {
+				ontologyNamespace = "http://" + Arrays.stream(folderPath.segments()).skip(3).collect(Collectors.joining("/")) + "/";
 			}
 		}
 		
