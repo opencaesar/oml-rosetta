@@ -46,7 +46,6 @@
       </builder>
    </extension>
    <extension
-         id="io.opencaesar.rosetta.oml.ui.wizards.OmlProjectWizard"
          point="org.eclipse.ui.newWizards">
       <wizard
             category="org.eclipse.emf.ecore.Wizard.category.ID"
@@ -59,7 +58,7 @@
             category="org.eclipse.emf.ecore.Wizard.category.ID"
             class="io.opencaesar.rosetta.oml.wizards.OmlOntologyWizard"
             hasPages="true"
-            id="io.opencaesar.rosetta.oml.ui.wizard2"
+            id="io.opencaesar.rosetta.oml.ui.wizards.OmlOntologyWizard"
             name="OML Ontology"
             project="false">
       </wizard>

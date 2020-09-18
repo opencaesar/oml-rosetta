@@ -67,37 +67,40 @@ import io.opencaesar.rosetta.oml.ui.project.OmlProjectBuilder;
  * the project to have OML and Xtext natures.
  */
 public class OmlProjectWizard extends Wizard implements INewWizard {
-		
+	
 	private IWorkbench workbench;
-	private WizardNewProjectCreationPage mainPage = new WizardNewProjectCreationPage("Create OML Project");
+	private WizardNewProjectCreationPage newProjectPage = new WizardNewProjectCreationPage("Create OML Project");
 	
 	private ProjectSetupPage setupPage = new ProjectSetupPage();
 	private IProject newProject;
 	
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		setWindowTitle("Create OML Project");
 		this.workbench = workbench;
+		setWindowTitle("Create OML Project");
+		newProjectPage.setTitle("Create an OML Project");
+		newProjectPage.setDescription("Specify the project name.");
+		newProjectPage.setImageDescriptor(OmlUiPlugin.OML_LOGO);
 	}
 	
 	@Override
 	public void addPages() {
 		super.addPages();
-		addPage(mainPage);
+		addPage(newProjectPage);
 		addPage(setupPage);
 	}
 
 	@Override
 	public boolean performFinish() {
-		URI locationUri = mainPage.getLocationURI();
-		String projectName = mainPage.getProjectName();
+		URI locationUri = newProjectPage.getLocationURI();
+		String projectName = newProjectPage.getProjectName();
 		if (locationUri== null) {
 			return false;
 		}
 		if (newProject == null) {
 			try {
 				getContainer().run(true, false, monitor -> createProject(monitor, projectName, locationUri));
-				workbench.getWorkingSetManager().addToWorkingSets(newProject, mainPage.getSelectedWorkingSets());
+				workbench.getWorkingSetManager().addToWorkingSets(newProject, newProjectPage.getSelectedWorkingSets());
 				BasicNewResourceWizard.selectAndReveal(newProject, workbench.getActiveWorkbenchWindow());
 				return true;
 			} catch (InvocationTargetException | InterruptedException e) {
@@ -274,6 +277,9 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 		protected ProjectSetupPage() {
 			super("Project Setup");
 			setPageComplete(false);
+			setTitle("Configure New OML Project");
+			setDescription("Set up an initial catalog, bundle ontology, and Gradle script.");
+			setImageDescriptor(OmlUiPlugin.OML_LOGO);
 		}
 
 		@Override

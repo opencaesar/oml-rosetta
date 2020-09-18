@@ -42,6 +42,7 @@ import io.opencaesar.oml.OmlPackage;
 import io.opencaesar.oml.Ontology;
 import io.opencaesar.oml.SeparatorKind;
 import io.opencaesar.oml.util.OmlXMIResource;
+import io.opencaesar.rosetta.oml.ui.OmlUiPlugin;
 
 /**
  * Wizard for creating ontology files.
@@ -153,6 +154,9 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 			super("Ontology Setup");
 			ontologySeparator = SeparatorKind.HASH;
 			setPageComplete(false);
+			setTitle("Ontology Setup");
+			setDescription("Specify an ontology kind, namespace, prefix, and separator");
+			setImageDescriptor(OmlUiPlugin.OML_LOGO);
 		}
 
 		@Override
@@ -316,6 +320,9 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 
 		protected FilePage(IStructuredSelection selection) {
 			super("FilePage", selection);
+			setTitle("Ontology File");
+			setDescription("Specify the ontology file location and type");
+			setImageDescriptor(OmlUiPlugin.OML_LOGO);
 		}
 
 		@Override
