@@ -215,14 +215,18 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 						.createBuild(BuildConfiguration.forRootProjectDirectory(newProject.getLocation().toFile()).build());
 					build.synchronize(runGradleWrapperMonitor.split(4));
 					
-					// Download gradlew
 					try {
 						build.withConnection(connection -> {
-							runGradleWrapperMonitor.worked(1);
+							// Download gradlew
 							connection.newBuild().forTasks("wrapper").run();
-							configureGradleMonitor.worked(8);
+							configureGradleMonitor.worked(5);
+							// Load OML dependencies
+							if (setupPage.configureGradle && setupPage.addVocabularyDependency) {
+								connection.newBuild().forTasks("omldependencies").run();
+							}
+							configureGradleMonitor.worked(5);
 							return null;
-						}, runGradleWrapperMonitor.split(1));
+						}, runGradleWrapperMonitor.split(10));
 					} catch (Exception e) {
 						if (e instanceof RuntimeException) {
 							throw (RuntimeException)e;
