@@ -42,6 +42,7 @@ import io.opencaesar.oml.OmlPackage;
 import io.opencaesar.oml.Ontology;
 import io.opencaesar.oml.SeparatorKind;
 import io.opencaesar.oml.util.OmlXMIResource;
+import io.opencaesar.rosetta.oml.ui.OmlUiPlugin;
 
 /**
  * Wizard for creating ontology files.
@@ -51,6 +52,9 @@ import io.opencaesar.oml.util.OmlXMIResource;
  * the file path and name.
  */
 public class OmlOntologyWizard extends Wizard implements INewWizard {
+	
+	private static final String OML_TREE_EDITOR = "io.opencaesar.oml.presentation.OmlEditorID";
+	
 	private IWorkbench workbench;
 	
 	private OntologySetupPage ontologySetupPage;
@@ -75,12 +79,12 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 			} else if (selection.getFirstElement() instanceof IFolder) {
 				folderPath = ((IFolder)selection.getFirstElement()).getFullPath();
 			} else if (selection.getFirstElement() instanceof IProject) {
-				folderPath = ((IProject)selection.getFirstElement()).getFolder("src").getFullPath();
+				folderPath = ((IProject)selection.getFirstElement()).getFolder("src").getFolder("oml").getFullPath();
 			}
 		}
 		if (folderPath != null) {
-			if (folderPath.segmentCount() > 2 && folderPath.segment(1).equals("src")) {
-				ontologyNamespace = "http://" + Arrays.stream(folderPath.segments()).skip(2).collect(Collectors.joining("/")) + "/";
+			if (folderPath.segmentCount() > 3 && folderPath.segment(1).equals("src") && folderPath.segment(2).equals("oml")) {
+				ontologyNamespace = "http://" + Arrays.stream(folderPath.segments()).skip(3).collect(Collectors.joining("/")) + "/";
 			}
 		}
 		
@@ -128,7 +132,7 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 			}
 			file.create(new ByteArrayInputStream(baos.toByteArray()), true, new NullProgressMonitor());
 			BasicNewResourceWizard.selectAndReveal(file, workbench.getActiveWorkbenchWindow());
-			IDE.openEditor(workbench.getActiveWorkbenchWindow().getActivePage(), file);
+			IDE.openEditor(workbench.getActiveWorkbenchWindow().getActivePage(), file, OML_TREE_EDITOR);
 			return true;
 		} catch (IOException | CoreException e) {
 			throw new RuntimeException(e.getMessage(), e);
@@ -153,6 +157,9 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 			super("Ontology Setup");
 			ontologySeparator = SeparatorKind.HASH;
 			setPageComplete(false);
+			setTitle("Ontology Setup");
+			setDescription("Specify an ontology kind, namespace, prefix, and separator");
+			setImageDescriptor(OmlUiPlugin.OML_LOGO);
 		}
 
 		@Override
@@ -316,6 +323,9 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 
 		protected FilePage(IStructuredSelection selection) {
 			super("FilePage", selection);
+			setTitle("Ontology File");
+			setDescription("Specify the ontology file location and type");
+			setImageDescriptor(OmlUiPlugin.OML_LOGO);
 		}
 
 		@Override

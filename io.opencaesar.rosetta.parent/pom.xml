@@ -2,15 +2,15 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.opencaesar.rosetta</groupId>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<artifactId>io.opencaesar.rosetta.parent</artifactId>
 	<packaging>pom</packaging>
 
 	<properties>
-		<tycho.version>1.2.0</tycho.version>
+		<tycho.version>2.0.0</tycho.version>
 		<maven.resources.version>3.1.0</maven.resources.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtextVersion>2.16.0</xtextVersion>
+		<xtextVersion>2.23.0</xtextVersion>
 	</properties>
 	
 	<modules>
@@ -83,5 +83,5 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 </project>

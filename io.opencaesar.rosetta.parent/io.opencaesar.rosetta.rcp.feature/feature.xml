@@ -2,7 +2,7 @@
 <feature
       id="io.opencaesar.rosetta.rcp.feature"
       label="%featureName"
-      version="0.3.1"
+      version="0.3.2"
       provider-name="%providerName">
 
    <description url="http://www.example.com/description">
@@ -593,6 +593,13 @@ limitations under the License.
 
    <plugin
          id="org.eclipse.eef.properties.ui.legacy"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.xtext.common.types.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
