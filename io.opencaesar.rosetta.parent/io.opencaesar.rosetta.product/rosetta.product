@@ -6,9 +6,7 @@
    <aboutInfo>
       <image path="/io.opencaesar.rosetta.rcp/images/about.png"/>
       <text>
-         Rosetta: Native OML Integration in Eclipse
-
-		Copyright © 2020 California Institute of Technology. Government Sponsorship Acknowledged.
+         %aboutText
       </text>
    </aboutInfo>
 
@@ -32,6 +30,7 @@
          <bmp/>
       </win>
    </launcher>
+
 
    <vm>
       <linux include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11</linux>
