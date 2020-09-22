@@ -13,7 +13,7 @@
          </property>
          <property
                name="aboutText"
-               value="Rosetta: Native OML Integration in Eclipse&#x0A;&#x0A;		Copyright © 2020 California Institute of Technology. Government Sponsorship Acknowledged.">
+               value="%aboutText">
          </property>
          <property
                name="aboutImage"
@@ -24,6 +24,17 @@
                value="images/eclipse16.png,images/eclipse32.png,images/eclipse48.png,images/eclipse64.png,images/eclipse128.png,images/eclipse256.png">
          </property>
       </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.splashHandlers">
+      <splashHandler
+            class="io.opencaesar.rosetta.rcp.SplashHandler"
+            id="io.opencaesar.rosetta.rcp.SplashHandler">
+      </splashHandler>
+      <splashHandlerProductBinding
+            productId="io.opencaesar.rosetta.rcp.product"
+            splashId="io.opencaesar.rosetta.rcp.SplashHandler">
+      </splashHandlerProductBinding>
    </extension>
 
 </plugin>
