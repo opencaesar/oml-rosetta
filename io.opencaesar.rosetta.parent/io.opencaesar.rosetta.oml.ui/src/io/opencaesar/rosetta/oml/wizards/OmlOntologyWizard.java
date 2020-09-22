@@ -52,6 +52,9 @@ import io.opencaesar.rosetta.oml.ui.OmlUiPlugin;
  * the file path and name.
  */
 public class OmlOntologyWizard extends Wizard implements INewWizard {
+	
+	private static final String OML_TREE_EDITOR = "io.opencaesar.oml.presentation.OmlEditorID";
+	
 	private IWorkbench workbench;
 	
 	private OntologySetupPage ontologySetupPage;
@@ -129,7 +132,7 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 			}
 			file.create(new ByteArrayInputStream(baos.toByteArray()), true, new NullProgressMonitor());
 			BasicNewResourceWizard.selectAndReveal(file, workbench.getActiveWorkbenchWindow());
-			IDE.openEditor(workbench.getActiveWorkbenchWindow().getActivePage(), file);
+			IDE.openEditor(workbench.getActiveWorkbenchWindow().getActivePage(), file, OML_TREE_EDITOR);
 			return true;
 		} catch (IOException | CoreException e) {
 			throw new RuntimeException(e.getMessage(), e);

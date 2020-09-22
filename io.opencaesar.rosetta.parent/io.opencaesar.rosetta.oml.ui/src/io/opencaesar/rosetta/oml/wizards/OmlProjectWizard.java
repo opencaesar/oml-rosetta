@@ -156,7 +156,7 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 			
 			OmlProjectResourceTemplates templates = new OmlProjectResourceTemplates();
 			templates.uriStartStringsToRewritePrefixes.put(setupPage.baseIri + (setupPage.baseIri.endsWith("/") ? "" : "/"), "src/oml/" + basePathSegments.stream().collect(Collectors.joining("/")) + "/");
-			templates.uriStartStringsToRewritePrefixes.put("http://", "build/dependencies/");
+			templates.uriStartStringsToRewritePrefixes.put("http://", "build/oml/");
 			templates.bundleIri = setupPage.bundleIri;
 
 			if (setupPage.configureGradle) {

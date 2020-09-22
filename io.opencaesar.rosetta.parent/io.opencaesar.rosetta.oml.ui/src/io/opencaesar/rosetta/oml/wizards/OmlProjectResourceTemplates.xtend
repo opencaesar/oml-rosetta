@@ -102,7 +102,7 @@ class OmlProjectResourceTemplates {
 		 */
 		task omldependencies(type: Copy) {
 		    from configurations.oml.files.collect { zipTree(it) }
-		    into file('build/dependencies')
+		    into file('build/oml')
 		}
 		
 		/*
