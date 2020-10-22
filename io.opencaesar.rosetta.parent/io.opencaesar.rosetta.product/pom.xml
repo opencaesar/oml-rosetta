@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>io.opencaesar.rosetta</groupId>
 		<artifactId>io.opencaesar.rosetta.parent</artifactId>
-		<version>0.3.2</version>
+		<version>0.4.0</version>
 	</parent>
 	
 	<build>
@@ -24,30 +24,27 @@
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-director-plugin</artifactId>
 				<version>${tycho.version}</version>
+				<executions>
+				    <execution>
+				      <id>create-distributions</id>
+				      <goals>
+				        <goal>materialize-products</goal>
+				        <goal>archive-products</goal>
+				      </goals>
+				    </execution>
+				</executions>
 				<configuration>
 					<products>
 						<product>
 							<id>rosetta</id>
 							<rootFolders>
 								<macosx>Rosetta.app</macosx>
+								<win32>Rosetta</win32>
+								<linux>Rosetta</linux>
 							</rootFolders>
 						</product>
 					</products>
 				</configuration>
-				<executions>
-					<execution>
-						<id>materialize-products</id>
-						<goals>
-							<goal>materialize-products</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>archive-products</id>
-						<goals>
-							<goal>archive-products</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

@@ -2,7 +2,7 @@
 <feature
       id="io.opencaesar.rosetta.rcp.feature"
       label="%featureName"
-      version="0.3.2"
+      version="0.4.0"
       provider-name="%providerName">
 
    <description url="http://www.example.com/description">
@@ -175,6 +175,10 @@ limitations under the License.
 
    <includes
          id="org.eclipse.emf.workspace"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.justj.openjdk.hotspot.jre.full"
          version="0.0.0"/>
 
    <plugin

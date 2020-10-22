@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.opencaesar.rosetta</groupId>
-	<version>0.3.2</version>
+	<version>0.4.0</version>
 	<artifactId>io.opencaesar.rosetta.parent</artifactId>
 	<packaging>pom</packaging>
 
@@ -32,6 +32,20 @@
 				<extensions>true</extensions>
 			</plugin>
 			<plugin>
+        		<groupId>org.eclipse.tycho</groupId>
+            		<artifactId>tycho-packaging-plugin</artifactId>
+             		<version>${tycho.version}</version>
+             		<executions>
+              			<execution>
+                			<phase>package</phase>
+               				<id>package-feature</id>
+                   			<configuration>
+                       			<finalName>${project.artifactId}_${unqualifiedVersion}.${buildQualifier}</finalName>
+                   			</configuration>
+            			</execution>
+        			</executions>
+    		</plugin>
+			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho.version}</version>
@@ -43,6 +57,7 @@
 							<version>${project.version}</version>
 						</artifact>
 					</target>
+            		<resolveWithExecutionEnvironmentConstraints>false</resolveWithExecutionEnvironmentConstraints>
 					<environments>
 						<environment>
 							<os>macosx</os>
@@ -60,6 +75,11 @@
 							<arch>x86_64</arch>
 						</environment>
 					</environments>
+		            <dependency-resolution>
+		              <profileProperties>
+		                <org.eclipse.justj.buildtime>true</org.eclipse.justj.buildtime>
+		              </profileProperties>
+		            </dependency-resolution>
 				</configuration>
 			</plugin>
 			<plugin>

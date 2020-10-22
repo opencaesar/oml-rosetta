@@ -30,14 +30,18 @@ function deploy_rcp() {
 	   fi
 	fi
 	
-	
+	version=`cat config.txt`
+
 	FILES=./*.zip
 		
 	echo "Processing features dir $FILES file..."
 	for f in $FILES;
 	do
+	  pre="${f%%-*}"
+	  post="${f#*-}"
+	  file="${pre}-${version}-${post}"
 	  echo "Processing $f file..."
-	  curl -X PUT -T $f -u ${BINTRAY_USER}:${BINTRAY_API_KEY} https://api.bintray.com/content/${BINTRAY_OWNER}/${BINTRAY_REPO}/${PCK_NAME}/${PCK_VERSION}/${TARGET_PATH}/${PCK_VERSION}/$f;publish=1
+	  curl -X PUT -T $f -u ${BINTRAY_USER}:${BINTRAY_API_KEY} https://api.bintray.com/content/${BINTRAY_OWNER}/${BINTRAY_REPO}/${PCK_NAME}/${PCK_VERSION}/${TARGET_PATH}/${PCK_VERSION}/$file;publish=1
 	  echo ""
 	done
 	
