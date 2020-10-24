@@ -17,7 +17,6 @@ An Eclipse extension that supports [OML](https://opencaesar.github.io/oml-spec) 
 
 Requirements: Java 11, maven 3.6+
 ```
-  cd io.opencaesar.rosetta.parent
   mvn verify
 ```
 
@@ -48,6 +47,7 @@ You can import existing OML projects or create new ones using the File->New or F
 For a list of available Rosetta versions, click [here](https://bintray.com/beta/#/opencaesar/rcp/oml-rosetta?tab=overview)
 | Rosetta | OML   |
 |---------|-------|
+| 0.4.x   | 0.7.5 |
 | 0.3.x   | 0.7.3 |
 | 0.2.x   | 0.7.0 |
 | 0.1.x   | 0.6.2 |

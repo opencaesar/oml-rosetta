@@ -10,9 +10,6 @@ cache:
   directories:
     - $HOME/.m2
 
-before_script:
-  - cd io.opencaesar.rosetta.parent
-
 script:
   - mvn verify
 
