@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Rosetta" uid="rosetta" id="io.opencaesar.rosetta.rcp.product" application="org.eclipse.ui.ide.workbench" version="0.4.0" useFeatures="true" includeLaunchers="true">
+<product name="Rosetta" uid="rosetta" id="io.opencaesar.rosetta.rcp.product" application="org.eclipse.ui.ide.workbench" version="0.5.0" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/io.opencaesar.rosetta.rcp/images/about.png"/>
@@ -73,11 +73,7 @@ limitations under the License.
    </configurations>
 
    <repositories>
-      <repository location="http://https://dl.bintray.com/opencaesar/p2/oml-rosetta/releases/0.3.2/" enabled="true" />
-      <repository location="http://download.eclipse.org/releases/2020-09" enabled="true" />
-      <repository location="http://https://dl.bintray.com/opencaesar/p2/oml-rosetta/releases/0.4.0/" enabled="true" />
-      <repository location="http://download.eclipse.org/releases/2020-09" enabled="true" />
-      <repository location="http://https://dl.bintray.com/opencaesar/p2/oml-rosetta/releases/0.4.0/" enabled="true" />
+      <repository location="http://https://dl.bintray.com/opencaesar/p2/oml-rosetta/releases/0.5.0/" enabled="true" />
       <repository location="http://download.eclipse.org/releases/2020-09" enabled="true" />
    </repositories>
 

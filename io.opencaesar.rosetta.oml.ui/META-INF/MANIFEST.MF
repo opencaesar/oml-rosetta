@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: io.opencaesar.rosetta.oml.ui;singleton:=true
-Bundle-Version: 0.4.0
+Bundle-Version: 0.5.0
 Automatic-Module-Name: io.opencaesar.rosetta.oml.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Localization: plugin
