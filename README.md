@@ -48,6 +48,7 @@ You can import existing OML projects or create new ones using the File->New or F
 For a list of available Rosetta versions, click [here](https://github.com/opencaesar/oml-rosetta/releases)
 | Rosetta | OML   |
 |---------|-------|
+| 0.6.x   | 0.8.1 |
 | 0.5.x   | 0.7.7 |
 | 0.4.x   | 0.7.5 |
 | 0.3.x   | 0.7.3 |
