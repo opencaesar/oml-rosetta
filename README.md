@@ -42,7 +42,29 @@ xattr -cr /path/to/Rosetta.app
 
 You can import existing OML projects or create new ones using the File->New or File->Import wizards.
 
-**Note**: When you have an OML project in the Project Explorer view, there is a filter that hides the Gradle `build` folder by default. To disable that filter, click on the view's menu (in top right corner), and select `Filters and Customization` and then make sure `Gradle Build Folder` is unselected.
+> When you have an OML project in the Project Explorer view, there is a filter that hides the Gradle `build` folder by default. To disable that filter, click on the view's menu (in top right corner), and select `Filters and Customization` and then make sure `Gradle Build Folder` is unselected.
+
+## Run analysis tools
+
+Show the Gradle views by selecting Window -> Show View -> Other... -> Gradle -> (select both views) -> Open
+
+Once in Gradle Tasks view, choose from the view menu (the ... at the top right): Show All Tasks
+
+The Gradle Tasks view should show all your projects (from project explorer). Expand your project and navigate the specific tasks (e.g., other/build) in your gradle script. Double click on them to execute them. 
+
+The following are common tasks:
+
+other/build: to build the project
+
+publishing/publishToMavenLocal: to publish to maven local
+
+other/startFuseki: to start a Fuseki server
+
+other/owlQuery: to run the SPARQL queries
+
+other/stopFuseki: to stop a Fuseki server
+
+> After each Gradle operation above, right click on the relevant project in Project Explorer view and select Refresh and inspect the results in the build folder
 
 ## OML Version
 For a list of available Rosetta versions, click [here](https://github.com/opencaesar/oml-rosetta/releases)
