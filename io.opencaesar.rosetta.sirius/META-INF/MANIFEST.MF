@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Rosetta Sirius Enhancements
+Bundle-SymbolicName: io.opencaesar.rosetta.sirius;singleton:=true
+Bundle-Version: 0.7.0
+Automatic-Module-Name: io.opencaesar.rosetta.sirius
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.eclipse.rcp,
+ org.eclipse.swt,
+ org.eclipse.jface,
+ org.eclipse.ui.views.properties.tabbed,
+ org.eclipse.emf.common.ui,
+ org.eclipse.emf.transaction,
+ org.eclipse.sirius.table,
+ org.eclipse.sirius.table.ui,
+ org.eclipse.sirius.tree,
+ org.eclipse.sirius.tree.ui
+Import-Package: org.eclipse.ui
+Bundle-Vendor: openCAESAR

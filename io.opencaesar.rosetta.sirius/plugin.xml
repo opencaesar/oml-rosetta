@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="io.opencaesar.rosetta.sirius.BlankSelectedLineWorkaround">
+      </startup>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="io.opencaesar.rosetta.sirius.handlers.CollapseLineHandler"
+            id="io.opencaesar.rosetta.sirius.handlers.CollapseLineHandler"
+            name="Collapse">
+      </command>
+      <command
+            defaultHandler="io.opencaesar.rosetta.sirius.handlers.ExpandLineHandler"
+            id="io.opencaesar.rosetta.sirius.handlers.ExpandLineHandler"
+            name="Expand">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.sirius.table.ui.EditionTableEditorID?before=hideGroup">
+         <command
+               commandId="io.opencaesar.rosetta.sirius.handlers.CollapseLineHandler"
+               label="Collapse"
+               style="push"
+               tooltip="Collapse the selected element">
+         </command>
+         <command
+               commandId="io.opencaesar.rosetta.sirius.handlers.ExpandLineHandler"
+               label="Expand"
+               style="push"
+               tooltip="Expand the selected element">
+         </command>
+      </menuContribution>
+   </extension>
+
+</plugin>
