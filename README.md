@@ -70,6 +70,7 @@ other/stopFuseki: to stop a Fuseki server
 For a list of available Rosetta versions, click [here](https://github.com/opencaesar/oml-rosetta/releases)
 | Rosetta | OML   |
 |---------|-------|
+| 0.7.x   | 0.8.7 |
 | 0.6.x   | 0.8.1 |
 | 0.5.x   | 0.7.7 |
 | 0.4.x   | 0.7.5 |
