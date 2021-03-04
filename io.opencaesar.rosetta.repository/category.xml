@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature id="io.opencaesar.rosetta.feature">
-      <category name="Rosetta"/>
-   </feature>
-   <feature id="io.opencaesar.oml.feature">
-      <category name="OML"/>
-   </feature>
-   <feature id="io.opencaesar.oml.ui.feature">
-      <category name="OML"/>
-   </feature>
-   <feature id="io.opencaesar.oml.dsl.feature">
-      <category name="OML"/>
-   </feature>
-   <feature id="io.opencaesar.oml.dsl.ui.feature">
-      <category name="OML"/>
-   </feature>
-   <category-def name="Rosetta" label="Rosetta"/>
-   <category-def name="OML" label="OML"/>
+   <category-def name="rosetta" label="Rosetta"/>
+   <feature id="io.opencaesar.rosetta.feature" version="0.0.0"><category name="rosetta"/></feature>
+
+   <category-def name="rosetta.source" label="Rosetta (Sources)"/>
+   <feature id="io.opencaesar.rosetta.feature.source" version="0.0.0"><category name="rosetta.source"/></feature>
+
+   <category-def name="oml" label="OML"/>
+   <feature id="io.opencaesar.oml.feature" version="0.0.0"><category name="oml"/></feature>
+   <feature id="io.opencaesar.oml.dsl.feature" version="0.0.0"><category name="oml"/></feature>
+   <feature id="io.opencaesar.oml.dsl.ui.feature" version="0.0.0"><category name="oml"/></feature>
+   <feature id="io.opencaesar.oml.ui.feature" version="0.0.0"><category name="oml"/></feature>
+ 
+   <category-def name="oml.source" label="OML (Sources)"/>
+   <feature id="io.opencaesar.oml.feature.source" version="0.0.0"><category name="oml.source"/></feature>
+   <feature id="io.opencaesar.oml.dsl.feature.source" version="0.0.0"><category name="oml.source"/></feature>
+   <feature id="io.opencaesar.oml.dsl.ui.feature.source" version="0.0.0"><category name="oml.source"/></feature>
+   <feature id="io.opencaesar.oml.ui.feature.source" version="0.0.0"><category name="oml.source"/></feature>
+
    <repository-reference location="http://https://dl.bintray.com/opencaesar/p2/oml/releases/0.7.2/" enabled="true" />
 </site>

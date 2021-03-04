@@ -23,9 +23,15 @@
 			<repository location="http://download.eclipse.org/releases/2020-09"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<unit id="io.opencaesar.oml.ui.feature.feature.group" version="0.0.0"/>
+			<unit id="io.opencaesar.oml.feature.feature.group" version="0.0.0"/>
+			<unit id="io.opencaesar.oml.feature.source.feature.group" version="0.0.0"/>
+			<unit id="io.opencaesar.oml.dsl.feature.feature.group" version="0.0.0"/>
+			<unit id="io.opencaesar.oml.dsl.feature.source.feature.group" version="0.0.0"/>
 			<unit id="io.opencaesar.oml.dsl.ui.feature.feature.group" version="0.0.0"/>
-			<repository location="https://dl.bintray.com/opencaesar/p2/oml/releases/0.8.1/"/>
+			<unit id="io.opencaesar.oml.dsl.ui.feature.source.feature.group" version="0.0.0"/>
+			<unit id="io.opencaesar.oml.ui.feature.feature.group" version="0.0.0"/>
+			<unit id="io.opencaesar.oml.ui.feature.source.feature.group" version="0.0.0"/>
+			<repository location="https://dl.bintray.com/opencaesar/p2/oml/releases/0.8.7/"/>
 		</location>
 	</locations>
 </target>
