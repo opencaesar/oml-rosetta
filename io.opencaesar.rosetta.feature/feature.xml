@@ -29,24 +29,33 @@ See the License for the specific language governing permissions and
 limitations under the License.
    </license>
 
-   <includes
-         id="io.opencaesar.oml.dsl.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="io.opencaesar.oml.dsl.ui.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="io.opencaesar.oml.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="io.opencaesar.oml.ui.feature"
-         version="0.0.0"/>
+   <requires>
+      <import feature="io.opencaesar.oml.sdk.feature" version="0.8.8"/>
+   </requires>
 
    <plugin
          id="io.opencaesar.rosetta.oml.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="io.opencaesar.rosetta.oml.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="io.opencaesar.rosetta.sirius"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="io.opencaesar.rosetta.sirius.source"
          download-size="0"
          install-size="0"
          version="0.0.0"

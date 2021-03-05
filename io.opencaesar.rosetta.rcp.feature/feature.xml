@@ -30,22 +30,6 @@ limitations under the License.
    </license>
 
    <includes
-         id="io.opencaesar.oml.dsl.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="io.opencaesar.oml.dsl.ui.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="io.opencaesar.oml.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="io.opencaesar.oml.ui.feature"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.platform"
          version="0.0.0"/>
 
@@ -180,13 +164,6 @@ limitations under the License.
    <includes
          id="org.eclipse.justj.openjdk.hotspot.jre.full"
          version="0.0.0"/>
-
-   <plugin
-         id="io.opencaesar.rosetta.rcp"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="com.google.guava"
@@ -604,13 +581,6 @@ limitations under the License.
 
    <plugin
          id="org.eclipse.xtext.common.types.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="io.opencaesar.rosetta.sirius"
          download-size="0"
          install-size="0"
          version="0.0.0"

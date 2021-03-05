@@ -72,6 +72,12 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<excludes>
+						<plugin id="io.opencaesar.rosetta.oml.ui.source" />
+						<plugin id="io.opencaesar.rosetta.sirius.source" />
+					</excludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
