@@ -43,7 +43,7 @@ class OmlProjectResourceTemplates {
 				maven { url 'https://dl.bintray.com/opencaesar/oml-tools' }
 				maven { url 'https://dl.bintray.com/opencaesar/oml' }
 				maven { url 'http://dl.bintray.com/vermeulen-mp/gradle-plugins' }
-				jcenter()
+				mavenCentral()
 			}
 			dependencies {
 				classpath 'io.opencaesar.owl:owl-query-gradle:+'
@@ -84,7 +84,7 @@ class OmlProjectResourceTemplates {
 			«IF addVocabularyDependency»
 				maven { url 'https://dl.bintray.com/opencaesar/vocabularies' }
 			«ENDIF»
-			jcenter()
+			mavenCentral()
 		}
 		
 		/*
