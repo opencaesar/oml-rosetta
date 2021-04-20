@@ -38,11 +38,6 @@ class OmlProjectResourceTemplates {
 		buildscript {
 			repositories {
 				mavenLocal()
-				maven { url 'https://dl.bintray.com/opencaesar/owl-adapter' }
-				maven { url 'https://dl.bintray.com/opencaesar/owl-tools' }
-				maven { url 'https://dl.bintray.com/opencaesar/oml-tools' }
-				maven { url 'https://dl.bintray.com/opencaesar/oml' }
-				maven { url 'http://dl.bintray.com/vermeulen-mp/gradle-plugins' }
 				mavenCentral()
 			}
 			dependencies {
@@ -51,10 +46,7 @@ class OmlProjectResourceTemplates {
 				classpath 'io.opencaesar.owl:owl-reason-gradle:+'
 				classpath 'io.opencaesar.owl:oml2owl-gradle:+'
 				classpath 'io.opencaesar.oml:oml-bikeshed-gradle:+'
-				classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:+'
 				classpath 'com.wiredforcode:gradle-spawn-plugin:+'
-				// needed since gradle bintray brings an old version of xerces
-				configurations.classpath.exclude group: 'xerces', module: 'xercesImpl'
 			}
 		}
 		
@@ -81,9 +73,6 @@ class OmlProjectResourceTemplates {
 		 */
 		repositories {
 			mavenLocal()
-			«IF addVocabularyDependency»
-				maven { url 'https://dl.bintray.com/opencaesar/vocabularies' }
-			«ENDIF»
 			mavenCentral()
 		}
 		
