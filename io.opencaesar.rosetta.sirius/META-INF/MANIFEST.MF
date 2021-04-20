@@ -14,6 +14,10 @@ Require-Bundle: org.eclipse.rcp,
  org.eclipse.sirius.table,
  org.eclipse.sirius.table.ui,
  org.eclipse.sirius.tree,
- org.eclipse.sirius.tree.ui
+ org.eclipse.sirius.tree.ui,
+ org.eclipse.emf.edit.ui,
+ org.eclipse.emf.ecore,
+ org.eclipse.ui.ide
 Import-Package: org.eclipse.ui
 Bundle-Vendor: openCAESAR
+Export-Package: io.opencaesar.rosetta.sirius.validation

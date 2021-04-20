@@ -29,5 +29,7 @@ Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.xtend.lib,
  org.eclipse.xtend.lib.macro,
  org.eclipse.buildship.core,
- org.eclipse.help.ui
+ org.eclipse.help.ui,
+ io.opencaesar.rosetta.sirius
 Bundle-Vendor: %providerName
+Export-Package: io.opencaesar.rosetta.oml.ui.validation
