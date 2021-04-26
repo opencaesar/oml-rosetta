@@ -3,7 +3,6 @@ package io.opencaesar.rosetta.sirius.handlers;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IMarker;
@@ -13,7 +12,6 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.impl.EValidatorRegistryImpl;
@@ -27,13 +25,13 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.sirius.table.metamodel.table.DLine;
 import org.eclipse.sirius.table.metamodel.table.DTable;
 import org.eclipse.sirius.viewpoint.DRepresentation;
-import org.eclipse.sirius.viewpoint.description.JavaExtension;
+import org.eclipse.sirius.viewpoint.DRepresentationElement;
 import org.eclipse.sirius.viewpoint.description.Viewpoint;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.ide.IDE;
 
 import io.opencaesar.rosetta.sirius.MarkerRepresentationElementSelector;
-import io.opencaesar.rosetta.sirius.validation.ValidationService;
+import io.opencaesar.rosetta.sirius.validation.JavaExtensionScanningEValidator;
 
 /**
  * Validates a selected Sirius table line and all its sub-lines using
@@ -45,16 +43,18 @@ public class ValidateLineHandler extends AbstractLineHandler {
 	protected void execute(ExecutionEvent event, List<DLine> lines) {
 		if (!lines.isEmpty()) {
 			// Map allows determining which representation element to show for a given semantic element.
-			var semanticElementsToLine = new LinkedHashMap<EObject, DLine>();
+			var semanticElementsToLine = new LinkedHashMap<EObject, DRepresentationElement>();
 			for (var line : lines) {
 				collectSemanticElementsFromLineAndChildren(line, semanticElementsToLine);
 			}
 			var table = findContainerOfType(lines.get(0), DTable.class);
 			var viewpoint = findContainerOfType(table.getDescription(), Viewpoint.class);
-			var validationServices = viewpoint.getOwnedJavaExtensions().stream()
-					.map(JavaExtension::getQualifiedClassName).map(ValidationService::getValidationService)
-					.filter(s -> s != null).collect(Collectors.toList());
-			var validateAction = new ValidateActionEx(validationServices, semanticElementsToLine);
+			var validator = new JavaExtensionScanningEValidator(viewpoint);
+			var validatorRegistry = new EValidatorRegistryImpl();
+			for (var object : semanticElementsToLine.keySet()) {
+				validatorRegistry.put(object.eClass().getEPackage(), validator);
+			}
+			var validateAction = new ValidateActionEx(validatorRegistry, semanticElementsToLine);
 			validateAction.setActiveWorkbenchPart(HandlerUtil.getActiveEditor(event));
 			validateAction.run();
 		}
@@ -78,7 +78,7 @@ public class ValidateLineHandler extends AbstractLineHandler {
 	/**
 	 * Recursively collect all semantic elements from a table line and all its children.
 	 */
-	private static void collectSemanticElementsFromLineAndChildren(DLine line, LinkedHashMap<EObject, DLine> semanticElementsToLine) {
+	private static void collectSemanticElementsFromLineAndChildren(DLine line, LinkedHashMap<EObject, DRepresentationElement> semanticElementsToLine) {
 		for (var semanticElement : line.getSemanticElements()) {
 			semanticElementsToLine.put(semanticElement, line);
 		}
@@ -90,19 +90,13 @@ public class ValidateLineHandler extends AbstractLineHandler {
 	/**
 	 * Extends EMF ValidateAction to use a customized EclipseResourcesUtil to configure
 	 * markers so that MarkerRepresentationElementSelector can select elements with failed
-	 * validation constraints and to use a custom EValidatorRegistry that delegates to
-	 * a viewpoint's ValidationServices.
+	 * validation constraints and to use a custom EValidator.Registry.
 	 */
 	private static class ValidateActionEx extends ValidateAction {
-		private EValidatorRegistryImpl validatorRegistry = new EValidatorRegistryImpl();
+		private EValidator.Registry validatorRegistry;
 		
-		private ValidateActionEx(List<ValidationService> validationServices, Map<EObject, DLine> semanticElementsToLine) {
-			// Ensure the EValidatorRegistry has a EValidator for the EPackage
-			// of every validated object.
-			var validator = new EValidatorImpl(validationServices);
-			for (var semanticElement : semanticElementsToLine.keySet()) {
-				validatorRegistry.put(semanticElement.eClass().getEPackage(), validator);
-			}
+		private ValidateActionEx(EValidator.Registry validatorRegistry, Map<EObject, DRepresentationElement> semanticElementsToLine) {
+			this.validatorRegistry = validatorRegistry;
 			eclipseResourcesUtil = new EclipseResourcesUtilEx(semanticElementsToLine);
 			updateSelection(new StructuredSelection(semanticElementsToLine.keySet().toArray()));
 		}
@@ -148,45 +142,15 @@ public class ValidateLineHandler extends AbstractLineHandler {
 	}
 
 	/**
-	 * EValidator implementation that delegates to ValidationServices
-	 */
-	private static class EValidatorImpl implements EValidator {
-		private List<ValidationService> validationServices;
-		
-		private EValidatorImpl(List<ValidationService> validationServices) {
-			this.validationServices = validationServices;
-		}
-		
-		@Override
-		public boolean validate(EObject eObject, DiagnosticChain diagnostics, Map<Object, Object> context) {
-			var allOk = true;
-			for (var validationService : validationServices) {
-				allOk &= validationService.validate(eObject, diagnostics, context);
-			}
-			return allOk;
-		}
-		@Override
-		public boolean validate(EClass eClass, EObject eObject, DiagnosticChain diagnostics,
-				Map<Object, Object> context) {
-			return validate(eObject, diagnostics, context);
-		}
-		@Override
-		public boolean validate(EDataType eDataType, Object value, DiagnosticChain diagnostics,
-				Map<Object, Object> context) {
-			return true;
-		}
-	}
-	
-	/**
 	 * EclipseResourcesUtil extension that includes information about selected
 	 * representation elements in generated markers as well as binding it to the
 	 * MarkerRepresentationElementSelector editor ID to allow opening a marker to
 	 * take the user to the corresponding Sirius representation element.
 	 */
 	private static class EclipseResourcesUtilEx extends ValidateAction.EclipseResourcesUtil {
-		private Map<EObject, DLine> semanticElementsToLine;
+		private Map<EObject, DRepresentationElement> semanticElementsToLine;
 		
-		EclipseResourcesUtilEx(Map<EObject, DLine> semanticElementsToLine) {
+		EclipseResourcesUtilEx(Map<EObject, DRepresentationElement> semanticElementsToLine) {
 			this.semanticElementsToLine = semanticElementsToLine;
 		}
 		

@@ -6,10 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation applied to a Sirius Java extension class that indicates it is a validation service.
+ * Annotation applied to a constraint method (annotated by {@link Constraint}) indicating
+ * the abbreviated OML {@link Instance} type IRI a constraint applies to.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface ValidationService {
-
+@Target(ElementType.PARAMETER)
+public @interface AbbreviatedTypeIri {
+	String value();
 }

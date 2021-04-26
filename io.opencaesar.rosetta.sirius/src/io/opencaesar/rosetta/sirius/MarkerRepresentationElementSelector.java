@@ -18,16 +18,16 @@ import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.EditorPart;
 
 /**
- * An IGotoMarker implementation that selects up a Sirius Representation Element 
- * referenced from a Marker. Only selects elements that are in open Sirius representations;
- * if the representation is closed or the representation no longer contains the
- * referenced representation element, an error dialog is displayed.
+ * An IGotoMarker implementation that selects a Sirius Representation Element 
+ * referenced from a Marker in an open Sirius editor. If the representation is
+ * closed or the representation no longer contains the referenced representation
+ * element, an error dialog is displayed.
  * 
  * When a marker is created, this editor's ID is set as the marker's IDE.EDITOR_ID_ATTR
  * attribute along with the representation URI, representation element fragment, and
  * representation name (for display in an error dialog). Opening the marker causes this
  * editor to be activated, at which point it looks for the referenced representation
- * element in all the open Sirius representations, and then selects it before closing
+ * element in all the open Sirius editor, and then selects it before closing
  * itself.
  */
 public class MarkerRepresentationElementSelector extends EditorPart implements IGotoMarker {
@@ -77,7 +77,7 @@ public class MarkerRepresentationElementSelector extends EditorPart implements I
 		if (!openedRepresentationElement) {
 			var representationName = marker.getAttribute(REPRESENTATION_NAME, "(unknown)");
 			var message = representationOpen
-					? "its no longer appears to part of the " + representationName + " view."
+					? "it no longer appears to be included in the " + representationName + " view."
 					: "the " + representationName + " view it was presented in appears to be closed.";
 			MessageDialog.openError(shell, "Unable to open element", "The selected element couldn't be found; " + message);
 		}

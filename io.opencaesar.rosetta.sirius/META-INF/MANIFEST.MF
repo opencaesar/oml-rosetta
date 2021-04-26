@@ -11,13 +11,15 @@ Require-Bundle: org.eclipse.rcp,
  org.eclipse.ui.views.properties.tabbed,
  org.eclipse.emf.common.ui,
  org.eclipse.emf.transaction,
+ org.eclipse.sirius.common,
  org.eclipse.sirius.table,
  org.eclipse.sirius.table.ui,
  org.eclipse.sirius.tree,
  org.eclipse.sirius.tree.ui,
  org.eclipse.emf.edit.ui,
  org.eclipse.emf.ecore,
- org.eclipse.ui.ide
+ org.eclipse.ui.ide,
+ io.opencaesar.oml
 Import-Package: org.eclipse.ui
 Bundle-Vendor: openCAESAR
 Export-Package: io.opencaesar.rosetta.sirius.validation
