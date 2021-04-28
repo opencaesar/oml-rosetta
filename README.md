@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/opencaesar/oml-rosetta.svg?branch=master)](https://travis-ci.org/opencaesar/oml-rosetta)
 [![Release](https://img.shields.io/github/v/release/opencaesar/oml-rosetta?label=download)](https://github.com/opencaesar/oml-rosetta/releases/latest)
-[![Updatesite](https://img.shields.io/badge/p2-updatesite-yellow.svg?longCache=true)](https://bintray.com/opencaesar/p2/oml-rosetta/_latestVersion)
+[![Updatesite](https://img.shields.io/badge/p2-updatesite-yellow.svg?longCache=true)](https://github.com/opencaesar/oml-rosetta-p2)
 
 
 An Eclipse extension that supports [OML](https://opencaesar.github.io/oml-spec) natively and is published as a p2 update site and an RCP.
@@ -23,9 +23,9 @@ Requirements: Java 11, maven 3.6+
 
 ## Install Update Site
 
-You can install the Rosetta update site into an existing ```Eclipse``` using (Help->Install New Software->Add->Location):
+You can install the Rosetta p2 update site into an existing ```Eclipse``` using (Help->Install New Software->Add->Location):
 
-```https://dl.bintray.com/opencaesar/p2/oml-rosetta/releases/<version>```
+Visit https://github.com/opencaesar/oml-rosetta-p2 for URL options
 
 ## Install RCP
 

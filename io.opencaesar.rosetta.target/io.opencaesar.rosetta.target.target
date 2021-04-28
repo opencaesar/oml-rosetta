@@ -24,7 +24,7 @@
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="io.opencaesar.oml.sdk.feature.feature.group" version="0.0.0"/>
-			<repository location="https://dl.bintray.com/opencaesar/p2/oml/releases/0.8.8/"/>
+			<repository location="https://opencaesar.github.io/oml-p2"/>
 		</location>
 	</locations>
 </target>

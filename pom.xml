@@ -2,16 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.opencaesar.rosetta</groupId>
-	<version>0.7.0</version>
 	<artifactId>io.opencaesar.rosetta.parent</artifactId>
+	<version>0.7.0</version>
 	<packaging>pom</packaging>
-
-	<properties>
-		<tycho.version>2.0.0</tycho.version>
-		<maven.resources.version>3.1.0</maven.resources.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<xtextVersion>2.23.0</xtextVersion>
-	</properties>
 	
 	<modules>
 		<module>io.opencaesar.rosetta.oml.ui</module>
@@ -24,32 +17,54 @@
 		<module>io.opencaesar.rosetta.target</module>
 	</modules>
 	
+	<properties>
+	    <tycho-version>2.2.0</tycho-version>
+	    <tycho-extras-version>${tycho-version}</tycho-extras-version>
+		<maven.resources.version>3.1.0</maven.resources.version>
+	    <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
+        <eclipse-version>2020-09</eclipse-version>
+		<xtextVersion>2.23.0</xtextVersion>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Required properties for releasing -->
+        <github-update-repo>git@github.com:opencaesar/oml-rosetta-p2.git</github-update-repo>
+        <github-local-clone>${project.build.directory}/checkout</github-local-clone>
+        <releases-directory>${github-local-clone}/releases</releases-directory>
+        <current-release-directory>${releases-directory}/${qualifiedVersion}</current-release-directory>
+        <!-- The label for the Composite sites -->
+        <site.label>OML Rosetta p2 site</site.label>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-maven-plugin</artifactId>
-				<version>${tycho.version}</version>
+				<version>${tycho-version}</version>
 				<extensions>true</extensions>
 			</plugin>
 			<plugin>
         		<groupId>org.eclipse.tycho</groupId>
            		<artifactId>tycho-packaging-plugin</artifactId>
-            		<version>${tycho.version}</version>
+            		<version>${tycho-version}</version>
+ 	                <configuration>
+    	                <format>'v'yyyyMMdd'-'HHmm</format>
+        	        </configuration>
             		<executions>
              			<execution>
-               			<phase>package</phase>
-              				<id>package-feature</id>
-                  			<configuration>
-                      			<finalName>${project.artifactId}_${unqualifiedVersion}.${buildQualifier}</finalName>
-                  			</configuration>
-           			</execution>
-       			</executions>
+               				<phase>package</phase>
+              					<id>package-feature</id>
+                  				<configuration>
+                      				<finalName>${project.artifactId}_${unqualifiedVersion}.${buildQualifier}</finalName>
+                  				</configuration>
+           				</execution>
+       				</executions>
     		</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-source-plugin</artifactId>
-             	<version>${tycho.version}</version>
+             	<version>${tycho-version}</version>
 				<executions>
 					<execution>
 						<id>plugin-source</id>
@@ -62,7 +77,7 @@
 			<plugin>
 				<groupId>org.eclipse.tycho.extras</groupId>
 				<artifactId>tycho-source-feature-plugin</artifactId>
-             	<version>${tycho.version}</version>
+             	<version>${tycho-version}</version>
 				<executions>
 					<execution>
 						<id>source-feature</id>
@@ -82,7 +97,7 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
-				<version>${tycho.version}</version>
+				<version>${tycho-version}</version>
 				<configuration>
 					<target>
 						<artifact>
@@ -124,7 +139,7 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-plugin</artifactId>
-				<version>${tycho.version}</version>
+				<version>${tycho-version}</version>
 				<executions>
 					<execution>
 						<id>attach-p2-metadata</id>
@@ -136,6 +151,67 @@
 				</executions>
 			</plugin>
 		</plugins>
+
+        <pluginManagement>
+            <plugins>
+		        <plugin>
+		          <groupId>org.apache.maven.plugins</groupId>
+		          <artifactId>maven-scm-plugin</artifactId>
+		          <version>1.11.2</version>
+		        </plugin>
+		        <plugin>
+		          <groupId>org.apache.maven.plugins</groupId>
+		          <artifactId>maven-resources-plugin</artifactId>
+		          <version>3.2.0</version>
+		        </plugin>
+		        <plugin>
+		          <groupId>org.codehaus.mojo</groupId>
+		          <artifactId>exec-maven-plugin</artifactId>
+		          <version>3.0.0</version>
+		        </plugin>
+		        <plugin>
+		          <groupId>org.codehaus.mojo</groupId>
+		          <artifactId>build-helper-maven-plugin</artifactId>
+		          <version>3.2.0</version>
+		        </plugin>
+		        <plugin>
+		          <groupId>org.eclipse.tycho.extras</groupId>
+		          <artifactId>tycho-eclipserun-plugin</artifactId>
+		          <version>${tycho-version}</version>
+		        </plugin>
+            </plugins>
+        </pluginManagement>
 	</build>
+
+    <profiles>
+        <profile>
+          <!-- Activate this profile to perform the release to GitHub Pages -->
+          <id>release-composite</id>
+          <activation>
+            <activeByDefault>false</activeByDefault>
+          </activation>
+          <build>
+            <pluginManagement>
+              <plugins>
+                <plugin>
+                  <artifactId>maven-install-plugin</artifactId>
+                  <executions>
+                    <execution>
+                      <id>default-install</id>
+                      <phase>none</phase>
+                    </execution>
+                  </executions>
+                </plugin>
+                <plugin>
+                  <artifactId>maven-deploy-plugin</artifactId>
+                  <configuration>
+                    <skip>true</skip>
+                  </configuration>
+                </plugin>
+              </plugins>
+            </pluginManagement>
+          </build>
+        </profile>
+    </profiles>
 
 </project>

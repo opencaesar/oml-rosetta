@@ -73,7 +73,7 @@ limitations under the License.
    </configurations>
 
    <repositories>
-      <repository location="http://https://dl.bintray.com/opencaesar/p2/oml-rosetta/releases/0.7.0/" enabled="true" />
+      <repository location="https://opencaesar.github.io/oml-rosetta-p2" enabled="true" />
       <repository location="http://download.eclipse.org/releases/2020-09" enabled="true" />
    </repositories>
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
    <feature id="io.opencaesar.rosetta.feature"/>
-   <repository-reference location="http://https://dl.bintray.com/opencaesar/p2/oml/releases/0.6.2/" enabled="true" />
+   <repository-reference location="https://opencaesar.github.io/oml-rosetta-p2" enabled="true" />
 </site>
