@@ -75,11 +75,4 @@ limitations under the License.
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
-         id="io.opencaesar.rosetta.rcp"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
 </feature>
