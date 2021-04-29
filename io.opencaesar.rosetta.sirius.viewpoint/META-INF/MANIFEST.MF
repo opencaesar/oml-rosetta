@@ -3,7 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: io.opencaesar.rosetta.sirius.viewpoint;singleton:=true
 Bundle-Version: 0.8.0
+Automatic-Module-Name: io.opencaesar.rosetta.sirius.viewpoint
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Activator: io.opencaesar.rosetta.sirius.viewpoint.Activator
+Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -14,7 +17,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.xtext,
  io.opencaesar.oml
-Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Vendor: %providerName
-Automatic-Module-Name: io.opencaesar.rosetta.sirius.viewpoint
