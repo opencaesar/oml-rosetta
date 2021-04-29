@@ -6,14 +6,14 @@
 			<unit id="org.eclipse.platform.sdk" version="0.0.0"/>
 			<unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.epp.mpc.feature.group" version="0.0.0"/>
-			<unit id="org.eclipse.pde.source.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.pde.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.buildship.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.jgit.ssh.apache.feature.group" version="0.0.0"/>
-			<unit id="org.eclipse.emf.compare.diagram.sirius.source.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.emf.compare.diagram.sirius.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.emf.compare.egit.feature.group" version="0.0.0"/>
-			<unit id="org.eclipse.emf.compare.ide.ui.source.feature.group" version="0.0.0"/>
-			<unit id="org.eclipse.emf.ecore.xcore.lib.source.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.emf.compare.ide.ui.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.emf.ecore.xcore.lib.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.xtext.runtime.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.sirius.properties.feature.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.sirius.runtime.aql.feature.group" version="0.0.0"/>

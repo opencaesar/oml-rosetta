@@ -3,12 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.opencaesar.rosetta</groupId>
 	<artifactId>io.opencaesar.rosetta.parent</artifactId>
-	<version>0.7.0</version>
+	<version>0.8.0</version>
 	<packaging>pom</packaging>
 	
 	<modules>
 		<module>io.opencaesar.rosetta.oml.ui</module>
 		<module>io.opencaesar.rosetta.sirius</module>
+		<module>io.opencaesar.rosetta.sirius.viewpoint</module>
 		<module>io.opencaesar.rosetta.feature</module>
 		<module>io.opencaesar.rosetta.rcp</module>
 		<module>io.opencaesar.rosetta.rcp.feature</module>
@@ -91,6 +92,7 @@
 					<excludes>
 						<plugin id="io.opencaesar.rosetta.oml.ui.source" />
 						<plugin id="io.opencaesar.rosetta.sirius.source" />
+						<plugin id="io.opencaesar.rosetta.sirius.viewpoint.source" />
 					</excludes>
 				</configuration>
 			</plugin>

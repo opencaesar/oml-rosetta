@@ -51,9 +51,6 @@
       </menuContribution>
    </extension>
    <extension
-         point="org.eclipse.ui.editorActions">
-   </extension>
-   <extension
          point="org.eclipse.ui.editors">
       <editor
             class="io.opencaesar.rosetta.sirius.MarkerRepresentationElementSelector"
