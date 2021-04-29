@@ -19,6 +19,11 @@
             id="io.opencaesar.rosetta.sirius.handlers.ExpandLineHandler"
             name="Expand">
       </command>
+      <command
+            defaultHandler="io.opencaesar.rosetta.sirius.handlers.ValidateLineHandler"
+            id="io.opencaesar.rosetta.sirius.handlers.ValidateLineHandler"
+            name="Validate">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -37,7 +42,22 @@
                style="push"
                tooltip="Expand the selected element">
          </command>
+         <command
+               commandId="io.opencaesar.rosetta.sirius.handlers.ValidateLineHandler"
+               label="Validate"
+               style="push"
+               tooltip="Validate the selected element">
+         </command>
       </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="io.opencaesar.rosetta.sirius.MarkerRepresentationElementSelector"
+            default="false"
+            id="io.opencaesar.rosetta.sirius.MarkerRepresentationElementSelector"
+            name="MarkerRepresentationElementSelector">
+      </editor>
    </extension>
 
 </plugin>
