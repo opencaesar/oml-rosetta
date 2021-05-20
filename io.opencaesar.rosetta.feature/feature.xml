@@ -2,7 +2,7 @@
 <feature
       id="io.opencaesar.rosetta.feature"
       label="%featureName"
-      version="0.8.0"
+      version="0.8.1"
       provider-name="%providerName">
 
    <description url="http://www.example.com/description">
