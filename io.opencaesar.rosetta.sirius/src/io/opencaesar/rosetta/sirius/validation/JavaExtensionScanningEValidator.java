@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.sirius.common.tools.api.interpreter.ClassLoadingCallback;
 import org.eclipse.sirius.common.tools.api.interpreter.JavaExtensionsManager;
+import org.eclipse.sirius.common.tools.internal.interpreter.ClassLoadingService;
 import org.eclipse.sirius.viewpoint.description.Viewpoint;
 
 import io.opencaesar.oml.Instance;
@@ -58,11 +59,13 @@ public class JavaExtensionScanningEValidator implements EValidator {
 	 * Locates all constraint methods annotated with {@link Constraint} in validation service
 	 * classes annotated with {@link ValidationService}.
 	 */
+	@SuppressWarnings("restriction")
 	public JavaExtensionScanningEValidator(Viewpoint viewpoint) {
 		// Load Viewpoint Java Extension Classes
 		var validationServices = new LinkedHashMap<String, Class<?>>();
 		var extensionsManager = new JavaExtensionsManager();
 		try {
+			extensionsManager.setClassLoadingOverride(ClassLoadingService.getClassLoading());
 			extensionsManager.addClassLoadingCallBack(new ClassLoadingCallback() {
 				@Override
 				public void loaded(String className, Class<?> classObject) {
