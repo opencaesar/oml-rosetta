@@ -50,6 +50,7 @@
       <wizard
             category="org.eclipse.emf.ecore.Wizard.category.ID"
             class="io.opencaesar.rosetta.oml.wizards.OmlProjectWizard"
+            icon="icons/oml.png"
             id="io.opencaesar.rosetta.oml.ui.wizards.OmlProjectWizard"
             name="OML Project"
             project="true">
@@ -58,6 +59,7 @@
             category="org.eclipse.emf.ecore.Wizard.category.ID"
             class="io.opencaesar.rosetta.oml.wizards.OmlOntologyWizard"
             hasPages="true"
+            icon="icons/oml.png"
             id="io.opencaesar.rosetta.oml.ui.wizards.OmlOntologyWizard"
             name="OML Ontology"
             project="false">

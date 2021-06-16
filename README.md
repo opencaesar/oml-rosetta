@@ -1,6 +1,6 @@
 # Rosetta
 
-[![Build Status](https://travis-ci.org/opencaesar/oml-rosetta.svg?branch=master)](https://travis-ci.org/opencaesar/oml-rosetta)
+[![Build Status](https://travis-ci.com/opencaesar/oml-rosetta.svg?branch=master)](https://travis-ci.com/opencaesar/oml-rosetta)
 [![Release](https://img.shields.io/github/v/release/opencaesar/oml-rosetta?label=download)](https://github.com/opencaesar/oml-rosetta/releases/latest)
 [![Updatesite](https://img.shields.io/badge/p2-updatesite-yellow.svg?longCache=true)](https://github.com/opencaesar/oml-rosetta-p2)
 
@@ -70,6 +70,8 @@ other/stopFuseki: to stop a Fuseki server
 For a list of available Rosetta versions, click [here](https://github.com/opencaesar/oml-rosetta/releases)
 | Rosetta | OML   |
 |---------|-------|
+| 0.9.0   | 0.9.0 |
+| 0.8.x   | 0.8.8 |
 | 0.7.x   | 0.8.8 |
 | 0.6.x   | 0.8.1 |
 | 0.5.x   | 0.7.7 |

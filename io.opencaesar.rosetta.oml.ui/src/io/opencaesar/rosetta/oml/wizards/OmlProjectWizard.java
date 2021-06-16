@@ -49,15 +49,12 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.ui.XtextProjectHelper;
 
-import io.opencaesar.oml.DescriptionBundle;
-import io.opencaesar.oml.DescriptionBundleUsage;
 import io.opencaesar.oml.OmlFactory;
 import io.opencaesar.oml.OmlPackage;
 import io.opencaesar.oml.Ontology;
 import io.opencaesar.oml.SeparatorKind;
-import io.opencaesar.oml.VocabularyBundle;
-import io.opencaesar.oml.VocabularyBundleInclusion;
 import io.opencaesar.rosetta.oml.ui.OmlUiPlugin;
 import io.opencaesar.rosetta.oml.ui.project.OmlProject;
 import io.opencaesar.rosetta.oml.ui.project.OmlProjectBuilder;
@@ -115,9 +112,11 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projectName);
 		description.setLocationURI(locationUri);
 		description.setNatureIds(OmlProject.getRequiredNatures());
-		ICommand buildCommand = description.newCommand();
-		buildCommand.setBuilderName(OmlProjectBuilder.NAME);
-		description.setBuildSpec(new ICommand[] { buildCommand });
+		ICommand xtextBuildCommand = description.newCommand();
+		xtextBuildCommand.setBuilderName(XtextProjectHelper.BUILDER_ID);
+		ICommand omlBuildCommand = description.newCommand();
+		omlBuildCommand.setBuilderName(OmlProjectBuilder.NAME);
+		description.setBuildSpec(new ICommand[] { xtextBuildCommand, omlBuildCommand });
 		newProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 		try {
 			newProject.create(description, subMonitor.split(1));
@@ -157,13 +156,15 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 			OmlProjectResourceTemplates templates = new OmlProjectResourceTemplates();
 			templates.uriStartStringsToRewritePrefixes.put(setupPage.baseIri + (setupPage.baseIri.endsWith("/") ? "" : "/"), "src/oml/" + basePathSegments.stream().collect(Collectors.joining("/")) + "/");
 			templates.uriStartStringsToRewritePrefixes.put("http://", "build/oml/");
+			templates.baseIri = setupPage.baseIri;
 			templates.bundleIri = setupPage.bundleIri;
 
 			if (setupPage.configureGradle) {
+				templates.gradleProjectName = newProject.getName();
 				templates.gradleProjectGroup = setupPage.gradleGroupId;
+				templates.gradleProjectTitle = setupPage.gradleTitle;
 				templates.gradleProjectDescription = setupPage.gradleDescription;
 				templates.gradleProjectVersion = setupPage.gradleVersion;
-				templates.addVocabularyDependency = setupPage.addVocabularyDependency;
 			}
 			
 			// Create catalog
@@ -171,25 +172,18 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 			IFile catalogFile = newProject.getFile("catalog.xml");
 			catalogFile.create(new ByteArrayInputStream(templates.catalogXml().getBytes(StandardCharsets.UTF_8)), true, subMonitor.split(1));
 			
+			// Create .fuseki.ttl
+			
+			IFile fusekiFile = newProject.getFile(".fuseki.ttl");
+			fusekiFile.create(new ByteArrayInputStream(templates.fusekiTtl().getBytes(StandardCharsets.UTF_8)), true, subMonitor.split(1));
+
 			// Create bundle
 			
 			Ontology bundle = (Ontology) OmlFactory.eINSTANCE.create(setupPage.bundleType);
 			bundle.setIri(setupPage.bundleIri);
 			bundle.setPrefix(bundleName);
 			bundle.setSeparator(SeparatorKind.HASH);
-			
-			if (setupPage.configureGradle && setupPage.addVocabularyDependency) {
-				if (bundle instanceof DescriptionBundle) {
-					DescriptionBundleUsage usage = OmlFactory.eINSTANCE.createDescriptionBundleUsage();
-					usage.setUri("http://imce.jpl.nasa.gov/foundation/bundle");
-					((DescriptionBundle)bundle).getOwnedImports().add(usage);
-				} else if (bundle instanceof VocabularyBundle) {
-					VocabularyBundleInclusion inclusion = OmlFactory.eINSTANCE.createVocabularyBundleInclusion();
-					inclusion.setUri("http://imce.jpl.nasa.gov/foundation/bundle");
-					((VocabularyBundle)bundle).getOwnedImports().add(inclusion);
-				}
-			}
-			
+						
 			IFile bundleFile = bundleFolder.getFile(bundleName + ".oml");
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			XtextResourceSet resourceSet = new XtextResourceSet();
@@ -221,9 +215,7 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 							connection.newBuild().forTasks("wrapper").run();
 							configureGradleMonitor.worked(5);
 							// Load OML dependencies
-							if (setupPage.configureGradle && setupPage.addVocabularyDependency) {
-								connection.newBuild().forTasks("omldependencies").run();
-							}
+							connection.newBuild().forTasks("omlDependencies").run();
 							configureGradleMonitor.worked(5);
 							return null;
 						}, runGradleWrapperMonitor.split(10));
@@ -258,8 +250,6 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 		
 		private String bundleIri = baseIri + "/bundle";
 		
-		private String bikeshedPublishUrl = "http://example.com/bikeshed/";
-
 		private Text bundleIriInput;
 		
 		private boolean configureGradle = true;
@@ -268,14 +258,14 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 		
 		private String gradleGroupId = "com.example";
 		
-		private String gradleDescription = "Example Project";
+		private String gradleTitle = "Example";
+
+		private String gradleDescription = "This is an example";
 		
 		private String gradleVersion = "1.0.0";
 		
 		private Text groupIdInput;
 
-		private boolean addVocabularyDependency = true;
-		
 		private EClass bundleType = OmlPackage.Literals.DESCRIPTION_BUNDLE;
 		
 		protected ProjectSetupPage() {
@@ -386,6 +376,15 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 				validateInputs();
 			});
 
+			new Label(gradleGroup, SWT.NONE).setText("Title");
+			Text titleInput = new Text(gradleGroup, SWT.BORDER);
+			titleInput.setText(gradleTitle);
+			titleInput.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
+			titleInput.addModifyListener(ev -> {
+				gradleTitle = titleInput.getText();
+				validateInputs();
+			});
+
 			new Label(gradleGroup, SWT.NONE).setText("Description");
 			Text descriptionInput = new Text(gradleGroup, SWT.BORDER);
 			descriptionInput.setText(gradleDescription);
@@ -395,29 +394,12 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 				validateInputs();
 			});
 			
-			new Label(gradleGroup, SWT.NONE).setText("Bikeshed Publish URL");
-			Text bikeshedPublishUrlInput = new Text(gradleGroup, SWT.BORDER);
-			bikeshedPublishUrlInput.setText(bikeshedPublishUrl);
-			bikeshedPublishUrlInput.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
-			bikeshedPublishUrlInput.addModifyListener(ev -> {
-				bikeshedPublishUrl = bikeshedPublishUrlInput.getText();
-				validateInputs();
-			});
-			
-			Button addVocabularyDependencyCheckbox = new Button(gradleGroup, SWT.CHECK);
-			addVocabularyDependencyCheckbox.setText("Add Foundation Vocabulary Dependency");
-			addVocabularyDependencyCheckbox.setSelection(addVocabularyDependency);
-			addVocabularyDependencyCheckbox.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
-			addVocabularyDependencyCheckbox.addListener(SWT.Selection, ev -> {
-				addVocabularyDependency = addVocabularyDependencyCheckbox.getSelection();
-			});
-			
 			configureGradleCheckbox.addListener(SWT.Selection, ev -> {
 				configureGradle = configureGradleCheckbox.getSelection();
 				groupIdInput.setEnabled(configureGradle);
+				titleInput.setEnabled(configureGradle);
 				descriptionInput.setEnabled(configureGradle);
 				versionInput.setEnabled(configureGradle);
-				addVocabularyDependencyCheckbox.setEnabled(configureGradle);
 				validateInputs();
 			});
 			
@@ -452,11 +434,13 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 					return false;
 				}
 				if (configureGradle) {
-					new URI(bikeshedPublishUrl);
 					if (gradleGroupId == null || gradleGroupId.trim().isEmpty()) {
 						return false;
 					}
 					if (gradleVersion == null || gradleVersion.trim().isEmpty()) {
+						return false;
+					}
+					if (gradleTitle == null || gradleTitle.trim().isEmpty()) {
 						return false;
 					}
 				}
