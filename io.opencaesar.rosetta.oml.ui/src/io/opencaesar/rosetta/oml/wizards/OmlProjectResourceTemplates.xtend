@@ -6,14 +6,15 @@ class OmlProjectResourceTemplates {
 	
 	public val uriStartStringsToRewritePrefixes = new LinkedHashMap<String, String>()
 	
+	public var String baseIri
 	public var String bundleIri
 	
+	public var String gradleProjectName;
 	public var String gradleProjectGroup
+	public var String gradleProjectTitle
 	public var String gradleProjectDescription
 	public var String gradleProjectVersion
-	
-	public var boolean addVocabularyDependency = true
-	
+		
 	def String catalogXml() '''
 		<?xml version="1.0"?>
 		<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
@@ -23,14 +24,46 @@ class OmlProjectResourceTemplates {
 		</catalog>
 	'''
 	
+	def String fusekiTtl() '''
+		@prefix fuseki:  <http://jena.apache.org/fuseki#> .
+		@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+		@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+		@prefix tdb:     <http://jena.hpl.hp.com/2008/tdb#> .
+		@prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> .
+		@prefix :        <#> .
+		
+		[] rdf:type fuseki:Server .
+		
+		<#service> rdf:type fuseki:Service ;
+		    rdfs:label          "«gradleProjectTitle»" ;												# Human readable label for dataset
+		    fuseki:name         "«gradleProjectName»" ;												# Name of the dataset in the endpoint url
+		    fuseki:serviceReadWriteGraphStore "data" ;											# SPARQL Graph store protocol (read and write)
+		    fuseki:endpoint 	[ fuseki:operation fuseki:query ;	fuseki:name "sparql"  ] ;	# SPARQL query service
+		    fuseki:endpoint 	[ fuseki:operation fuseki:shacl ;	fuseki:name "shacl" ] ;		# SHACL query service
+		    fuseki:dataset      <#dataset> .
+		
+		## In memory TDB with union graph.
+		<#dataset> rdf:type   tdb:DatasetTDB ;
+		  tdb:location "--mem--" ;
+		  # Query timeout on this dataset (1s, 1000 milliseconds)
+		  ja:context [ ja:cxtName "arq:queryTimeout" ; ja:cxtValue "1000" ] ;
+		  # Make the default graph be the union of all named graphs.
+		  tdb:unionDefaultGraph true .
+	'''
+
 	def String buildGradle() '''
 		/* 
 		 * The Maven coordinates for the project artifact
 		 */
+		ext.title = '«gradleProjectTitle»'
 		description = '«gradleProjectDescription»'
 		group = '«gradleProjectGroup»'
 		version = '«gradleProjectVersion»'
 		
+		/* 
+		 * The Gradle plugins 
+		 */
+		apply plugin: 'maven-publish'
 		
 		/* 
 		 * The Gradle task dependencies 
@@ -41,182 +74,213 @@ class OmlProjectResourceTemplates {
 				mavenCentral()
 			}
 			dependencies {
-				classpath 'io.opencaesar.owl:owl-query-gradle:+'
-				classpath 'io.opencaesar.owl:owl-load-gradle:+'
-				classpath 'io.opencaesar.owl:owl-reason-gradle:+'
-				classpath 'io.opencaesar.owl:oml2owl-gradle:+'
-				classpath 'io.opencaesar.oml:oml-bikeshed-gradle:+'
-				classpath 'com.wiredforcode:gradle-spawn-plugin:+'
+		        classpath 'io.opencaesar.owl:owl-fuseki-gradle:+'
+		        classpath 'io.opencaesar.owl:owl-query-gradle:+'
+		        classpath 'io.opencaesar.owl:owl-load-gradle:+'
+		        classpath 'io.opencaesar.owl:owl-reason-gradle:+'
+		        classpath 'io.opencaesar.oml:oml-merge-gradle:+'
+		        classpath 'io.opencaesar.adapters:oml2owl-gradle:+'
 			}
 		}
 		
 		/*
-		 * Dependency versions
+		 * Dataset-specific variables
 		 */
-		ext {
-			«IF addVocabularyDependency»
-				vocabulariesVersion = '1.0.+'
-			«ENDIF»
-			fusekiVersion = '3.16.0' 
-		}
-		
-		/*
-		 * The configuration of OML dependencies
-		 */
-		configurations {
-			oml // Include the oml dependencies only
-		    fuseki //Include fuseki server
-		}
+		ext.dataset = [
+		    // Name of dataset (matches one used in .fuseki.ttl file)
+		    name: '«gradleProjectName»',
+		    // Root ontology IRI of the dataset
+		    rootOntologyIri: '«bundleIri»',
+		]
 		
 		/*
 		 * The repositories to look up OML dependencies in
 		 */
 		repositories {
-			mavenLocal()
-			mavenCentral()
+		    mavenLocal()
+		    mavenCentral()
+		}
+
+		/*
+		 * The configuration of OML dependencies
+		 */
+		configurations {
+		    oml
+		}
+		
+		/*
+		 * Dependency versions
+		 */
+		ext { 
+		    coreVersion = '+'
 		}
 		
 		/*
 		 * The OML dependencies
 		 */
 		dependencies {
-			«IF addVocabularyDependency»
-				oml "io.opencaesar.ontologies:vocabularies:$vocabulariesVersion"
-			«ENDIF»
-		    fuseki "org.apache.jena:jena-fuseki-server:$fusekiVersion"
+		    oml "io.opencaesar.ontologies:core-vocabularies:$coreVersion"
 		}
 		
 		/*
 		 * A task to extract and merge the OML dependencies
 		 */
-		task omldependencies(type: Copy) {
-		    from configurations.oml.files.collect { zipTree(it) }
-		    into file('build/oml')
+		task omlDependencies(type:io.opencaesar.oml.merge.OmlMergeTask, group:"oml") {
+		    inputZipPaths = configurations.oml.files
+		    outputCatalogFolder = file('build/oml')
 		}
 		
 		/*
 		 * A task to convert the OML catalog to OWL catalog
 		 */
-		task oml2owl(type:io.opencaesar.oml2owl.Oml2OwlTask, dependsOn: omldependencies) {
-			// OML catalog
-			inputCatalogPath = file('catalog.xml')
-			// OWL catalog
-			outputCatalogPath = file('build/owl/catalog.xml')
+		task omlToOwl(type:io.opencaesar.oml2owl.Oml2OwlTask, group:"oml", dependsOn: omlDependencies) {
+		    // OML catalog
+		    inputCatalogPath = file('catalog.xml')
+		    // OWL catalog
+		    outputCatalogPath = file('build/owl/catalog.xml')
 		}
 		
 		/*
 		 * A task to run the Openllet reasoner on the OWL catalog
 		 */
-		task owlreason(type:io.opencaesar.owl.reason.OwlReasonTask, dependsOn: oml2owl) {
-			// OWL catalog
-			catalogPath = file('build/owl/catalog.xml')
-			// Input ontology IRI to reason on
-			inputOntologyIri = '«bundleIri»'
-			// Entailment statements to generate and the ontologies to persist them in
-			specs = [
-				'«bundleIri»/classes = ALL_SUBCLASS',
-				'«bundleIri»/properties = INVERSE_PROPERTY | ALL_SUBPROPERTY',
-				'«bundleIri»/individuals = ALL_INSTANCE | DATA_PROPERTY_VALUE | OBJECT_PROPERTY_VALUE | SAME_AS'
-			]
-			// Junit error report
-			reportPath = file('build/reports/reasoning.xml')
+		task owlReason(type:io.opencaesar.owl.reason.OwlReasonTask, group:"oml", dependsOn: omlToOwl) {
+		    // OWL catalog
+		    catalogPath = file('build/owl/catalog.xml')
+		    // Input ontology IRI to reason on
+		    inputOntologyIri = "$dataset.rootOntologyIri".toString()
+		    // Entailment statements to generate and the ontologies to persist them in
+		    specs = [
+		        "$dataset.rootOntologyIri/classes = ALL_SUBCLASS".toString(),
+		        "$dataset.rootOntologyIri/properties = INVERSE_PROPERTY | ALL_SUBPROPERTY".toString(),
+		        "$dataset.rootOntologyIri/individuals = ALL_INSTANCE | DATA_PROPERTY_VALUE | OBJECT_PROPERTY_VALUE | SAME_AS".toString()
+		    ]
+		    // Junit error report
+		    reportPath = file('build/reports/reasoning.xml')
 		}
 		
+		/*
+		 * Start the headless Fuseki server
+		 */
+		task startFuseki(type: io.opencaesar.owl.fuseki.StartFusekiTask, group:"oml") {
+		    configurationPath = file('.fuseki.ttl')
+		    outputFolderPath = file('.fuseki')
+		}
 		
-		task owlload(type:io.opencaesar.owl.load.OwlLoadTask, dependsOn: owlreason) {
-			catalogPath = file('build/owl/catalog.xml')
-			endpointURL = 'http://localhost:3030/firesat'
+		/*
+		 * Stop the headless Fuseki server
+		 */
+		task stopFuseki(type: io.opencaesar.owl.fuseki.StopFusekiTask, group:"oml") {
+		    outputFolderPath = file('.fuseki')
+		}
+		
+		/*
+		 * A task to load an OWL catalog to a Fuseki dataset endpoint
+		 */
+		task owlLoad(type:io.opencaesar.owl.load.OwlLoadTask, group:"oml", dependsOn: owlReason) {
+		    catalogPath = file('build/owl/catalog.xml')
+		    endpointURL = "http://localhost:3030/$dataset.name".toString()
 		    fileExtensions = ['owl', 'ttl']
+		    iris = [
+		        "$dataset.rootOntologyIri/classes".toString(),
+		        "$dataset.rootOntologyIri/properties".toString(),
+		        "$dataset.rootOntologyIri/individuals".toString()
+		    ]
 		}
 		
-		task owlquery(type:io.opencaesar.owl.query.OwlQueryTask, dependsOn: owlload) {
-			endpointURL = 'http://localhost:3030/firesat'
-			queryPath = file('src/sparql')
-			resultPath = file('build/frames')
+		/*
+		 * A task to run a set of SPARQL queries on a Fuseki dataset endpoint
+		 */
+		task owlQuery(type:io.opencaesar.owl.query.OwlQueryTask, group:"oml", dependsOn: owlLoad) {
+		    endpointURL = "http://localhost:3030/$dataset.name".toString()
+		    queryPath = file('src/sparql')
+		    resultPath = file('build/frames')
 		}
 
-		/*
-		 * A task to generate Bikeshed specification for the OML catalog
-		 */
-		task oml2bikeshed(type: io.opencaesar.oml.bikeshed.Oml2BikeshedTask, dependsOn: omldependencies) {
-			// OML catalog
-			inputCatalogPath = file('catalog.xml')
-			// OWL folder
-			outputFolderPath = file('build/bikeshed')
-			// Input Ontology Iri
-			rootOntologyIri = '«bundleIri»'
-			// Publish URL
-			publishUrl = 'https://opencaesar.github.io/vocabularies/'
-		}
-		
-		/*
-		 * A task to render the Bikeshed specification to HTML
-		 */
-		task bikeshed2html(dependsOn: oml2bikeshed) {
-			doLast {
-				exec { commandLine 'chmod', '+x', 'build/bikeshed/publish.sh' }
-				exec { commandLine 'build/bikeshed/publish.sh' }
-			}
-		}
-
-		/*
-		 * A task to generate a publishable Zip archive for the OML sources of this project
-		 */
-		task omlzip(type: Zip) {
-			from file('src/oml')
-			destinationDir(file('build/libs'))
-			archiveBaseName = project.name
-			archiveVersion = project.version
-		}
-		
 		/*
 		 * A task to build the project, which executes several tasks together
 		 */
-		task build() {
-			dependsOn omlzip
-			dependsOn owlreason
-			dependsOn bikeshed2html
+		task build(group: "oml") {
+		    dependsOn owlReason
 		}
 		
 		/*
 		 * A task to delete the build artifacts
 		 */
-		task clean(type: Delete) {
-			delete 'build'
-		}
+		task clean(type: Delete, group: "oml")
 		
 		/*
-		 * Publish to Maven spec
+		 * Publish artifact to maven
 		 */
-		apply plugin: 'maven-publish'
+		task omlZip(type: Zip, group:"oml") {
+		    from file('src/oml')
+		    include "**/*.oml"
+		    destinationDirectory = file('build/libs')
+		    archiveBaseName = project.name
+		    archiveVersion = project.version
+		}
 		
-		publishToMavenLocal.dependsOn omlzip
+		def pomConfig = {
+		    licenses {
+		        license {
+		            name "The Apache Software License, Version 2.0"
+		            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+		            distribution "repo"
+		        }
+		    }
+		    developers {
+		        developer {
+		            id "melaasar"
+		            name "Maged Elaasar"
+		            email "melaasar@gmail.com"
+		        }
+		    }
+		    scm {
+		        url 'https://github.com/opencaesar/'+rootProject.name
+		    }
+		}
 		
 		publishing {
 		    publications {
 		        maven(MavenPublication) {
-		            artifact omlzip
+		            groupId project.group
+		            artifactId project.name
+		            version project.version
+		            artifact omlZip
+		            pom {
+		                packaging = 'zip'
+		                withXml {
+		                    def root = asNode()
+		                    if (configurations.find { it.name == 'oml' }) {
+		                        def dependencies = root.appendNode('dependencies')
+		                        configurations.oml.resolvedConfiguration.resolvedArtifacts.each {
+		                            def dependency = dependencies.appendNode('dependency')
+		                            dependency.appendNode('groupId', it.moduleVersion.id.group)
+		                            dependency.appendNode('artifactId', it.moduleVersion.id.name)
+		                            dependency.appendNode('version', it.moduleVersion.id.version)
+		                            if (it.classifier != null) {
+		                                dependency.appendNode('classifier', it.classifier)
+		                                dependency.appendNode('type', it.extension)
+		                            }
+		                        }
+		                    }
+		                    root.appendNode('name', project.ext.title)
+		                    root.appendNode('description', project.description)
+		                    root.appendNode('url', 'https://github.com/opencaesar/'+rootProject.name)
+		                    root.children().last() + pomConfig
+		                }
+		            }
 		        }
 		    }
 		}
 		
 		/*
-		 * Start and stop the Fuseki server
-		 */
-		apply plugin: 'com.wiredforcode.spawn'
+		 * Integration with the Eclipse IDE
+		 */ 
+		apply plugin: 'eclipse'
 		
-		task downloadFuseki(type: Copy) {
-		    from configurations.fuseki
-		    into file("build/libs")
+		eclipse {
+		    synchronizationTasks omlDependencies
 		}
-		
-		task startFuseki(type: SpawnProcessTask, dependsOn: downloadFuseki) {
-			command "java -jar ${projectDir}/build/libs/jena-fuseki-server-${fusekiVersion}.jar --mem firesat"
-			ready "Apache Jena Fuseki ${fusekiVersion}"
-		}
-		
-		task stopFuseki(type: KillProcessTask)
-		
 	'''
 	
 }

@@ -2,7 +2,7 @@
 <feature
       id="io.opencaesar.rosetta.rcp.feature"
       label="%featureName"
-      version="0.8.1"
+      version="0.9.0"
       provider-name="%providerName">
 
    <description url="http://www.example.com/description">
@@ -86,7 +86,7 @@ limitations under the License.
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.jgit.ssh.jsch"
+         id="org.eclipse.emf.compare.diagram.sirius"
          version="0.0.0"/>
 
    <includes
@@ -162,18 +162,29 @@ limitations under the License.
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.justj.openjdk.hotspot.jre.full"
+         id="org.eclipse.justj.openjdk.hotspot.jre.minimal.stripped"
          version="0.0.0"/>
 
    <includes
          id="io.opencaesar.oml.sdk.feature"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.emf.compare.diagram.gmf"
+         version="0.0.0"/>
+
    <plugin
          id="com.google.guava"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="30.1.0.v20210127-2300"
+         unpack="false"/>
+
+   <plugin
+         id="com.google.guava"
+         download-size="0"
+         install-size="0"
+         version="27.1.0.v20190517-1946"
          unpack="false"/>
 
    <plugin
@@ -592,6 +603,56 @@ limitations under the License.
 
    <plugin
          id="io.opencaesar.rosetta.rcp"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.compress"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.sshd.sftp"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="net.i2p.crypto.eddsa"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jgit.gpg.bc"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.bouncycastle.bcprov"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bouncycastle.bcpg"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="javaewah"
          download-size="0"
          install-size="0"
          version="0.0.0"

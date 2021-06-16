@@ -24,7 +24,9 @@ import org.eclipse.sirius.common.tools.api.interpreter.JavaExtensionsManager;
 import org.eclipse.sirius.common.tools.internal.interpreter.ClassLoadingService;
 import org.eclipse.sirius.viewpoint.description.Viewpoint;
 
+import io.opencaesar.oml.Classifier;
 import io.opencaesar.oml.Instance;
+import io.opencaesar.oml.util.OmlRead;
 import io.opencaesar.oml.util.OmlSearch;
 
 /**
@@ -278,7 +280,8 @@ public class JavaExtensionScanningEValidator implements EValidator {
 
 		@Override
 		public boolean test(EObject instance) {
-			return javaType.isInstance(instance) && instance instanceof Instance && OmlSearch.hasTypeIri((Instance) instance, typeIri);
+			var type = (Classifier) OmlRead.getMemberByIri((Instance)instance, typeIri);
+			return javaType.isInstance(instance) && instance instanceof Instance && OmlSearch.findIsTypeOf((Instance) instance, type);
 		}
 
 		@Override
@@ -309,9 +312,10 @@ public class JavaExtensionScanningEValidator implements EValidator {
 
 		@Override
 		public boolean test(EObject instance) {
+			var type = (Classifier) OmlRead.getMemberByAbbreviatedIri((Instance)instance, abbreviatedTypeIri);
 			return javaType.isInstance(instance)
 					&& instance instanceof Instance
-					&& OmlSearch.hasAbbreviatedTypeIri((Instance) instance, abbreviatedTypeIri);
+					&& OmlSearch.findIsTypeOf((Instance) instance, type);
 		}
 
 		@Override
