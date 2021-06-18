@@ -162,7 +162,7 @@ limitations under the License.
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.justj.openjdk.hotspot.jre.minimal.stripped"
+         id="org.eclipse.justj.openjdk.hotspot.jre.full"
          version="0.0.0"/>
 
    <includes

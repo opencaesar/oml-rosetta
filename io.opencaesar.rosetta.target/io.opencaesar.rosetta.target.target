@@ -25,7 +25,7 @@
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/justj/jres/11/updates/release"/>
-			<unit id="org.eclipse.justj.openjdk.hotspot.jre.minimal.stripped.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="11.0.2.v20200815-0835"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="io.opencaesar.oml.sdk.feature.feature.group" version="0.0.0"/>
