@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Rosetta" uid="rosetta" id="io.opencaesar.rosetta.rcp.product" application="org.eclipse.ui.ide.workbench" version="0.9.0" useFeatures="true" includeLaunchers="true">
+<product name="Rosetta" uid="rosetta" id="io.opencaesar.rosetta.rcp.product" application="org.eclipse.ui.ide.workbench" version="0.9.1" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/io.opencaesar.rosetta.rcp/images/about.png"/>
@@ -40,7 +40,7 @@
    <license>
         <url>http://www.apache.org/licenses/LICENSE-2.0</url>
         <text>
-   Copyright © 2020 California Institute of Technology. Government Sponsorship Acknowledged.
+   Copyright © 2020-2021 California Institute of Technology. Government Sponsorship Acknowledged.
 
 Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
 you may not use this file except in compliance with the License.
