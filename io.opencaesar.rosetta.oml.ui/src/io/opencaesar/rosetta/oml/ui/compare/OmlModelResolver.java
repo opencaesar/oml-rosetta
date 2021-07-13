@@ -22,10 +22,15 @@ import java.util.Collections;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.compare.ide.ui.logical.AbstractModelResolver;
 import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor;
+import org.eclipse.emf.compare.ide.ui.logical.IStorageProviderAccessor.DiffSide;
 import org.eclipse.emf.compare.ide.ui.logical.SynchronizationModel;
+import org.eclipse.emf.compare.ide.utils.ResourceUtil;
 import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 
 /**
@@ -36,33 +41,75 @@ import org.eclipse.emf.compare.ide.utils.StorageTraversal;
 public class OmlModelResolver extends AbstractModelResolver {
 
 	@Override
-	public SynchronizationModel resolveLocalModels(IResource left, IResource right, IResource origin,
-			IProgressMonitor monitor) throws InterruptedException {
-		return new SynchronizationModel(getTraversal(left), getTraversal(right), getTraversal(origin));
-	}
-
-	@Override
-	public SynchronizationModel resolveModels(IStorageProviderAccessor storageAccessor, IStorage left, IStorage right,
-			IStorage origin, IProgressMonitor monitor) throws InterruptedException {
-		return new SynchronizationModel(getTraversal(left), getTraversal(right), getTraversal(origin));
-	}
-
-	@Override
-	public StorageTraversal resolveLocalModel(IResource resource, IProgressMonitor monitor)
-			throws InterruptedException {
-		return getTraversal(resource);
-	}
-
-	@Override
 	public boolean canResolve(IStorage sourceStorage) {
 		return true;
 	}
+	
+	// Local
+	
+	@Override
+	public StorageTraversal resolveLocalModel(IResource resource, IProgressMonitor monitor)
+			throws InterruptedException {
+		return getLocalTraversal(resource);
+	}
 
-	private static StorageTraversal getTraversal(Object resource) {
+	@Override
+	public SynchronizationModel resolveLocalModels(IResource left, IResource right, IResource origin,
+			IProgressMonitor monitor) throws InterruptedException {
+		return new SynchronizationModel(getLocalTraversal(left), getLocalTraversal(right), getLocalTraversal(origin));
+	}
+
+	/**
+	 * For local resources, include the given resource directly in the StorageTraversal.
+	 */
+	private static StorageTraversal getLocalTraversal(IResource resource) {
 		if (resource instanceof IStorage) {
 			return new StorageTraversal(Collections.singleton((IStorage)resource));
 		} else {
 			return new StorageTraversal(Collections.emptySet());
 		}
 	}
+	
+	// Remote
+
+	@Override
+	public SynchronizationModel resolveModels(IStorageProviderAccessor storageAccessor, IStorage left, IStorage right,
+			IStorage origin, IProgressMonitor monitor) throws InterruptedException {
+		var subMonitor = SubMonitor.convert(monitor, 3);
+		return new SynchronizationModel(
+				getRemoteTraversal(storageAccessor, left, DiffSide.SOURCE, subMonitor.split(1)),
+				getRemoteTraversal(storageAccessor, right, DiffSide.REMOTE, subMonitor.split(1)),
+				getRemoteTraversal(storageAccessor, origin, DiffSide.ORIGIN, subMonitor.split(1))
+		);
+	}
+
+	/**
+	 * For remote traversals, the IStorage given to us may be a wrapper for an underlying IStorage object that
+	 * doesn't actually exist and is null; trying to load the contents of this IStorage results in an error.
+	 * 
+	 * To prevent this, try to locate the storage object ourselves from the
+	 * storageAccessor using the given storage object's name to ensure it exists.
+	 */
+	private static StorageTraversal getRemoteTraversal(IStorageProviderAccessor storageAccessor, IStorage givenStorage, DiffSide side, IProgressMonitor monitor) {
+		try {
+			if (givenStorage != null) {
+				var path = ResourceUtil.getAbsolutePath(givenStorage);
+				var file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+				var storageProvider = storageAccessor.getStorageProvider(file, side);
+				if (storageProvider != null) {
+					var foundStorage = storageProvider.getStorage(monitor);
+					if (foundStorage != null) {
+						return new StorageTraversal(Collections.singleton(foundStorage));
+					}
+				}
+			}
+		} catch (CoreException e) {
+			// returns an empty traversal in the event of a CoreException
+			e.printStackTrace();
+		} finally {
+			monitor.done();
+		}
+		return new StorageTraversal(Collections.emptySet());
+	}
+	
 }
