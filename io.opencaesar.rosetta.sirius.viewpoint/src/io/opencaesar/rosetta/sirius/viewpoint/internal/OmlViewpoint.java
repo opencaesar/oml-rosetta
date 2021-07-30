@@ -249,10 +249,15 @@ public final class OmlViewpoint {
 				.map(s -> s.getSpecializedTerm())
 				.collect(Collectors.toSet()));
 		// related terms
-		terms.addAll(vocabulary.getOwnedStatements().stream()
-				.filter(e -> e instanceof RelationEntity)
+		terms.addAll(
+				OmlRead
+				.getAllImportedOntologies(vocabulary, true).stream()
+				.filter(o -> o instanceof Vocabulary)
+				.map(v -> (Vocabulary)v)
+				.flatMap(v -> v.getOwnedStatements().stream())
+				.filter(t -> t instanceof RelationEntity)
 				.map(e -> (RelationEntity)e)
-				.flatMap(r -> Stream.of(r.getSource(), r.getTarget()))
+				.flatMap(r -> Stream.of(r, r.getSource(), r.getTarget()))
 				.collect(Collectors.toSet()));
 		// range restricted entities
 		terms.addAll(vocabulary.getOwnedStatements().stream()
