@@ -407,7 +407,7 @@ public final class OmlViewpoint {
 	}
 
     public static String getLabel(RelationRangeRestrictionAxiom axiom) {
-    	String q = (axiom.getKind() == RangeRestrictionKind.ALL) ? "∀ " : "∃ ";
+    	String q = (axiom.getKind() == RangeRestrictionKind.ALL) ? "\u2200" : "\u2203";
     	return q + getLabel(axiom.getOntology(), axiom.getRelation());
     }
 
