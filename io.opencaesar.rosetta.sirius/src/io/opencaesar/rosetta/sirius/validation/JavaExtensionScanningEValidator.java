@@ -159,8 +159,16 @@ public class JavaExtensionScanningEValidator implements EValidator {
 							invalidConstraintWarnings.add("Ignoring constraint " + getClass().getSimpleName() + "." + method.getName() + " because the EObject parameter has both @TypeIri and @AbbreviatedTypeIri annotations.");
 							continue findMethods;
 						} else if (typeIriAnnotation != null) {
+							if (!Instance.class.isAssignableFrom(parameter.getType())) {
+								invalidConstraintWarnings.add("Ignoring constraint " + getClass().getSimpleName() + "." + method.getName() + " becuse the parameter annotated with @TypeIri is not an Instance parameter");
+								continue findMethods;
+							}
 							objectPredicate = new TypeIriPredicate(parameter.getType(), typeIriAnnotation.value());
 						} else if (abbreviatedTypeIriAnnotation != null) {
+							if (!Instance.class.isAssignableFrom(parameter.getType())) {
+								invalidConstraintWarnings.add("Ignoring constraint " + getClass().getSimpleName() + "." + method.getName() + " becuse the parameter annotated with @AbbreviatedTypeIri is not an Instance parameter");
+								continue findMethods;
+							}
 							objectPredicate = new AbbreviatedTypeIriPredicate(parameter.getType(), abbreviatedTypeIriAnnotation.value());
 						} else {
 							objectPredicate = new IsInstancePredicate(parameter.getType());
@@ -172,7 +180,7 @@ public class JavaExtensionScanningEValidator implements EValidator {
 						}
 						hasContextParameter = true;
 					} else {
-						invalidConstraintWarnings.add("Ignoring constraint " + getClass().getSimpleName() + "." + method.getName() + " because the method accepts an unrecognized parameter.");
+						invalidConstraintWarnings.add("Ignoring constraint " + getClass().getSimpleName() + "." + method.getName() + " because the method accepts an unrecognized parameter " + parameter.getName() + ".");
 						continue findMethods;
 					}
 				}
@@ -292,14 +300,20 @@ public class JavaExtensionScanningEValidator implements EValidator {
 		private String typeIri;
 
 		public TypeIriPredicate(Class<?> javaType, String typeIri) {
+			if (!Instance.class.isAssignableFrom(javaType)) {
+				throw new IllegalArgumentException("Not an instance type: " + javaType);
+			}
 			this.javaType = javaType;
 			this.typeIri = typeIri;
 		}
 
 		@Override
 		public boolean test(EObject instance) {
-			var type = (Classifier) OmlRead.getMemberByIri((Instance)instance, typeIri);
-			return javaType.isInstance(instance) && instance instanceof Instance && OmlSearch.findIsTypeOf((Instance) instance, type);
+			if (javaType.isInstance(instance)) {
+				var type = OmlRead.getMemberByIri((Instance)instance, typeIri);
+				return type instanceof Classifier && OmlSearch.findIsKindOf((Instance) instance, (Classifier) type);
+			}
+			return false;
 		}
 
 		@Override
@@ -324,16 +338,20 @@ public class JavaExtensionScanningEValidator implements EValidator {
 		private String abbreviatedTypeIri;
 
 		public AbbreviatedTypeIriPredicate(Class<?> javaType, String abbreviatedTypeIri) {
+			if (!Instance.class.isAssignableFrom(javaType)) {
+				throw new IllegalArgumentException("Not an instance type: " + javaType);
+			}
 			this.javaType = javaType;
 			this.abbreviatedTypeIri = abbreviatedTypeIri;
 		}
 
 		@Override
 		public boolean test(EObject instance) {
-			var type = (Classifier) OmlRead.getMemberByAbbreviatedIri((Instance)instance, abbreviatedTypeIri);
-			return javaType.isInstance(instance)
-					&& instance instanceof Instance
-					&& OmlSearch.findIsTypeOf((Instance) instance, type);
+			if (javaType.isInstance(instance)) {
+				var type = OmlRead.getMemberByAbbreviatedIri((Instance)instance, abbreviatedTypeIri);
+				return type instanceof Classifier && OmlSearch.findIsKindOf((Instance) instance, (Classifier) type);
+			}
+			return false;
 		}
 
 		@Override
