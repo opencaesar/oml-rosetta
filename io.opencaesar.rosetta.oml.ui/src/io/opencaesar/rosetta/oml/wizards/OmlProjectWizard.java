@@ -72,7 +72,6 @@ import org.eclipse.xtext.ui.XtextProjectHelper;
 import io.opencaesar.oml.OmlFactory;
 import io.opencaesar.oml.OmlPackage;
 import io.opencaesar.oml.Ontology;
-import io.opencaesar.oml.SeparatorKind;
 import io.opencaesar.rosetta.oml.ui.OmlUiPlugin;
 import io.opencaesar.rosetta.oml.ui.project.OmlProject;
 import io.opencaesar.rosetta.oml.ui.project.OmlProjectBuilder;
@@ -156,7 +155,7 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 			}
 			
 			IFolder bundleFolder = omlFolder;
-			List<String> bundlePathSegments = getPathSegments(setupPage.bundleIri);
+			List<String> bundlePathSegments = getPathSegments(setupPage.bundleNamespace);
 			List<String> bundleFolderSegments = bundlePathSegments.subList(0, bundlePathSegments.size()-1);
 			String bundleName = bundlePathSegments.get(bundlePathSegments.size()-1);
 			for (String pathSegment : bundleFolderSegments) {
@@ -175,7 +174,7 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 			templates.uriStartStringsToRewritePrefixes.put(setupPage.baseIri + (setupPage.baseIri.endsWith("/") ? "" : "/"), "src/oml/" + basePathSegments.stream().collect(Collectors.joining("/")) + "/");
 			templates.uriStartStringsToRewritePrefixes.put("http://", "build/oml/");
 			templates.baseIri = setupPage.baseIri;
-			templates.bundleIri = setupPage.bundleIri;
+			templates.bundleIri = setupPage.bundleNamespace;
 
 			if (setupPage.configureGradle) {
 				templates.gradleProjectName = newProject.getName();
@@ -198,9 +197,8 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 			// Create bundle
 			
 			Ontology bundle = (Ontology) OmlFactory.eINSTANCE.create(setupPage.bundleType);
-			bundle.setIri(setupPage.bundleIri);
+			bundle.setNamespace(setupPage.bundleNamespace);
 			bundle.setPrefix(bundleName);
-			bundle.setSeparator(SeparatorKind.HASH);
 						
 			IFile bundleFile = bundleFolder.getFile(bundleName + ".oml");
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -266,9 +264,9 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 		
 		private String baseIri = "http://example.com/project";
 		
-		private String bundleIri = baseIri + "/bundle";
+		private String bundleNamespace = baseIri + "/bundle#";
 		
-		private Text bundleIriInput;
+		private Text bundleNamespaceInput;
 		
 		private boolean configureGradle = true;
 		
@@ -305,14 +303,14 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 			catalogGroup.setText("Catalog");
 			catalogGroup.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
 			catalogGroup.setLayout(new GridLayout(1, true));
-			new Label(catalogGroup, SWT.NONE).setText("Base URI");
+			new Label(catalogGroup, SWT.NONE).setText("Base IRI");
 			Text baseIriInput = new Text(catalogGroup, SWT.BORDER);
 			baseIriInput.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
 			baseIriInput.setText(baseIri);
 			baseIriInput.addModifyListener(e -> {
 				String newBaseIri = baseIriInput.getText();
-				if (bundleIri.startsWith(baseIri)) {
-					bundleIriInput.setText(bundleIri.replaceFirst(Pattern.quote(baseIri), newBaseIri));
+				if (bundleNamespace.startsWith(baseIri)) {
+					bundleNamespaceInput.setText(bundleNamespace.replaceFirst(Pattern.quote(baseIri), newBaseIri));
 				}
 				baseIri = newBaseIri;
 				if (!gradleGroupIdModified) {
@@ -352,12 +350,12 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 				if (vocabularyBundleButton.getSelection()) bundleType = OmlPackage.Literals.VOCABULARY_BUNDLE;
 			});
 			
-			new Label(bundleGroup, SWT.NONE).setText("Bundle IRI");
-			bundleIriInput = new Text(bundleGroup, SWT.BORDER);
-			bundleIriInput.setText(baseIri + "/bundle");
-			bundleIriInput.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
-			bundleIriInput.addModifyListener(e -> {
-				bundleIri = bundleIriInput.getText();
+			new Label(bundleGroup, SWT.NONE).setText("Bundle Namespace");
+			bundleNamespaceInput = new Text(bundleGroup, SWT.BORDER);
+			bundleNamespaceInput.setText(bundleNamespace);
+			bundleNamespaceInput.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true, false));
+			bundleNamespaceInput.addModifyListener(e -> {
+				bundleNamespace = bundleNamespaceInput.getText();
 				validateInputs();
 			});
 			
@@ -448,7 +446,9 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 				if (baseUri.getHost() == null || baseUri.getHost().trim().isEmpty()) {
 					return false;
 				}
-				if (bundleIri == null || !bundleIri.startsWith(baseIri.endsWith("/") ? baseIri : baseIri + "/")) {
+				if (bundleNamespace == null || 
+					!bundleNamespace.startsWith(baseIri.endsWith("/") ? baseIri : baseIri + "/") ||
+					!(bundleNamespace.endsWith("/") || bundleNamespace.endsWith("#"))) {
 					return false;
 				}
 				if (configureGradle) {

@@ -58,7 +58,6 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import io.opencaesar.oml.OmlFactory;
 import io.opencaesar.oml.OmlPackage;
 import io.opencaesar.oml.Ontology;
-import io.opencaesar.oml.SeparatorKind;
 import io.opencaesar.oml.util.OmlXMIResource;
 import io.opencaesar.rosetta.oml.ui.OmlUiPlugin;
 
@@ -72,6 +71,7 @@ import io.opencaesar.rosetta.oml.ui.OmlUiPlugin;
 public class OmlOntologyWizard extends Wizard implements INewWizard {
 	
 	private static final String OML_TREE_EDITOR = "io.opencaesar.oml.presentation.OmlEditorID";
+	private static final String OML_EDITOR = "io.opencaesar.oml.dsl.Oml";
 	
 	private IWorkbench workbench;
 	
@@ -81,7 +81,6 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 	private EClass ontologyKind;
 	private String ontologyNamespace;
 	private String ontologyPrefix;
-	private SeparatorKind ontologySeparator;
 	
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
@@ -112,9 +111,9 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 			filePage.setContainerFullPath(folderPath);
 		}
 		
-		ontologyNamespace += "newOntology";
+		ontologyNamespace += "newOntology#";
 		
-		setWindowTitle("Create OML Ontology");
+		setWindowTitle("Create OML Model");
 	}
 	
 	@Override
@@ -134,8 +133,7 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			
 			Ontology ontology = (Ontology) OmlFactory.eINSTANCE.create(ontologyKind);
-			ontology.setIri(ontologyNamespace);
-			ontology.setSeparator(ontologySeparator);
+			ontology.setNamespace(ontologyNamespace);
 			ontology.setPrefix(ontologyPrefix);
 			if (filePage.getFileName().endsWith(".oml")) {
 				XtextResourceSet resourceSet = new XtextResourceSet();
@@ -150,7 +148,11 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 			}
 			file.create(new ByteArrayInputStream(baos.toByteArray()), true, new NullProgressMonitor());
 			BasicNewResourceWizard.selectAndReveal(file, workbench.getActiveWorkbenchWindow());
-			IDE.openEditor(workbench.getActiveWorkbenchWindow().getActivePage(), file, OML_TREE_EDITOR);
+			if (filePage.getFileName().endsWith(".oml")) {
+				IDE.openEditor(workbench.getActiveWorkbenchWindow().getActivePage(), file, OML_EDITOR);
+			} else {
+				IDE.openEditor(workbench.getActiveWorkbenchWindow().getActivePage(), file, OML_TREE_EDITOR);
+			}
 			return true;
 		} catch (IOException | CoreException e) {
 			throw new RuntimeException(e.getMessage(), e);
@@ -172,11 +174,10 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 		private Text ontologyPrefixInput;
 		
 		protected OntologySetupPage() {
-			super("Ontology Setup");
-			ontologySeparator = SeparatorKind.HASH;
+			super("Model Setup");
 			setPageComplete(false);
-			setTitle("Ontology Setup");
-			setDescription("Specify an ontology kind, namespace, prefix, and separator");
+			setTitle("Model Setup");
+			setDescription("Specify an ontology kind, namespace, and prefix");
 			setImageDescriptor(OmlUiPlugin.OML_LOGO);
 		}
 
@@ -188,7 +189,6 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 			addOntologyKindSelector(body);
 			addNamespaceInput(body);
 			addPrefixInput(body);
-			addSeparatorInput(body);
 			
 			setControl(body);
 		}
@@ -257,34 +257,13 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 			}
 		}
 		
-		private void addSeparatorInput(Composite body) {
-			new Label(body, SWT.NONE).setText("Separator");
-			Composite row = new Composite(body, SWT.NONE);
-			row.setLayout(new GridLayout(2, false));
-			final Button hash = new Button(row, SWT.RADIO);
-			hash.setText("#");
-			hash.setSelection(true);
-			final Button slash = new Button(row, SWT.RADIO);
-			slash.setText("/");
-			SelectionListener selectionListener = new SelectionListener() {
-				public void widgetDefaultSelected(SelectionEvent e) {
-					widgetSelected(e);
-				}
-				public void widgetSelected(SelectionEvent e) {
-					if (e.getSource() == slash) {
-						ontologySeparator = SeparatorKind.SLASH;
-					} else {
-						ontologySeparator = SeparatorKind.HASH;
-					}
-					onPageUpdated();
-				}
-			};
-			hash.addSelectionListener(selectionListener);
-			slash.addSelectionListener(selectionListener);
-		}
-
 		private void onPageUpdated() {
 			try {
+				if (!(ontologyNamespace.endsWith("/") || ontologyNamespace.endsWith("#"))) {
+					// Ensure an namespace separator is set
+					setPageComplete(false);
+					return;
+				}
 				java.net.URI parsed = new java.net.URI(ontologyNamespace);
 				if (parsed.getPath() != null) {
 					String[] pathSegments = parsed.getPath().split("/");
@@ -298,7 +277,7 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 						filePage.setFileName(fileName);
 						defaultPrefix = fileName.substring(0, fileName.indexOf("."));
 					} else {
-						if (ontologyKind == OmlPackage.Literals.DESCRIPTION) {
+						if (ontologyKind == OmlPackage.Literals.DESCRIPTION || ontologyKind == OmlPackage.Literals.DESCRIPTION_BUNDLE) {
 							filePage.setFileName(fileName + ".omlxmi");
 						} else {
 							filePage.setFileName(fileName + ".oml");

@@ -221,7 +221,7 @@ public class OmlMatchEngine extends DefaultMatchEngine {
 
 		// Objects identified by things they reference
 		if (eObject instanceof Import) {
-			return "Import " + escapeForIdString(((Import)eObject).getUri());
+			return "Import " + escapeForIdString(((Import)eObject).getIri());
 		}
 		if (eObject instanceof Annotation) {
 			return baseId + getIdInScope(Annotation.class, eObject, Annotation::getProperty);

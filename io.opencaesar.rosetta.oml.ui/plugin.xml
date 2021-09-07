@@ -61,7 +61,7 @@
             hasPages="true"
             icon="icons/oml.png"
             id="io.opencaesar.rosetta.oml.ui.wizards.OmlOntologyWizard"
-            name="OML Ontology"
+            name="OML Model"
             project="false">
       </wizard>
    </extension>
