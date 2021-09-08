@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
 
+   <!-- Commented for now to assess out of the box behavior
    <extension
          point="org.eclipse.emf.compare.rcp.matchEngine">
       <engineFactory
@@ -18,6 +19,7 @@
             ranking="42">
       </resolver>
    </extension>
+   -->
    <extension
          id="nature"
          name="OML Project"
