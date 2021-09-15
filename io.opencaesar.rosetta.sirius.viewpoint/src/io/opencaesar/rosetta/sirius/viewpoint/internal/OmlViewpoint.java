@@ -29,7 +29,13 @@ import java.util.stream.Stream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -40,7 +46,11 @@ import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.XtextResource;
 
+import io.opencaesar.oml.AnnotationProperty;
 import io.opencaesar.oml.Classifier;
+import io.opencaesar.oml.Concept;
+import io.opencaesar.oml.ConceptInstance;
+import io.opencaesar.oml.ConceptTypeAssertion;
 import io.opencaesar.oml.Description;
 import io.opencaesar.oml.DifferentFromPredicate;
 import io.opencaesar.oml.Element;
@@ -56,6 +66,7 @@ import io.opencaesar.oml.NamedInstanceReference;
 import io.opencaesar.oml.Ontology;
 import io.opencaesar.oml.Predicate;
 import io.opencaesar.oml.PropertyValueAssertion;
+import io.opencaesar.oml.QuotedLiteral;
 import io.opencaesar.oml.RangeRestrictionKind;
 import io.opencaesar.oml.RelationCardinalityRestrictionAxiom;
 import io.opencaesar.oml.RelationEntity;
@@ -81,21 +92,23 @@ import io.opencaesar.oml.util.OmlSearch;
 /**
  * Services used by the OML viewpoint
  * 
- * NOTE: This class should not be treated as API. It is only meant to be used by this project 
+ * NOTE: This class should not be treated as API. It is only meant to be used by
+ * this project
  * 
  * @author elaasar
  */
 public final class OmlViewpoint {
-    
-	//-------
+
+	// -------
 	// EDITOR
-	//-------
-	
+	// -------
+
 	private static final String OML_EDITOR_ID = "io.opencaesar.oml.dsl.Oml";
 
 	/**
-	 * Opens the Oml editor for the given Oml element and highlights it in the editor
-	 *  
+	 * Opens the Oml editor for the given Oml element and highlights it in the
+	 * editor
+	 * 
 	 * @param element
 	 * @return
 	 */
@@ -125,26 +138,20 @@ public final class OmlViewpoint {
 		return element;
 	}
 
-    public static String getTypes(Ontology ontology, NamedInstance instance) {
-		var types = OmlSearch.findTypeAssertions(instance).stream()
-			.map(a -> getLabel(ontology, a.getType()))
-			.collect(Collectors.toList());
+	public static String getTypes(Ontology ontology, NamedInstance instance) {
+		var types = OmlSearch.findTypeAssertions(instance).stream().map(a -> getLabel(ontology, a.getType()))
+				.collect(Collectors.toList());
 		return String.join(", ", types);
 	}
 
 	public static Set<LinkAssertion> getVisualizedLinks(Description description) {
 		var links = new HashSet<LinkAssertion>();
 		// member links
-		links.addAll(description.getOwnedStatements().stream()
-				.filter(s -> s instanceof NamedInstance)
-				.map(s -> (NamedInstance)s)
-				.flatMap(ci -> ci.getOwnedLinks().stream())
-				.collect(Collectors.toSet()));
+		links.addAll(description.getOwnedStatements().stream().filter(s -> s instanceof NamedInstance)
+				.map(s -> (NamedInstance) s).flatMap(ci -> ci.getOwnedLinks().stream()).collect(Collectors.toSet()));
 		// reference links
-		links.addAll(description.getOwnedStatements().stream()
-				.filter(s -> s instanceof NamedInstanceReference)
-				.map(s -> (NamedInstanceReference)s)
-				.flatMap(ci -> ci.getOwnedLinks().stream())
+		links.addAll(description.getOwnedStatements().stream().filter(s -> s instanceof NamedInstanceReference)
+				.map(s -> (NamedInstanceReference) s).flatMap(ci -> ci.getOwnedLinks().stream())
 				.collect(Collectors.toSet()));
 		return links;
 	}
@@ -152,203 +159,140 @@ public final class OmlViewpoint {
 	public static Set<NamedInstance> getVisualizedNamedInstances(Description description) {
 		var instances = new LinkedHashSet<NamedInstance>();
 		// member instances
-		instances.addAll(description.getOwnedStatements().stream()
-				.filter(s -> s instanceof NamedInstance)
-				.map(s -> (NamedInstance)s)
-				.collect(Collectors.toSet()));
+		instances.addAll(description.getOwnedStatements().stream().filter(s -> s instanceof NamedInstance)
+				.map(s -> (NamedInstance) s).collect(Collectors.toSet()));
 		// referenced instances
-		instances.addAll(description.getOwnedStatements().stream()
-				.filter(s -> s instanceof NamedInstanceReference)
-				.map(s -> (NamedInstanceReference) s)
-				.map(r -> (NamedInstance) OmlRead.resolve(r))
+		instances.addAll(description.getOwnedStatements().stream().filter(s -> s instanceof NamedInstanceReference)
+				.map(s -> (NamedInstanceReference) s).map(r -> (NamedInstance) OmlRead.resolve(r))
 				.collect(Collectors.toSet()));
 		// related instances
-		instances.addAll(description.getOwnedStatements().stream()
-				.filter(e -> e instanceof RelationInstance)
-				.map(e -> (RelationInstance)e)
+		instances.addAll(description.getOwnedStatements().stream().filter(e -> e instanceof RelationInstance)
+				.map(e -> (RelationInstance) e)
 				.flatMap(i -> Stream.concat(i.getSources().stream(), i.getTargets().stream()))
 				.collect(Collectors.toSet()));
 		// linked instances
-		instances.addAll(description.getOwnedStatements().stream()
-				.filter(s -> s instanceof NamedInstance)
-				.map(s -> (NamedInstance)s)
-				.flatMap(i -> i.getOwnedLinks().stream())
-				.map(l -> l.getTarget())
+		instances.addAll(description.getOwnedStatements().stream().filter(s -> s instanceof NamedInstance)
+				.map(s -> (NamedInstance) s).flatMap(i -> i.getOwnedLinks().stream()).map(l -> l.getTarget())
 				.flatMap(i -> {
 					var list = new ArrayList<NamedInstance>();
 					list.add(i);
 					if (i instanceof RelationEntity) {
-						list.addAll(((RelationInstance)i).getSources());
-						list.addAll(((RelationInstance)i).getTargets());
+						list.addAll(((RelationInstance) i).getSources());
+						list.addAll(((RelationInstance) i).getTargets());
 					}
 					return list.stream();
 				}).collect(Collectors.toSet()));
 		// linked instances
-		instances.addAll(description.getOwnedStatements().stream()
-				.filter(s -> s instanceof NamedInstanceReference)
-				.map(s -> (NamedInstanceReference) s)
-				.flatMap(i -> i.getOwnedLinks().stream())
-				.map(l -> l.getTarget())
+		instances.addAll(description.getOwnedStatements().stream().filter(s -> s instanceof NamedInstanceReference)
+				.map(s -> (NamedInstanceReference) s).flatMap(i -> i.getOwnedLinks().stream()).map(l -> l.getTarget())
 				.flatMap(i -> {
 					var list = new ArrayList<NamedInstance>();
 					list.add(i);
 					if (i instanceof RelationEntity) {
-						list.addAll(((RelationInstance)i).getSources());
-						list.addAll(((RelationInstance)i).getTargets());
+						list.addAll(((RelationInstance) i).getSources());
+						list.addAll(((RelationInstance) i).getTargets());
 					}
 					return list.stream();
 				}).collect(Collectors.toSet()));
 		return instances;
 	}
 
-	public static List<PropertyValueAssertion> getVisualizedPropertyValues(Description description, NamedInstance instance) {
+	public static List<PropertyValueAssertion> getVisualizedPropertyValues(Description description,
+			NamedInstance instance) {
 		var assertions = new ArrayList<PropertyValueAssertion>();
 		// scalar property values on members
-		assertions.addAll(description.getOwnedStatements().stream()
-			.filter(s -> s == instance)
-			.map(s -> (NamedInstance)s)
-			.flatMap(i -> i.getOwnedPropertyValues().stream())
-			.filter(a -> a instanceof PropertyValueAssertion)
-			.map(a -> (PropertyValueAssertion)a)
-			.collect(Collectors.toList()));
+		assertions.addAll(description.getOwnedStatements().stream().filter(s -> s == instance)
+				.map(s -> (NamedInstance) s).flatMap(i -> i.getOwnedPropertyValues().stream())
+				.filter(a -> a instanceof PropertyValueAssertion).map(a -> (PropertyValueAssertion) a)
+				.collect(Collectors.toList()));
 		// scalar property values on references
-		assertions.addAll(description.getOwnedStatements().stream()
-			.filter(s -> s instanceof NamedInstanceReference)
-			.map(s -> (NamedInstanceReference)s)
-			.filter(r -> OmlRead.resolve(r) == instance)
-			.flatMap(i -> i.getOwnedPropertyValues().stream())
-			.filter(a -> a instanceof PropertyValueAssertion)
-			.map(a -> (PropertyValueAssertion)a)
-			.collect(Collectors.toList()));
+		assertions.addAll(description.getOwnedStatements().stream().filter(s -> s instanceof NamedInstanceReference)
+				.map(s -> (NamedInstanceReference) s).filter(r -> OmlRead.resolve(r) == instance)
+				.flatMap(i -> i.getOwnedPropertyValues().stream()).filter(a -> a instanceof PropertyValueAssertion)
+				.map(a -> (PropertyValueAssertion) a).collect(Collectors.toList()));
 		return assertions;
 	}
 
 	public static Set<SpecializableTerm> getVisualizedTerms(Vocabulary vocabulary) {
 		var terms = new LinkedHashSet<SpecializableTerm>();
 		// direct terms
-		terms.addAll(vocabulary.getOwnedStatements().stream()
-				.filter(s -> s instanceof SpecializableTerm)
-				.map(s -> (SpecializableTerm)s)
-				.collect(Collectors.toSet()));
+		terms.addAll(vocabulary.getOwnedStatements().stream().filter(s -> s instanceof SpecializableTerm)
+				.map(s -> (SpecializableTerm) s).collect(Collectors.toSet()));
 		// referenced terms
-		terms.addAll(vocabulary.getOwnedStatements().stream()
-				.filter(s -> s instanceof SpecializableTermReference)
-				.map(s -> (SpecializableTerm) OmlRead.resolve((SpecializableTermReference)s))
+		terms.addAll(vocabulary.getOwnedStatements().stream().filter(s -> s instanceof SpecializableTermReference)
+				.map(s -> (SpecializableTerm) OmlRead.resolve((SpecializableTermReference) s))
 				.collect(Collectors.toSet()));
 		// specialized terms
-		terms.addAll(vocabulary.getOwnedStatements().stream()
-				.filter(s -> s instanceof SpecializableTerm)
-				.map(s -> (SpecializableTerm)s)
-				.flatMap(e -> e.getOwnedSpecializations().stream())
-				.map(s -> s.getSpecializedTerm())
-				.collect(Collectors.toSet()));
-		terms.addAll(vocabulary.getOwnedStatements().stream()
-				.filter(s -> s instanceof SpecializableTermReference)
-				.map(s -> (SpecializableTermReference)s)
-				.flatMap(e -> e.getOwnedSpecializations().stream())
-				.map(s -> s.getSpecializedTerm())
-				.collect(Collectors.toSet()));
+		terms.addAll(vocabulary.getOwnedStatements().stream().filter(s -> s instanceof SpecializableTerm)
+				.map(s -> (SpecializableTerm) s).flatMap(e -> e.getOwnedSpecializations().stream())
+				.map(s -> s.getSpecializedTerm()).collect(Collectors.toSet()));
+		terms.addAll(vocabulary.getOwnedStatements().stream().filter(s -> s instanceof SpecializableTermReference)
+				.map(s -> (SpecializableTermReference) s).flatMap(e -> e.getOwnedSpecializations().stream())
+				.map(s -> s.getSpecializedTerm()).collect(Collectors.toSet()));
 		// related terms
-		terms.addAll(
-				OmlRead
-				.getAllImportedOntologies(vocabulary, true).stream()
-				.filter(o -> o instanceof Vocabulary)
-				.map(v -> (Vocabulary)v)
-				.flatMap(v -> v.getOwnedStatements().stream())
-				.filter(t -> t instanceof RelationEntity)
-				.map(e -> (RelationEntity)e)
-				.flatMap(r -> Stream.of(r, r.getSource(), r.getTarget()))
-				.collect(Collectors.toSet()));
+		terms.addAll(OmlRead.getAllImportedOntologies(vocabulary, true).stream().filter(o -> o instanceof Vocabulary)
+				.map(v -> (Vocabulary) v).flatMap(v -> v.getOwnedStatements().stream())
+				.filter(t -> t instanceof RelationEntity).map(e -> (RelationEntity) e)
+				.flatMap(r -> Stream.of(r, r.getSource(), r.getTarget())).collect(Collectors.toSet()));
 		// range restricted entities
-		terms.addAll(vocabulary.getOwnedStatements().stream()
-				.filter(s -> s instanceof Entity)
-				.map(s -> (Entity)s)
+		terms.addAll(vocabulary.getOwnedStatements().stream().filter(s -> s instanceof Entity).map(s -> (Entity) s)
 				.flatMap(e -> e.getOwnedRelationRestrictions().stream())
 				.filter(r -> r instanceof RelationRangeRestrictionAxiom)
-				.map(r -> ((RelationRangeRestrictionAxiom)r).getRange())
-				.collect(Collectors.toSet()));
-		terms.addAll(vocabulary.getOwnedStatements().stream()
-				.filter(s -> s instanceof EntityReference)
-				.map(s -> (EntityReference)s)
-				.flatMap(e -> e.getOwnedRelationRestrictions().stream())
+				.map(r -> ((RelationRangeRestrictionAxiom) r).getRange()).collect(Collectors.toSet()));
+		terms.addAll(vocabulary.getOwnedStatements().stream().filter(s -> s instanceof EntityReference)
+				.map(s -> (EntityReference) s).flatMap(e -> e.getOwnedRelationRestrictions().stream())
 				.filter(r -> r instanceof RelationRangeRestrictionAxiom)
-				.map(r -> ((RelationRangeRestrictionAxiom)r).getRange())
-				.collect(Collectors.toSet()));
+				.map(r -> ((RelationRangeRestrictionAxiom) r).getRange()).collect(Collectors.toSet()));
 		// cardinality range restricted entities
-		terms.addAll(vocabulary.getOwnedStatements().stream()
-				.filter(s -> s instanceof Entity)
-				.map(s -> (Entity)s)
+		terms.addAll(vocabulary.getOwnedStatements().stream().filter(s -> s instanceof Entity).map(s -> (Entity) s)
 				.flatMap(e -> e.getOwnedRelationRestrictions().stream())
 				.filter(r -> r instanceof RelationCardinalityRestrictionAxiom)
-				.map(r -> ((RelationCardinalityRestrictionAxiom)r).getRange())
-				.collect(Collectors.toSet()));
-		terms.addAll(vocabulary.getOwnedStatements().stream()
-				.filter(s -> s instanceof EntityReference)
-				.map(s -> (EntityReference)s)
-				.flatMap(e -> e.getOwnedRelationRestrictions().stream())
+				.map(r -> ((RelationCardinalityRestrictionAxiom) r).getRange()).collect(Collectors.toSet()));
+		terms.addAll(vocabulary.getOwnedStatements().stream().filter(s -> s instanceof EntityReference)
+				.map(s -> (EntityReference) s).flatMap(e -> e.getOwnedRelationRestrictions().stream())
 				.filter(r -> r instanceof RelationCardinalityRestrictionAxiom)
-				.map(r -> ((RelationCardinalityRestrictionAxiom)r).getRange())
-				.collect(Collectors.toSet()));
+				.map(r -> ((RelationCardinalityRestrictionAxiom) r).getRange()).collect(Collectors.toSet()));
 		return terms;
 	}
 
 	public static Set<NamedInstance> getVisualizedNamedInstances(Vocabulary vocabulary) {
 		var instances = new LinkedHashSet<NamedInstance>();
 		// on direct entities
-		instances.addAll(vocabulary.getOwnedStatements().stream()
-				.filter(s -> s instanceof Entity)
-				.map(s -> (Entity)s)
+		instances.addAll(vocabulary.getOwnedStatements().stream().filter(s -> s instanceof Entity).map(s -> (Entity) s)
 				.flatMap(e -> e.getOwnedRelationRestrictions().stream())
 				.filter(r -> r instanceof RelationTargetRestrictionAxiom)
-				.map(r -> ((RelationTargetRestrictionAxiom)r).getTarget())
-				.collect(Collectors.toSet()));
+				.map(r -> ((RelationTargetRestrictionAxiom) r).getTarget()).collect(Collectors.toSet()));
 		// on referenced entities
-		instances.addAll(vocabulary.getOwnedStatements().stream()
-				.filter(s -> s instanceof EntityReference)
-				.map(s -> (EntityReference)s)
-				.flatMap(e -> e.getOwnedRelationRestrictions().stream())
+		instances.addAll(vocabulary.getOwnedStatements().stream().filter(s -> s instanceof EntityReference)
+				.map(s -> (EntityReference) s).flatMap(e -> e.getOwnedRelationRestrictions().stream())
 				.filter(r -> r instanceof RelationTargetRestrictionAxiom)
-				.map(r -> ((RelationTargetRestrictionAxiom)r).getTarget())
-				.collect(Collectors.toSet()));
+				.map(r -> ((RelationTargetRestrictionAxiom) r).getTarget()).collect(Collectors.toSet()));
 		return instances;
 	}
-	
+
 	public static List<RelationRestrictionAxiom> getVisualizedRestrictions(Vocabulary vocabulary) {
 		var restrictions = new ArrayList<RelationRestrictionAxiom>();
 		// on direct entities
-		restrictions.addAll(vocabulary.getOwnedStatements().stream()
-				.filter(s -> s instanceof Entity)
-				.map(s -> (Entity)s)
-				.flatMap(e -> e.getOwnedRelationRestrictions().stream())
-				.collect(Collectors.toSet()));
+		restrictions
+				.addAll(vocabulary.getOwnedStatements().stream().filter(s -> s instanceof Entity).map(s -> (Entity) s)
+						.flatMap(e -> e.getOwnedRelationRestrictions().stream()).collect(Collectors.toSet()));
 		// on referenced entities
-		restrictions.addAll(vocabulary.getOwnedStatements().stream()
-				.filter(s -> s instanceof EntityReference)
-				.map(s -> (EntityReference) s)
-				.flatMap(e -> e.getOwnedRelationRestrictions().stream())
+		restrictions.addAll(vocabulary.getOwnedStatements().stream().filter(s -> s instanceof EntityReference)
+				.map(s -> (EntityReference) s).flatMap(e -> e.getOwnedRelationRestrictions().stream())
 				.collect(Collectors.toSet()));
 		return restrictions;
 	}
 
 	public static Set<SemanticProperty> getVisualizedProperties(Vocabulary vocabulary, Classifier classifier) {
 		var properties = new LinkedHashSet<SemanticProperty>();
-		properties.addAll(vocabulary.getOwnedStatements().stream()
-			.filter(s -> s instanceof SemanticProperty)
-			.map(s -> (SemanticProperty)s)
-			.filter(p -> p.getDomain() == classifier)
-			.collect(Collectors.toList()));
-		properties.addAll(vocabulary.getOwnedStatements().stream()
-			.filter(s -> s instanceof ScalarPropertyReference)
-			.map(s -> (ScalarPropertyReference) s)
-			.map(r -> (ScalarProperty) OmlRead.resolve(r))
-			.filter(p -> p.getDomain() == classifier)
-			.collect(Collectors.toList()));
-		properties.addAll(vocabulary.getOwnedStatements().stream()
-				.filter(s -> s instanceof StructuredPropertyReference)
-				.map(s -> (StructuredPropertyReference) s)
-				.map(r -> (StructuredProperty) OmlRead.resolve(r))
-				.filter(p -> p.getDomain() == classifier)
-				.collect(Collectors.toList()));
+		properties.addAll(vocabulary.getOwnedStatements().stream().filter(s -> s instanceof SemanticProperty)
+				.map(s -> (SemanticProperty) s).filter(p -> p.getDomain() == classifier).collect(Collectors.toList()));
+		properties.addAll(vocabulary.getOwnedStatements().stream().filter(s -> s instanceof ScalarPropertyReference)
+				.map(s -> (ScalarPropertyReference) s).map(r -> (ScalarProperty) OmlRead.resolve(r))
+				.filter(p -> p.getDomain() == classifier).collect(Collectors.toList()));
+		properties.addAll(vocabulary.getOwnedStatements().stream().filter(s -> s instanceof StructuredPropertyReference)
+				.map(s -> (StructuredPropertyReference) s).map(r -> (StructuredProperty) OmlRead.resolve(r))
+				.filter(p -> p.getDomain() == classifier).collect(Collectors.toList()));
 		return properties;
 	}
 
@@ -359,7 +303,7 @@ public final class OmlViewpoint {
 	public static String getLabel(Ontology ontology, Member member) {
 		return OmlRead.getAbbreviatedIriIn(member, ontology);
 	}
-	
+
 	public static String getLabel(Ontology ontology, RelationEntity entity) {
 		var forward = entity.getForwardRelation();
 		if (forward != null) {
@@ -370,72 +314,230 @@ public final class OmlViewpoint {
 	}
 
 	public static String getLabel(Ontology ontology, NamedInstance instance) {
-		return OmlRead.getAbbreviatedIriIn(instance, ontology) + " : "+getTypes(ontology, instance);
+		return OmlRead.getAbbreviatedIriIn(instance, ontology) + " : " + getTypes(ontology, instance);
 	}
 
 	public static String getLabel(Ontology ontology, ScalarProperty property) {
-		return OmlRead.getAbbreviatedIriIn(property, ontology)+" : "+getLabel(ontology, property.getRange())+(property.isFunctional()? " [0..1]": "");
+		return OmlRead.getAbbreviatedIriIn(property, ontology) + " : " + getLabel(ontology, property.getRange())
+				+ (property.isFunctional() ? " [0..1]" : "");
 	}
 
 	public static String getLabel(Ontology ontology, Predicate predicate) {
 		if (predicate instanceof TypePredicate)
-			return getLabel(ontology, (TypePredicate)predicate);
+			return getLabel(ontology, (TypePredicate) predicate);
 		if (predicate instanceof RelationEntityPredicate)
-			return getLabel(ontology, (RelationEntityPredicate)predicate);
+			return getLabel(ontology, (RelationEntityPredicate) predicate);
 		if (predicate instanceof FeaturePredicate)
-			return getLabel(ontology, (FeaturePredicate)predicate);
+			return getLabel(ontology, (FeaturePredicate) predicate);
 		if (predicate instanceof SameAsPredicate)
-			return getLabel(ontology, (SameAsPredicate)predicate);
+			return getLabel(ontology, (SameAsPredicate) predicate);
 		if (predicate instanceof DifferentFromPredicate)
-			return getLabel(ontology, (DifferentFromPredicate)predicate);
+			return getLabel(ontology, (DifferentFromPredicate) predicate);
 		return "";
 	}
 
 	public static String getLabel(Ontology ontology, TypePredicate predicate) {
-		return getLabel(ontology, predicate.getType())+"("+predicate.getVariable()+")";
+		return getLabel(ontology, predicate.getType()) + "(" + predicate.getVariable() + ")";
 	}
-	
+
 	public static String getLabel(Ontology ontology, RelationEntityPredicate predicate) {
-		return getLabel(ontology, predicate.getEntity())+"("+predicate.getVariable1()+", "+predicate.getEntityVariable()+ ", "+predicate.getVariable2()+")";
+		return getLabel(ontology, predicate.getEntity()) + "(" + predicate.getVariable1() + ", "
+				+ predicate.getEntityVariable() + ", " + predicate.getVariable2() + ")";
 	}
 
 	public static String getLabel(Ontology ontology, FeaturePredicate predicate) {
-		return getLabel(ontology, predicate.getFeature())+"("+predicate.getVariable1()+", "+predicate.getVariable2()+")";
+		return getLabel(ontology, predicate.getFeature()) + "(" + predicate.getVariable1() + ", "
+				+ predicate.getVariable2() + ")";
 	}
 
 	public static String getLabel(Ontology ontology, SameAsPredicate predicate) {
-		return "SameAs("+predicate.getVariable1()+", "+predicate.getVariable2()+")";
+		return "SameAs(" + predicate.getVariable1() + ", " + predicate.getVariable2() + ")";
 	}
 
 	public static String getLabel(Ontology ontology, DifferentFromPredicate predicate) {
-		return "DifferentFrom("+predicate.getVariable1()+", "+predicate.getVariable2()+")";
+		return "DifferentFrom(" + predicate.getVariable1() + ", " + predicate.getVariable2() + ")";
 	}
 
-    public static String getLabel(RelationRangeRestrictionAxiom axiom) {
-    	String q = (axiom.getKind() == RangeRestrictionKind.ALL) ? "\u2200" : "\u2203";
-    	return q + getLabel(axiom.getOntology(), axiom.getRelation());
-    }
+	public static String getLabel(RelationRangeRestrictionAxiom axiom) {
+		String q = (axiom.getKind() == RangeRestrictionKind.ALL) ? "\u2200" : "\u2203";
+		return q + getLabel(axiom.getOntology(), axiom.getRelation());
+	}
 
-    public static String getLabel(RelationCardinalityRestrictionAxiom axiom) {
-    	return getLabel(axiom.getOntology(), axiom.getRelation());
-    }
+	public static String getLabel(RelationCardinalityRestrictionAxiom axiom) {
+		return getLabel(axiom.getOntology(), axiom.getRelation());
+	}
 
-    public static String getLabel(RelationTargetRestrictionAxiom axiom) {
-    	return getLabel(axiom.getOntology(), axiom.getRelation());
-    }
+	public static String getLabel(RelationTargetRestrictionAxiom axiom) {
+		return getLabel(axiom.getOntology(), axiom.getRelation());
+	}
 
-    public static String getLabel(ScalarPropertyValueAssertion assertion) {
+	public static String getLabel(ScalarPropertyValueAssertion assertion) {
 		var property = OmlRead.getAbbreviatedIriIn(assertion.getProperty(), assertion.getOntology());
 		var value = OmlRead.getLexicalValue(assertion.getValue());
-		return property+" = "+value;
+		return property + " = " + value;
 	}
 
-    public static String getLabel(LinkAssertion assertion) {
+	public static String getLabel(LinkAssertion assertion) {
 		return OmlRead.getAbbreviatedIriIn(assertion.getRelation(), assertion.getOntology());
 	}
-    
-    public static String getLabel(Literal literal) {
+
+	public static String getLabel(Literal literal) {
 		return OmlRead.getLexicalValue(literal);
+	}
+
+	public static boolean hasNWDecoration(EObject e) {
+		return null != getNWDecorationImage(e);
+	}
+
+	public static String getNWDecorationImage(EObject e) {
+		return getConceptInstanceForVocabularyAnnotationPropertyValue(e,
+				URI.createURI("http://opencaesar.io/viewpoint"), "http://opencaesar.io/viewpoint#decoration-nw");
+	}
+
+	public static boolean hasNEDecoration(EObject e) {
+		return null != getNEDecorationImage(e);
+	}
+
+	public static String getNEDecorationImage(EObject e) {
+		return getConceptInstanceForVocabularyAnnotationPropertyValue(e,
+				URI.createURI("http://opencaesar.io/viewpoint"), "http://opencaesar.io/viewpoint#decoration-ne");
+	}
+
+	public static boolean hasSWDecoration(EObject e) {
+		return null != getSWDecorationImage(e);
+	}
+
+	public static String getSWDecorationImage(EObject e) {
+		return getConceptInstanceForVocabularyAnnotationPropertyValue(e,
+				URI.createURI("http://opencaesar.io/viewpoint"), "http://opencaesar.io/viewpoint#decoration-sw");
+	}
+
+	public static boolean hasSEDecoration(EObject e) {
+		return null != getSEDecorationImage(e);
+	}
+
+	public static String getSEDecorationImage(EObject e) {
+		return getConceptInstanceForVocabularyAnnotationPropertyValue(e,
+				URI.createURI("http://opencaesar.io/viewpoint"), "http://opencaesar.io/viewpoint#decoration-se");
+	}
+
+	public static boolean hasCDecoration(EObject e) {
+		return null != getCDecorationImage(e);
+	}
+
+	public static String getCDecorationImage(EObject e) {
+		return getConceptInstanceForVocabularyAnnotationPropertyValue(e,
+				URI.createURI("http://opencaesar.io/viewpoint"), "http://opencaesar.io/viewpoint#decoration-c");
+	}
+
+	public static boolean hasNDecoration(EObject e) {
+		return null != getNDecorationImage(e);
+	}
+
+	public static String getNDecorationImage(EObject e) {
+		return getConceptInstanceForVocabularyAnnotationPropertyValue(e,
+				URI.createURI("http://opencaesar.io/viewpoint"), "http://opencaesar.io/viewpoint#decoration-n");
+	}
+
+	public static boolean hasSDecoration(EObject e) {
+		return null != getSDecorationImage(e);
+	}
+
+	public static String getSDecorationImage(EObject e) {
+		return getConceptInstanceForVocabularyAnnotationPropertyValue(e,
+				URI.createURI("http://opencaesar.io/viewpoint"), "http://opencaesar.io/viewpoint#decoration-s");
+	}
+
+	public static boolean hasEDecoration(EObject e) {
+		return null != getEDecorationImage(e);
+	}
+
+	public static String getEDecorationImage(EObject e) {
+		return getConceptInstanceForVocabularyAnnotationPropertyValue(e,
+				URI.createURI("http://opencaesar.io/viewpoint"), "http://opencaesar.io/viewpoint#decoration-e");
+	}
+
+	public static boolean hasWDecoration(EObject e) {
+		return null != getWDecorationImage(e);
+	}
+
+	public static String getWDecorationImage(EObject e) {
+		return getConceptInstanceForVocabularyAnnotationPropertyValue(e,
+				URI.createURI("http://opencaesar.io/viewpoint"), "http://opencaesar.io/viewpoint#decoration-w");
+	}
+
+	public static String getConceptInstanceForVocabularyAnnotationPropertyValue(EObject e, URI annotationVocabulary,
+			String annotationPropertyIRI) {
+		if (!(e instanceof ConceptInstance))
+			return null;
+		ConceptInstance ci = (ConceptInstance) e;
+		URI uri = OmlRead.getResolvedUri(ci.eResource(), annotationVocabulary);
+		Resource r = ci.eResource().getResourceSet().getResource(uri, true);
+		Member p = OmlRead.getMemberByIri(r, annotationPropertyIRI);
+		if (p instanceof AnnotationProperty) {
+			AnnotationProperty ap = (AnnotationProperty) p;
+			List<ConceptTypeAssertion> cts = OmlSearch.findTypeAssertions(ci).stream().collect(Collectors.toList());
+			if (cts.size() == 1) {
+				ConceptTypeAssertion a = cts.get(0);
+				Concept c = a.getType();
+				Literal value = OmlSearch.findAnnotationValue(c, ap);
+				Object v = OmlRead.getValue(value);
+				if (v instanceof String) {
+					String s = (String) v;
+					System.out.println("check CI Vocabulary Annotation: " + ci.getAbbreviatedIri() + " : "
+							+ c.getAbbreviatedIri() + " " + ap.getAbbreviatedIri() + "=" + s);
+					return s;
+				} else
+					return null;
+			} else
+				return null;
+		} else
+			return null;
+	}
+
+	public static boolean checkConceptInstanceForVocabularyAnnotationPropertyValue(EObject e,
+			String annotationPropertyIRI, String annotationValue) {
+		if (!(e instanceof ConceptInstance))
+			return false;
+		ConceptInstance ci = (ConceptInstance) e;
+		List<ConceptTypeAssertion> cts = OmlSearch.findTypeAssertions(ci).stream().collect(Collectors.toList());
+		if (cts.size() == 1) {
+			ConceptTypeAssertion a = cts.get(0);
+			Concept c = a.getType();
+			var property = (AnnotationProperty) OmlRead.getMemberByIri(c, annotationPropertyIRI);
+			Literal value = OmlSearch.findAnnotationValue(c, property);
+			Object v = OmlRead.getValue(value);
+			if (v instanceof String) {
+				String s = (String) v;
+				boolean result = annotationValue.equals(s);
+				System.out.println("check CI Vocabulary Annotation: " + ci.getAbbreviatedIri() + " : "
+						+ c.getAbbreviatedIri() + " " + property.getAbbreviatedIri() + "=" + s + " == "
+						+ annotationValue + " ? " + result);
+
+				return result;
+			} else
+				return false;
+		} else
+			return false;
+	}
+
+	public static boolean checkConceptInstanceForDescriptionAnnotationPropertyValue(EObject e,
+			String annotationPropertyIRI, String annotationValue) {
+		if (!(e instanceof ConceptInstance))
+			return false;
+		ConceptInstance ci = (ConceptInstance) e;
+		var property = (AnnotationProperty) OmlRead.getMemberByIri(ci, annotationPropertyIRI);
+		Literal value = OmlSearch.findAnnotationValue(ci, property);
+		Object v = OmlRead.getValue(value);
+		if (v instanceof String) {
+			String s = (String) v;
+			boolean result = annotationValue.equals(s);
+			System.out.println("check CI Description Annotation : " + ci.getAbbreviatedIri() + " "
+					+ property.getAbbreviatedIri() + "=" + s + " == " + annotationValue + " ? " + result);
+
+			return result;
+		} else
+			return false;
 	}
 
 }
