@@ -28,11 +28,11 @@
               <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             </style>
           </subNodeMappings>
-          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12" labelExpression="aql:diagram.target.oclAsType(oml::Ontology).getLabel(self)" iconPath="/io.opencaesar.rosetta.sirius.viewpoint/icons/i-icon.png" tooltipExpression="aql:view.getParentDiagram().oclAsType(diagram::DSemanticDiagram).target.oclAsType(oml::Ontology).getLabel(self)" backgroundStyle="GradientTopToBottom">
+          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
-            <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
           </style>
         </containerMappings>
         <toolSections name="Double Click Tools">
@@ -54,9 +54,20 @@
             </initialOperation>
           </ownedTools>
         </toolSections>
+        <decorationDescriptionsSet>
+          <decorationDescriptions xsi:type="description:SemanticBasedDecoration" name="NW" position="NORTH_WEST" preconditionExpression="aql:element.hasNWDecoration()" imageExpression="aql:self.getNWDecorationImage()" domainClass="oml::ConceptInstance"/>
+          <decorationDescriptions xsi:type="description:SemanticBasedDecoration" name="NE" position="NORTH_EAST" preconditionExpression="aql:element.hasNEDecoration()" imageExpression="aql:self.getNEDecorationImage()" domainClass="oml::ConceptInstance"/>
+          <decorationDescriptions xsi:type="description:SemanticBasedDecoration" name="SW" preconditionExpression="aql:element.hasSWDecoration()" imageExpression="aql:self.getSWDecorationImage()" domainClass="oml::ConceptInstance"/>
+          <decorationDescriptions xsi:type="description:SemanticBasedDecoration" name="SE" position="SOUTH_EAST" preconditionExpression="aql:element.hasSEDecoration()" imageExpression="aql:self.getSEDecorationImage()" domainClass="oml::ConceptInstance"/>
+          <decorationDescriptions xsi:type="description:SemanticBasedDecoration" name="C" position="CENTER" preconditionExpression="aql:element.hasCDecoration()" imageExpression="aql:self.getCDecorationImage()" domainClass="oml::ConceptInstance"/>
+          <decorationDescriptions xsi:type="description:SemanticBasedDecoration" name="N" position="NORTH" preconditionExpression="aql:element.hasNDecoration()" imageExpression="aql:self.getNDecorationImage()" domainClass="oml::ConceptInstance"/>
+          <decorationDescriptions xsi:type="description:SemanticBasedDecoration" name="W" position="WEST" preconditionExpression="aql:element.hasWDecoration()" imageExpression="aql:self.getWDecorationImage()" domainClass="oml::ConceptInstance"/>
+          <decorationDescriptions xsi:type="description:SemanticBasedDecoration" name="S" position="SOUTH" preconditionExpression="aql:element.hasSDecoration()" imageExpression="aql:self.getSDecorationImage()" domainClass="oml::ConceptInstance"/>
+          <decorationDescriptions xsi:type="description:SemanticBasedDecoration" name="E" position="EAST" preconditionExpression="aql:element.hasEDecoration()" imageExpression="aql:self.getEDecorationImage()" domainClass="oml::ConceptInstance"/>
+        </decorationDescriptionsSet>
         <customization>
           <vsmElementCustomizations xsi:type="description:VSMElementCustomization" predicateExpression="aql:self.oclAsType(oml::IdentifiedElement).getOntology() &lt;> container">
-            <featureCustomizations xsi:type="description:EReferenceCustomization" appliedOn="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance']/@style" referenceName="foregroundColor">
+            <featureCustomizations xsi:type="description:EReferenceCustomization" referenceName="foregroundColor">
               <value href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
             </featureCustomizations>
           </vsmElementCustomizations>
@@ -86,12 +97,12 @@
           </style>
         </edgeMappings>
         <edgeMappings name="SpecializationAxiom" deletionDescription="//@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='Delete']" doubleClickDescription="//@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='NavigateToOmlEditor']" sourceMapping="//@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@containerMappings[name='Concept'] //@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@containerMappings[name='Aspect'] //@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@edgeMappings[name='RelationEntity'] //@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@containerMappings[name='Structure'] //@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@containerMappings[name='FacetedScalar'] //@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@containerMappings[name='EnumeratedScalar']" targetMapping="//@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@containerMappings[name='Concept'] //@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@containerMappings[name='Aspect'] //@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@edgeMappings[name='RelationEntity'] //@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@containerMappings[name='Structure'] //@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@containerMappings[name='FacetedScalar'] //@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@containerMappings[name='EnumeratedScalar']" targetFinderExpression="aql:self.getSuperTerm()" sourceFinderExpression="aql:self.getSubTerm()" domainClass="oml.SpecializationAxiom" useDomainElement="true">
-          <style targetArrow="InputClosedArrow" sizeComputationExpression="2" routingStyle="manhattan">
+          <style targetArrow="InputClosedArrow" sizeComputationExpression="3" routingStyle="manhattan">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
           </style>
         </edgeMappings>
         <edgeMappings name="RelationRangeRestrictionAxiom" deletionDescription="//@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='Delete']" semanticCandidatesExpression="aql:self.getVisualizedRestrictions()" doubleClickDescription="//@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='NavigateToOmlEditor']" sourceMapping="//@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@containerMappings[name='Concept'] //@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@containerMappings[name='Aspect'] //@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@edgeMappings[name='RelationEntity']" targetMapping="//@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@containerMappings[name='Concept'] //@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@containerMappings[name='Aspect'] //@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@edgeMappings[name='RelationEntity']" targetFinderExpression="aql:self.range" sourceFinderExpression="aql: self.getRestrictingEntity()" domainClass="oml.RelationRangeRestrictionAxiom" useDomainElement="true">
-          <style sourceArrow="OutputClosedArrow" sizeComputationExpression="2" routingStyle="manhattan">
+          <style lineStyle="dash" sourceArrow="OutputClosedArrow" sizeComputationExpression="2" routingStyle="manhattan">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             <centerLabelStyleDescription labelSize="12" showIcon="false" labelExpression="aql:self.getLabel()">
               <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
@@ -99,7 +110,7 @@
           </style>
         </edgeMappings>
         <edgeMappings name="RelationCardinalityRestrictionAxiom" deletionDescription="//@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='Delete']" semanticCandidatesExpression="aql:self.getVisualizedRestrictions()" doubleClickDescription="//@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='NavigateToOmlEditor']" sourceMapping="//@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@containerMappings[name='Concept'] //@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@containerMappings[name='Aspect'] //@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@edgeMappings[name='RelationEntity']" targetMapping="//@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@containerMappings[name='Concept'] //@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@containerMappings[name='Aspect'] //@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Diagram']/@defaultLayer/@edgeMappings[name='RelationEntity']" targetFinderExpression="aql:self.range" sourceFinderExpression="aql: self.getRestrictingEntity()" domainClass="oml.RelationCardinalityRestrictionAxiom" useDomainElement="true">
-          <style sourceArrow="OutputClosedArrow" sizeComputationExpression="2" routingStyle="manhattan">
+          <style lineStyle="dash" sourceArrow="OutputClosedArrow" sizeComputationExpression="2" routingStyle="manhattan">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             <centerLabelStyleDescription labelSize="12" showIcon="false" labelExpression="aql:self.getLabel()">
               <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
