@@ -29,13 +29,9 @@ import java.util.stream.Stream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -66,7 +62,6 @@ import io.opencaesar.oml.NamedInstanceReference;
 import io.opencaesar.oml.Ontology;
 import io.opencaesar.oml.Predicate;
 import io.opencaesar.oml.PropertyValueAssertion;
-import io.opencaesar.oml.QuotedLiteral;
 import io.opencaesar.oml.RangeRestrictionKind;
 import io.opencaesar.oml.RelationCardinalityRestrictionAxiom;
 import io.opencaesar.oml.RelationEntity;
@@ -391,7 +386,7 @@ public final class OmlViewpoint {
 
 	public static String getNWDecorationImage(EObject e) {
 		return getConceptInstanceForVocabularyAnnotationPropertyValue(e,
-				URI.createURI("http://opencaesar.io/viewpoint"), "http://opencaesar.io/viewpoint#decoration-nw");
+				"http://opencaesar.io/viewpoint", "http://opencaesar.io/viewpoint#decoration-nw");
 	}
 
 	public static boolean hasNEDecoration(EObject e) {
@@ -400,7 +395,7 @@ public final class OmlViewpoint {
 
 	public static String getNEDecorationImage(EObject e) {
 		return getConceptInstanceForVocabularyAnnotationPropertyValue(e,
-				URI.createURI("http://opencaesar.io/viewpoint"), "http://opencaesar.io/viewpoint#decoration-ne");
+				"http://opencaesar.io/viewpoint", "http://opencaesar.io/viewpoint#decoration-ne");
 	}
 
 	public static boolean hasSWDecoration(EObject e) {
@@ -409,7 +404,7 @@ public final class OmlViewpoint {
 
 	public static String getSWDecorationImage(EObject e) {
 		return getConceptInstanceForVocabularyAnnotationPropertyValue(e,
-				URI.createURI("http://opencaesar.io/viewpoint"), "http://opencaesar.io/viewpoint#decoration-sw");
+				"http://opencaesar.io/viewpoint", "http://opencaesar.io/viewpoint#decoration-sw");
 	}
 
 	public static boolean hasSEDecoration(EObject e) {
@@ -418,7 +413,7 @@ public final class OmlViewpoint {
 
 	public static String getSEDecorationImage(EObject e) {
 		return getConceptInstanceForVocabularyAnnotationPropertyValue(e,
-				URI.createURI("http://opencaesar.io/viewpoint"), "http://opencaesar.io/viewpoint#decoration-se");
+				"http://opencaesar.io/viewpoint", "http://opencaesar.io/viewpoint#decoration-se");
 	}
 
 	public static boolean hasCDecoration(EObject e) {
@@ -427,7 +422,7 @@ public final class OmlViewpoint {
 
 	public static String getCDecorationImage(EObject e) {
 		return getConceptInstanceForVocabularyAnnotationPropertyValue(e,
-				URI.createURI("http://opencaesar.io/viewpoint"), "http://opencaesar.io/viewpoint#decoration-c");
+				"http://opencaesar.io/viewpoint", "http://opencaesar.io/viewpoint#decoration-c");
 	}
 
 	public static boolean hasNDecoration(EObject e) {
@@ -436,7 +431,7 @@ public final class OmlViewpoint {
 
 	public static String getNDecorationImage(EObject e) {
 		return getConceptInstanceForVocabularyAnnotationPropertyValue(e,
-				URI.createURI("http://opencaesar.io/viewpoint"), "http://opencaesar.io/viewpoint#decoration-n");
+				"http://opencaesar.io/viewpoint", "http://opencaesar.io/viewpoint#decoration-n");
 	}
 
 	public static boolean hasSDecoration(EObject e) {
@@ -445,7 +440,7 @@ public final class OmlViewpoint {
 
 	public static String getSDecorationImage(EObject e) {
 		return getConceptInstanceForVocabularyAnnotationPropertyValue(e,
-				URI.createURI("http://opencaesar.io/viewpoint"), "http://opencaesar.io/viewpoint#decoration-s");
+				"http://opencaesar.io/viewpoint", "http://opencaesar.io/viewpoint#decoration-s");
 	}
 
 	public static boolean hasEDecoration(EObject e) {
@@ -454,7 +449,7 @@ public final class OmlViewpoint {
 
 	public static String getEDecorationImage(EObject e) {
 		return getConceptInstanceForVocabularyAnnotationPropertyValue(e,
-				URI.createURI("http://opencaesar.io/viewpoint"), "http://opencaesar.io/viewpoint#decoration-e");
+				"http://opencaesar.io/viewpoint", "http://opencaesar.io/viewpoint#decoration-e");
 	}
 
 	public static boolean hasWDecoration(EObject e) {
@@ -463,15 +458,15 @@ public final class OmlViewpoint {
 
 	public static String getWDecorationImage(EObject e) {
 		return getConceptInstanceForVocabularyAnnotationPropertyValue(e,
-				URI.createURI("http://opencaesar.io/viewpoint"), "http://opencaesar.io/viewpoint#decoration-w");
+				"http://opencaesar.io/viewpoint", "http://opencaesar.io/viewpoint#decoration-w");
 	}
 
-	public static String getConceptInstanceForVocabularyAnnotationPropertyValue(EObject e, URI annotationVocabulary,
+	public static String getConceptInstanceForVocabularyAnnotationPropertyValue(EObject e, String annotationVocabulary,
 			String annotationPropertyIRI) {
 		if (!(e instanceof ConceptInstance))
 			return null;
 		ConceptInstance ci = (ConceptInstance) e;
-		URI uri = OmlRead.getResolvedUri(ci.eResource(), annotationVocabulary);
+		URI uri = OmlRead.getUriByIri(ci.eResource(), annotationVocabulary);
 		Resource r = ci.eResource().getResourceSet().getResource(uri, true);
 		Member p = OmlRead.getMemberByIri(r, annotationPropertyIRI);
 		if (p instanceof AnnotationProperty) {
@@ -504,7 +499,7 @@ public final class OmlViewpoint {
 		if (cts.size() == 1) {
 			ConceptTypeAssertion a = cts.get(0);
 			Concept c = a.getType();
-			var property = (AnnotationProperty) OmlRead.getMemberByIri(c, annotationPropertyIRI);
+			var property = (AnnotationProperty) OmlRead.getMemberByIri(c.eResource().getResourceSet(), annotationPropertyIRI);
 			Literal value = OmlSearch.findAnnotationValue(c, property);
 			Object v = OmlRead.getValue(value);
 			if (v instanceof String) {
@@ -526,7 +521,7 @@ public final class OmlViewpoint {
 		if (!(e instanceof ConceptInstance))
 			return false;
 		ConceptInstance ci = (ConceptInstance) e;
-		var property = (AnnotationProperty) OmlRead.getMemberByIri(ci, annotationPropertyIRI);
+		var property = (AnnotationProperty) OmlRead.getMemberByIri(ci.eResource().getResourceSet(), annotationPropertyIRI);
 		Literal value = OmlSearch.findAnnotationValue(ci, property);
 		Object v = OmlRead.getValue(value);
 		if (v instanceof String) {
