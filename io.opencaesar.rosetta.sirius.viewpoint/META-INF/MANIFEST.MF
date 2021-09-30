@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: io.opencaesar.rosetta.sirius.viewpoint;singleton:=true
-Bundle-Version: 1.0.3
+Bundle-Version: 1.0.4
 Automatic-Module-Name: io.opencaesar.rosetta.sirius.viewpoint
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Activator: io.opencaesar.rosetta.sirius.viewpoint.Activator
