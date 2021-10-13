@@ -5,11 +5,11 @@
       version="1.0.4"
       provider-name="%providerName">
 
-   <description url="http://www.example.com/description">
+   <description url="https://github.com/opencaesar/oml-rosetta">
       %featureDesciption
    </description>
 
-   <copyright url="http://www.example.com/copyright">
+   <copyright url="https://github.com/opencaesar/oml-rosetta">
       Copyright © 2020 California Institute of Technology. Government Sponsorship Acknowledged.
    </copyright>
 
