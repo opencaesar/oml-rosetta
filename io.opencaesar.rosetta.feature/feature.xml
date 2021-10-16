@@ -2,7 +2,7 @@
 <feature
       id="io.opencaesar.rosetta.feature"
       label="%featureName"
-      version="1.0.4"
+      version="1.0.5"
       provider-name="%providerName">
 
    <description url="https://github.com/opencaesar/oml-rosetta">
@@ -29,8 +29,37 @@ See the License for the specific language governing permissions and
 limitations under the License.
    </license>
 
+   <url>
+      <update url="https://github.com/opencaesar/oml-rosetta-p2"/>
+   </url>
+
+   <includes
+         id="io.opencaesar.oml.sdk.feature"
+         version="0.0.0"/>
+
    <requires>
-      <import feature="io.opencaesar.oml.sdk.feature"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.help.ui"/>
+      <import plugin="org.eclipse.emf.compare.edit"/>
+      <import plugin="org.eclipse.emf.compare.ide"/>
+      <import plugin="org.eclipse.emf.compare.ide.ui"/>
+      <import plugin="org.eclipse.xtext.ui"/>
+      <import plugin="org.eclipse.xtext.xbase.lib"/>
+      <import plugin="org.eclipse.xtend.lib"/>
+      <import plugin="org.eclipse.buildship.core"/>
+      <import plugin="io.opencaesar.oml"/>
+      <import plugin="org.eclipse.ui.views.properties.tabbed"/>
+      <import plugin="org.eclipse.emf.edit.ui"/>
+      <import plugin="org.eclipse.emf.transaction"/>
+      <import plugin="org.eclipse.sirius.common"/>
+      <import plugin="org.eclipse.sirius.table.ui"/>
+      <import plugin="org.eclipse.sirius.tree.ui"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.sirius"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.xtext"/>
    </requires>
 
    <plugin
@@ -70,6 +99,13 @@ limitations under the License.
 
    <plugin
          id="io.opencaesar.rosetta.sirius.viewpoint.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="io.opencaesar.rosetta.rcp"
          download-size="0"
          install-size="0"
          version="0.0.0"

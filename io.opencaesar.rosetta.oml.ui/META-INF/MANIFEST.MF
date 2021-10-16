@@ -2,32 +2,18 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: io.opencaesar.rosetta.oml.ui;singleton:=true
-Bundle-Version: 1.0.4
+Bundle-Version: 1.0.5
 Automatic-Module-Name: io.opencaesar.rosetta.oml.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui.ide,
- org.eclipse.ui,
- org.eclipse.core.resources,
- org.eclipse.core.runtime,
- org.eclipse.emf.compare,
+ org.eclipse.help.ui,
  org.eclipse.emf.compare.edit,
- org.eclipse.emf.compare.egit,
  org.eclipse.emf.compare.ide,
  org.eclipse.emf.compare.ide.ui,
- org.eclipse.emf.compare.rcp,
- org.eclipse.emf.compare.rcp.ui,
- com.google.guava,
- io.opencaesar.oml,
- io.opencaesar.oml.dsl,
- io.opencaesar.oml.dsl.ide,
- io.opencaesar.oml.dsl.ui,
- io.opencaesar.oml.edit,
- io.opencaesar.oml.editor,
  org.eclipse.xtext.ui,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.xtend.lib,
- org.eclipse.xtend.lib.macro,
  org.eclipse.buildship.core,
- org.eclipse.help.ui
+ io.opencaesar.oml
 Bundle-Vendor: %providerName

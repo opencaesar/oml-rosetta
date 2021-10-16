@@ -3,18 +3,18 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.opencaesar.rosetta</groupId>
 	<artifactId>io.opencaesar.rosetta.parent</artifactId>
-	<version>1.0.4</version>
+	<version>1.0.5</version>
 	<packaging>pom</packaging>
 	
 	<modules>
-		<module>io.opencaesar.rosetta.oml.ui</module>
-		<module>io.opencaesar.rosetta.sirius</module>
-		<module>io.opencaesar.rosetta.sirius.viewpoint</module>
 		<module>io.opencaesar.rosetta.feature</module>
+		<module>io.opencaesar.rosetta.oml.ui</module>
+		<module>io.opencaesar.rosetta.product</module>
 		<module>io.opencaesar.rosetta.rcp</module>
 		<module>io.opencaesar.rosetta.rcp.feature</module>
 		<module>io.opencaesar.rosetta.repository</module>
-		<module>io.opencaesar.rosetta.product</module>
+		<module>io.opencaesar.rosetta.sirius</module>
+		<module>io.opencaesar.rosetta.sirius.viewpoint</module>
 		<module>io.opencaesar.rosetta.target</module>
 	</modules>
 	
@@ -74,27 +74,6 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho.extras</groupId>
-				<artifactId>tycho-source-feature-plugin</artifactId>
-             	<version>${tycho-version}</version>
-				<executions>
-					<execution>
-						<id>source-feature</id>
-						<phase>package</phase>
-						<goals>
-							<goal>source-feature</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<excludes>
-						<plugin id="io.opencaesar.rosetta.oml.ui.source" />
-						<plugin id="io.opencaesar.rosetta.sirius.source" />
-						<plugin id="io.opencaesar.rosetta.sirius.viewpoint.source" />
-					</excludes>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>

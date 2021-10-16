@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-
-   <category-def name="rosetta" label="Rosetta"/>
-   <feature id="io.opencaesar.rosetta.feature" version="0.0.0"><category name="rosetta"/></feature>
-
+   <feature id="io.opencaesar.rosetta.feature" version="0.0.0">
+      <category name="rosetta"/>
+   </feature>
+   <category-def name="rosetta" label="Rosetta">
+      <description>
+         Rosetta features
+      </description>
+   </category-def>
 </site>

@@ -2,24 +2,17 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: io.opencaesar.rosetta.sirius;singleton:=true
-Bundle-Version: 1.0.4
+Bundle-Version: 1.0.5
 Bundle-Localization: plugin
 Automatic-Module-Name: io.opencaesar.rosetta.sirius
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: org.eclipse.rcp,
- org.eclipse.swt,
- org.eclipse.jface,
+Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.ui.views.properties.tabbed,
- org.eclipse.emf.common.ui,
+ org.eclipse.emf.edit.ui,
  org.eclipse.emf.transaction,
  org.eclipse.sirius.common,
- org.eclipse.sirius.table,
  org.eclipse.sirius.table.ui,
- org.eclipse.sirius.tree,
  org.eclipse.sirius.tree.ui,
- org.eclipse.emf.edit.ui,
- org.eclipse.emf.ecore,
- org.eclipse.ui.ide,
  io.opencaesar.oml
 Import-Package: org.eclipse.ui
 Bundle-Vendor: %providerName
