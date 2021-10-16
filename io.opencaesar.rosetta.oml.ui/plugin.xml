@@ -49,8 +49,11 @@
    </extension>
    <extension
          point="org.eclipse.ui.newWizards">
+      <category
+            id="io.opencaesar.rosetta.oml.category.ID"
+            name="%_UI_Wizard_category"/>
       <wizard
-            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            category="io.opencaesar.rosetta.oml.category.ID"
             class="io.opencaesar.rosetta.oml.wizards.OmlProjectWizard"
             icon="icons/oml.png"
             id="io.opencaesar.rosetta.oml.ui.wizards.OmlProjectWizard"
@@ -58,7 +61,7 @@
             project="true">
       </wizard>
       <wizard
-            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            category="io.opencaesar.rosetta.oml.category.ID"
             class="io.opencaesar.rosetta.oml.wizards.OmlOntologyWizard"
             hasPages="true"
             icon="icons/oml.png"
