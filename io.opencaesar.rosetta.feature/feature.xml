@@ -33,11 +33,8 @@ limitations under the License.
       <update url="https://github.com/opencaesar/oml-rosetta-p2"/>
    </url>
 
-   <includes
-         id="io.opencaesar.oml.sdk.feature"
-         version="0.0.0"/>
-
    <requires>
+      <import feature="io.opencaesar.oml.sdk.feature" version="1.0.5"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.help.ui"/>
       <import plugin="org.eclipse.emf.compare.edit"/>

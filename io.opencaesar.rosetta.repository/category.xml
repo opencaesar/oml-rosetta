@@ -8,4 +8,5 @@
          Rosetta features
       </description>
    </category-def>
+   <repository-reference location="https://opencaesar.github.io/oml-p2" enabled="true" />
 </site>
