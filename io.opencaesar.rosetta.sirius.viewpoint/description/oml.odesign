@@ -4,7 +4,7 @@
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="Description Diagram" titleExpression="Description Diagram" domainClass="oml.Description" enablePopupBars="true">
       <metamodel href="http://opencaesar.io/oml#/"/>
       <defaultLayer name="Default">
-        <edgeMappings name="LinkAssertion" deletionDescription="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='Delete']" semanticCandidatesExpression="aql:self.getVisualizedLinks()" doubleClickDescription="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='NavigateToOmlEditor']" sourceMapping="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance'] //@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@edgeMappings[name='RelationInstance']" targetMapping="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance'] //@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@edgeMappings[name='RelationInstance']" targetFinderExpression="aql:self.target" sourceFinderExpression="aql:self.getNamedInstance()" domainClass="oml.LinkAssertion" useDomainElement="true">
+        <edgeMappings name="LinkAssertion" deletionDescription="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='Delete']" semanticCandidatesExpression="aql:self.getVisualizedLinks()" doubleClickDescription="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='NavigateToOmlEditor']" sourceMapping="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance'] //@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@edgeMappings[name='RelationInstance']" targetMapping="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance'] //@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@edgeMappings[name='RelationInstance']" targetFinderExpression="aql:self.getTarget()" sourceFinderExpression="aql:self.getSource()" domainClass="oml.LinkAssertion" useDomainElement="true">
           <style sizeComputationExpression="2" routingStyle="manhattan">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
             <centerLabelStyleDescription labelSize="12" showIcon="false" labelExpression="aql:self.getLabel()">
@@ -65,7 +65,7 @@
     </ownedRepresentations>
     <ownedJavaExtensions qualifiedClassName="io.opencaesar.oml.util.OmlSearch"/>
     <ownedJavaExtensions qualifiedClassName="io.opencaesar.oml.util.OmlRead"/>
-    <ownedJavaExtensions qualifiedClassName="io.opencaesar.rosetta.sirius.viewpoint.internal.OmlViewpoint"/>
+    <ownedJavaExtensions qualifiedClassName="io.opencaesar.rosetta.sirius.viewpoint.internal.Services"/>
   </ownedViewpoints>
   <ownedViewpoints name="Vocabularies" modelFileExtension="oml">
     <ownedRepresentations xsi:type="description_1:DiagramDescription" name="Vocabulary Diagram" titleExpression="Vocabulary Diagram" domainClass="oml.Vocabulary" enablePopupBars="true">
@@ -272,6 +272,6 @@
     </ownedRepresentations>
     <ownedJavaExtensions qualifiedClassName="io.opencaesar.oml.util.OmlSearch"/>
     <ownedJavaExtensions qualifiedClassName="io.opencaesar.oml.util.OmlRead"/>
-    <ownedJavaExtensions qualifiedClassName="io.opencaesar.rosetta.sirius.viewpoint.internal.OmlViewpoint"/>
+    <ownedJavaExtensions qualifiedClassName="io.opencaesar.rosetta.sirius.viewpoint.internal.Services"/>
   </ownedViewpoints>
 </description:Group>

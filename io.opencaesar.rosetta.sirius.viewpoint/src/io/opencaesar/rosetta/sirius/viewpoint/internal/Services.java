@@ -85,7 +85,7 @@ import io.opencaesar.oml.util.OmlSearch;
  * 
  * @author elaasar
  */
-public final class OmlViewpoint {
+public final class Services {
     
 	//-------
 	// EDITOR
@@ -132,7 +132,16 @@ public final class OmlViewpoint {
 		return String.join(", ", types);
 	}
 
-	public static Set<LinkAssertion> getVisualizedLinks(Description description) {
+    public static String getTypes(Ontology ontology, RelationInstance instance) {
+		var types = OmlSearch.findTypeAssertions(instance).stream()
+			.map(a -> a.getType())
+			.map(t -> { if (t.getForwardRelation() != null) return t.getForwardRelation(); else return t; } )
+			.map(t -> getLabel(ontology, t))
+			.collect(Collectors.toList());
+		return String.join(", ", types);
+	}
+
+    public static Set<LinkAssertion> getVisualizedLinks(Description description) {
 		var links = new HashSet<LinkAssertion>();
 		// member links
 		links.addAll(description.getOwnedStatements().stream()
@@ -366,6 +375,10 @@ public final class OmlViewpoint {
 
 	public static String getLabel(Ontology ontology, NamedInstance instance) {
 		return OmlRead.getAbbreviatedIriIn(instance, ontology) + " : "+getTypes(ontology, instance);
+	}
+
+	public static String getLabel(Ontology ontology, RelationInstance instance) {
+		return getTypes(ontology, instance);
 	}
 
 	public static String getLabel(Ontology ontology, ScalarProperty property) {
