@@ -211,7 +211,8 @@ class OmlProjectResourceTemplates {
 		task owlQuery(type:io.opencaesar.owl.query.OwlQueryTask, group:"oml", dependsOn: owlLoad) {
 		    endpointURL = "http://localhost:3030/$dataset.name".toString()
 		    queryPath = file('src/sparql')
-		    resultPath = file('build/frames')
+		    resultPath = file('build/results')
+		    format = 'json'
 		}
 
 		/*
@@ -289,6 +290,10 @@ class OmlProjectResourceTemplates {
 		            }
 		        }
 		    }
+		}
+		
+		tasks.named('wrapper') {
+		   gradleVersion = '6.5.1' //version required
 		}
 		
 		/*

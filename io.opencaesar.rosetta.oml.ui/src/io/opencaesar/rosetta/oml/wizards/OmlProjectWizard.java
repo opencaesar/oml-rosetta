@@ -174,7 +174,7 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 			templates.uriStartStringsToRewritePrefixes.put(setupPage.baseIri + (setupPage.baseIri.endsWith("/") ? "" : "/"), "src/oml/" + basePathSegments.stream().collect(Collectors.joining("/")) + "/");
 			templates.uriStartStringsToRewritePrefixes.put("http://", "build/oml/");
 			templates.baseIri = setupPage.baseIri;
-			templates.bundleIri = setupPage.bundleNamespace;
+			templates.bundleIri = setupPage.bundleNamespace.substring(0, setupPage.bundleNamespace.length()-1);
 
 			if (setupPage.configureGradle) {
 				templates.gradleProjectName = newProject.getName();
