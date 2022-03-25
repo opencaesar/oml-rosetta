@@ -374,7 +374,8 @@ public final class Services {
 	}
 
 	public static String getLabel(Ontology ontology, NamedInstance instance) {
-		return OmlRead.getAbbreviatedIriIn(instance, ontology) + " : "+getTypes(ontology, instance);
+		var types = getTypes(ontology, instance);
+		return (types != null && types.length()>0 ? "«"+types+"»\n" : "") + OmlRead.getAbbreviatedIriIn(instance, ontology);
 	}
 
 	public static String getLabel(Ontology ontology, RelationInstance instance) {

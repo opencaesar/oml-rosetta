@@ -277,11 +277,7 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 						filePage.setFileName(fileName);
 						defaultPrefix = fileName.substring(0, fileName.indexOf("."));
 					} else {
-						if (ontologyKind == OmlPackage.Literals.DESCRIPTION || ontologyKind == OmlPackage.Literals.DESCRIPTION_BUNDLE) {
-							filePage.setFileName(fileName + ".omlxmi");
-						} else {
-							filePage.setFileName(fileName + ".oml");
-						}
+						filePage.setFileName(fileName + ".oml");
 						defaultPrefix = fileName;
 					}
 					if (!ontologyPrefixChanged) {
