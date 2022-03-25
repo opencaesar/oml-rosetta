@@ -9,36 +9,37 @@
 			<unit id="org.eclipse.pde.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.buildship.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.egit.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.jgit.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.jgit.ssh.apache.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.emf.ecore.xcore.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.xtext.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.xtend.sdk.feature.group" version="0.0.0"/>
-			<repository location="http://download.eclipse.org/releases/2021-03"/>
+			<repository location="http://download.eclipse.org/releases/2022-03"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.emf.compare.diagram.sirius.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.emf.compare.egit.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.emf.compare.rcp.ui.source.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.emf.compare.ide.ui.source.feature.group" version="0.0.0"/>
-			<repository location="https://download.eclipse.org/modeling/emf/compare/updates/releases/3.3"/>
+			<repository location="https://download.eclipse.org/modeling/emf/compare/updates/releases/3.3/R202111290942/"/>
+		</location>
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<unit id="org.eclipse.eef.sdk.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.eef.ext.widgets.reference.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.acceleo.ui.interpreter.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.acceleo.query.source.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.sirius.runtime.ide.ui.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.sirius.properties.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.sirius.specifier.ide.ui.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.sirius.specifier.properties.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.sirius.interpreter.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.sirius.aql.feature.group" version="0.0.0"/>
+			<repository location="https://download.eclipse.org/sirius/updates/releases/7.0.0/2021-06/"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="0.0.0"/>
 			<repository location="https://download.eclipse.org/justj/jres/11/updates/release"/>
-		</location>
-		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<unit id="org.eclipse.eef.sdk.feature.feature.group" version="2.1.5.202008270808"/>
-			<unit id="org.eclipse.eef.ext.widgets.reference.feature.feature.group" version="2.1.5.202008270808"/>
-			<unit id="org.eclipse.acceleo.ui.interpreter.feature.group" version="3.7.10.202002210922"/>
-			<unit id="org.eclipse.acceleo.query.source.feature.group" version="7.0.0.202002210922"/>
-			<unit id="org.eclipse.sirius.runtime.ide.ui.feature.group" version="6.4.2.202103091337"/>
-			<unit id="org.eclipse.sirius.properties.feature.feature.group" version="6.4.2.202103091337"/>
-			<unit id="org.eclipse.sirius.specifier.ide.ui.feature.group" version="6.4.2.202103091337"/>
-			<unit id="org.eclipse.sirius.specifier.properties.feature.feature.group" version="6.4.2.202103091337"/>
-			<unit id="org.eclipse.sirius.interpreter.feature.feature.group" version="6.4.2.202103091337"/>
-			<unit id="org.eclipse.sirius.aql.feature.group" version="6.4.2.202103091337"/>
-			<repository location="https://download.eclipse.org/sirius/updates/releases/6.4.2/2020-09/"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="io.opencaesar.oml.sdk.feature.feature.group" version="0.0.0"/>
