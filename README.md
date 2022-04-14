@@ -1,3 +1,5 @@
+![OML Rosetta Workbench](https://raw.githubusercontent.com/opencaesar/oml-rosetta/master/io.opencaesar.rosetta.rcp/splash.bmp)
+
 # Rosetta
 
 [![Build Status](https://app.travis-ci.com/opencaesar/oml-rosetta.svg?branch=master)](https://app.travis-ci.com/github/opencaesar/oml-rosetta)
