@@ -5,7 +5,7 @@
 [![Updatesite](https://img.shields.io/badge/p2-updatesite-yellow.svg?longCache=true)](https://github.com/opencaesar/oml-rosetta-p2)
 
 
-An Eclipse extension that supports [OML](https://opencaesar.github.io/oml-spec) natively and is published as a p2 update site and an RCP.
+An Eclipse RCP (and plugin) that supports [OML](https://opencaesar.github.io/oml-spec) natively and is published as a p2 update site and an RCP.
 
 ![OML Rosetta Workbench](https://raw.githubusercontent.com/opencaesar/oml-rosetta/master/io.opencaesar.rosetta.rcp/splash.bmp)
 
