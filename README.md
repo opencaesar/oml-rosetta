@@ -1,5 +1,3 @@
-![OML Rosetta Workbench](https://raw.githubusercontent.com/opencaesar/oml-rosetta/master/io.opencaesar.rosetta.rcp/splash.bmp)
-
 # Rosetta
 
 [![Build Status](https://app.travis-ci.com/opencaesar/oml-rosetta.svg?branch=master)](https://app.travis-ci.com/github/opencaesar/oml-rosetta)
@@ -9,6 +7,7 @@
 
 An Eclipse extension that supports [OML](https://opencaesar.github.io/oml-spec) natively and is published as a p2 update site and an RCP.
 
+![OML Rosetta Workbench](https://raw.githubusercontent.com/opencaesar/oml-rosetta/master/io.opencaesar.rosetta.rcp/splash.bmp)
 
 ## Clone
 ```
