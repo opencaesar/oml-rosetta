@@ -26,24 +26,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
-import org.eclipse.xtext.nodemodel.ICompositeNode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.resource.XtextResource;
-
 import io.opencaesar.oml.Classifier;
 import io.opencaesar.oml.Description;
 import io.opencaesar.oml.DifferentFromPredicate;
-import io.opencaesar.oml.Element;
 import io.opencaesar.oml.Entity;
 import io.opencaesar.oml.EntityReference;
 import io.opencaesar.oml.EnumeratedScalar;
@@ -87,44 +72,6 @@ import io.opencaesar.oml.util.OmlSearch;
  */
 public final class Services {
     
-	//-------
-	// EDITOR
-	//-------
-	
-	private static final String OML_EDITOR_ID = "io.opencaesar.oml.dsl.Oml";
-
-	/**
-	 * Opens the Oml editor for the given Oml element and highlights it in the editor
-	 *  
-	 * @param element
-	 * @return
-	 */
-	public static EObject openInOmlEditor(Element element) {
-		if (element != null && element.eResource() instanceof XtextResource && element.eResource().getURI() != null) {
-
-			String fileURI = element.eResource().getURI().toPlatformString(true);
-			IFile workspaceFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fileURI));
-			if (workspaceFile != null) {
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				try {
-					IEditorPart openEditor = IDE.openEditor(page, workspaceFile, OML_EDITOR_ID, true);
-					if (openEditor instanceof AbstractTextEditor) {
-						ICompositeNode node = NodeModelUtils.findActualNodeFor(element);
-						if (node != null) {
-							int offset = node.getOffset();
-							int length = node.getTotalEndOffset() - offset;
-							((AbstractTextEditor) openEditor).selectAndReveal(offset, length);
-						}
-					}
-					// editorInput.
-				} catch (PartInitException e) {
-					System.err.println(e);
-				}
-			}
-		}
-		return element;
-	}
-
     public static String getTypes(Ontology ontology, NamedInstance instance) {
 		var types = OmlSearch.findTypeAssertions(instance).stream()
 			.map(a -> getLabel(ontology, a.getType()))

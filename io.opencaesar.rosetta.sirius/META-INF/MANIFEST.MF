@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: io.opencaesar.rosetta.sirius;singleton:=true
-Bundle-Version: 1.0.7
+Bundle-Version: 1.1.0
 Bundle-Localization: plugin
 Automatic-Module-Name: io.opencaesar.rosetta.sirius
 Bundle-RequiredExecutionEnvironment: JavaSE-11
@@ -13,7 +13,9 @@ Require-Bundle: org.eclipse.ui.ide,
  org.eclipse.sirius.common,
  org.eclipse.sirius.table.ui,
  org.eclipse.sirius.tree.ui,
+ org.eclipse.xtext.ui,
  io.opencaesar.oml
 Import-Package: org.eclipse.ui
 Bundle-Vendor: %providerName
-Export-Package: io.opencaesar.rosetta.sirius.validation
+Export-Package: io.opencaesar.rosetta.sirius.utils,
+ io.opencaesar.rosetta.sirius.validation

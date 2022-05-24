@@ -35,7 +35,12 @@
 			<unit id="org.eclipse.sirius.specifier.properties.feature.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.sirius.interpreter.feature.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.sirius.aql.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.sirius.diagram.elk.feature.feature.group" version="7.0.0.202202231547"/>
 			<repository location="https://download.eclipse.org/sirius/updates/releases/7.0.0/2021-06/"/>
+		</location>
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<unit id="org.apache.xalan" version="2.7.2.v20201124-1837"/>
+			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20220302172233/repository"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="0.0.0"/>
