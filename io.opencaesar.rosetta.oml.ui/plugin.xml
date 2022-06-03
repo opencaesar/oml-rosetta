@@ -55,18 +55,22 @@
       <wizard
             category="io.opencaesar.rosetta.oml.category.ID"
             class="io.opencaesar.rosetta.oml.wizards.OmlProjectWizard"
+	        finalPerspective="org.eclipse.sirius.ui.tools.perspective.modeling"
             icon="icons/oml.png"
             id="io.opencaesar.rosetta.oml.ui.wizards.OmlProjectWizard"
             name="OML Project"
+	        preferredPerspectives="org.eclipse.sirius.ui.tools.perspective.design"
             project="true">
       </wizard>
       <wizard
             category="io.opencaesar.rosetta.oml.category.ID"
             class="io.opencaesar.rosetta.oml.wizards.OmlOntologyWizard"
+	        finalPerspective="org.eclipse.sirius.ui.tools.perspective.modeling"
             hasPages="true"
             icon="icons/oml.png"
             id="io.opencaesar.rosetta.oml.ui.wizards.OmlOntologyWizard"
             name="OML Model"
+            preferredPerspectives="org.eclipse.sirius.ui.tools.perspective.design"
             project="false">
       </wizard>
    </extension>
@@ -82,6 +86,9 @@
       <contexts
             file="help/contexts.xml">
       </contexts>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
    </extension>
 
 </plugin>
