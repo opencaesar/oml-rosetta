@@ -18,8 +18,6 @@
  */
 package io.opencaesar.rosetta.oml.wizards;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -32,9 +30,11 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
@@ -52,13 +52,11 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
-import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.resource.XtextResourceSet;
 
 import io.opencaesar.oml.OmlFactory;
 import io.opencaesar.oml.OmlPackage;
 import io.opencaesar.oml.Ontology;
-import io.opencaesar.oml.util.OmlXMIResource;
+import io.opencaesar.oml.util.OmlConstants;
 import io.opencaesar.rosetta.oml.ui.OmlUiPlugin;
 
 /**
@@ -69,9 +67,6 @@ import io.opencaesar.rosetta.oml.ui.OmlUiPlugin;
  * the file path and name.
  */
 public class OmlOntologyWizard extends Wizard implements INewWizard {
-	
-	private static final String OML_TREE_EDITOR = "io.opencaesar.oml.presentation.OmlEditorID";
-	private static final String OML_EDITOR = "io.opencaesar.oml.dsl.Oml";
 	
 	private IWorkbench workbench;
 	
@@ -130,29 +125,17 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 			IFile file = folder.getFile(filePage.getFileName());
 			URI uri = URI.createURI(file.getLocationURI().toString());
 
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			
 			Ontology ontology = (Ontology) OmlFactory.eINSTANCE.create(ontologyKind);
 			ontology.setNamespace(ontologyNamespace);
 			ontology.setPrefix(ontologyPrefix);
-			if (filePage.getFileName().endsWith(".oml")) {
-				XtextResourceSet resourceSet = new XtextResourceSet();
-				resourceSet.getPackageRegistry().put(OmlPackage.eNS_URI, OmlPackage.eINSTANCE);
-				XtextResource resource = (XtextResource) resourceSet.createResource(uri, "oml");
-				resource.getContents().add(ontology);
-				resource.doSave(baos, Collections.EMPTY_MAP);
-			} else {
-				OmlXMIResource resource = new OmlXMIResource(uri);
-				resource.getContents().add(ontology);
-				resource.doSave(baos, Collections.EMPTY_MAP);
-			}
-			file.create(new ByteArrayInputStream(baos.toByteArray()), true, new NullProgressMonitor());
+			
+			ResourceSet resourceSet = new ResourceSetImpl();
+			Resource resource = resourceSet.createResource(uri);
+			resource.getContents().add(ontology);
+			resource.save(Collections.EMPTY_MAP);
+
 			BasicNewResourceWizard.selectAndReveal(file, workbench.getActiveWorkbenchWindow());
-			if (filePage.getFileName().endsWith(".oml")) {
-				IDE.openEditor(workbench.getActiveWorkbenchWindow().getActivePage(), file, OML_EDITOR);
-			} else {
-				IDE.openEditor(workbench.getActiveWorkbenchWindow().getActivePage(), file, OML_TREE_EDITOR);
-			}
+			IDE.openEditor(workbench.getActiveWorkbenchWindow().getActivePage(), file);
 			return true;
 		} catch (IOException | CoreException e) {
 			throw new RuntimeException(e.getMessage(), e);
@@ -272,14 +255,8 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 						return;
 					}
 					String fileName = pathSegments[pathSegments.length - 1];
-					String defaultPrefix;
-					if (fileName.endsWith(".oml") || fileName.endsWith(".omlxmi")) {
-						filePage.setFileName(fileName);
-						defaultPrefix = fileName.substring(0, fileName.indexOf("."));
-					} else {
-						filePage.setFileName(fileName + ".oml");
-						defaultPrefix = fileName;
-					}
+					filePage.setFileName(fileName+"."+OmlConstants.OML_EXTENSION);
+					String defaultPrefix = fileName;
 					if (!ontologyPrefixChanged) {
 						ontologyPrefix = defaultPrefix;
 						if (ontologyPrefixInput != null) {

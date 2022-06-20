@@ -55,24 +55,55 @@
       <wizard
             category="io.opencaesar.rosetta.oml.category.ID"
             class="io.opencaesar.rosetta.oml.wizards.OmlProjectWizard"
-	        finalPerspective="org.eclipse.sirius.ui.tools.perspective.modeling"
+            finalPerspective="org.eclipse.sirius.ui.tools.perspective.modeling"
             icon="icons/oml.png"
             id="io.opencaesar.rosetta.oml.ui.wizards.OmlProjectWizard"
             name="OML Project"
-	        preferredPerspectives="org.eclipse.sirius.ui.tools.perspective.design"
             project="true">
       </wizard>
       <wizard
             category="io.opencaesar.rosetta.oml.category.ID"
             class="io.opencaesar.rosetta.oml.wizards.OmlOntologyWizard"
-	        finalPerspective="org.eclipse.sirius.ui.tools.perspective.modeling"
+            finalPerspective="org.eclipse.sirius.ui.tools.perspective.modeling"
             hasPages="true"
             icon="icons/oml.png"
             id="io.opencaesar.rosetta.oml.ui.wizards.OmlOntologyWizard"
             name="OML Model"
-            preferredPerspectives="org.eclipse.sirius.ui.tools.perspective.design"
             project="false">
       </wizard>
+   </extension>
+   <extension point="org.eclipse.ui.perspectiveExtensions"> 
+	    <perspectiveExtension 
+	        targetID="org.eclipse.sirius.ui.tools.perspective.modeling"> 
+	        <newWizardShortcut id="io.opencaesar.rosetta.oml.ui.wizards.OmlProjectWizard"/> 
+	        <newWizardShortcut id="io.opencaesar.rosetta.oml.ui.wizards.OmlOntologyWizard"/> 
+	    </perspectiveExtension> 
+   </extension> 
+   <extension point="org.eclipse.ui.navigator.navigatorContent">
+     <commonWizard
+           menuGroupId="org.eclipse.sirius.category"
+           type="new"
+           wizardId="io.opencaesar.rosetta.oml.ui.wizards.OmlProjectWizard">
+        <enablement>
+           <with
+                 variable="activeWorkbenchWindow.activePerspective">
+              <equals
+                    value="org.eclipse.sirius.ui.tools.perspective.modeling">
+              </equals>
+           </with></enablement>
+     </commonWizard>
+     <commonWizard
+           type="new"
+           wizardId="io.opencaesar.rosetta.oml.ui.wizards.OmlOntologyWizard">
+        <enablement>
+           <with
+                 variable="activeWorkbenchWindow.activePerspective">
+              <equals
+                    value="org.eclipse.sirius.ui.tools.perspective.modeling">
+              </equals>
+           </with>
+        </enablement>
+     </commonWizard>
    </extension>
    <extension
          point="org.eclipse.help.toc">
@@ -86,9 +117,6 @@
       <contexts
             file="help/contexts.xml">
       </contexts>
-   </extension>
-   <extension
-         point="org.eclipse.ui.popupMenus">
    </extension>
 
 </plugin>
