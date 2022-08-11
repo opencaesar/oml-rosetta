@@ -34,7 +34,6 @@ limitations under the License.
    </url>
 
    <requires>
-      <import feature="io.opencaesar.oml.sdk.feature"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.help.ui"/>
       <import plugin="org.eclipse.emf.compare.edit"/>
@@ -44,7 +43,6 @@ limitations under the License.
       <import plugin="org.eclipse.xtext.xbase.lib"/>
       <import plugin="org.eclipse.xtend.lib"/>
       <import plugin="org.eclipse.buildship.core"/>
-      <import plugin="io.opencaesar.oml"/>
       <import plugin="org.eclipse.ui.views.properties.tabbed"/>
       <import plugin="org.eclipse.emf.edit.ui"/>
       <import plugin="org.eclipse.emf.transaction"/>
@@ -57,6 +55,7 @@ limitations under the License.
       <import plugin="org.eclipse.sirius"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
       <import plugin="org.eclipse.xtext"/>
+      <import feature="io.opencaesar.oml.sdk.feature" version="1.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
