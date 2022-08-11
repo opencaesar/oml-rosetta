@@ -34,7 +34,7 @@ limitations under the License.
    </url>
 
    <requires>
-      <import feature="io.opencaesar.oml.sdk.feature" version="1.0.5"/>
+      <import feature="io.opencaesar.oml.sdk.feature"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.help.ui"/>
       <import plugin="org.eclipse.emf.compare.edit"/>
