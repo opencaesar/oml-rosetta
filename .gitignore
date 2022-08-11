@@ -32,3 +32,4 @@ server/
 # macOS metadata
 .DS_Store
 workspace
+ecore.odesign

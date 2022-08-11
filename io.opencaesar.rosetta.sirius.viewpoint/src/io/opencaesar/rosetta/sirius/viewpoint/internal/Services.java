@@ -26,18 +26,24 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.eclipse.sirius.diagram.DDiagram;
+
 import io.opencaesar.oml.Classifier;
 import io.opencaesar.oml.Description;
+import io.opencaesar.oml.DescriptionImport;
 import io.opencaesar.oml.DifferentFromPredicate;
+import io.opencaesar.oml.Element;
 import io.opencaesar.oml.Entity;
 import io.opencaesar.oml.EntityReference;
 import io.opencaesar.oml.EnumeratedScalar;
 import io.opencaesar.oml.FeaturePredicate;
+import io.opencaesar.oml.Import;
 import io.opencaesar.oml.LinkAssertion;
 import io.opencaesar.oml.Literal;
 import io.opencaesar.oml.Member;
 import io.opencaesar.oml.NamedInstance;
 import io.opencaesar.oml.NamedInstanceReference;
+import io.opencaesar.oml.OmlFactory;
 import io.opencaesar.oml.Ontology;
 import io.opencaesar.oml.Predicate;
 import io.opencaesar.oml.PropertyValueAssertion;
@@ -49,6 +55,7 @@ import io.opencaesar.oml.RelationInstance;
 import io.opencaesar.oml.RelationRangeRestrictionAxiom;
 import io.opencaesar.oml.RelationRestrictionAxiom;
 import io.opencaesar.oml.RelationTargetRestrictionAxiom;
+import io.opencaesar.oml.Rule;
 import io.opencaesar.oml.SameAsPredicate;
 import io.opencaesar.oml.ScalarProperty;
 import io.opencaesar.oml.ScalarPropertyReference;
@@ -58,8 +65,10 @@ import io.opencaesar.oml.SpecializableTerm;
 import io.opencaesar.oml.SpecializableTermReference;
 import io.opencaesar.oml.StructuredProperty;
 import io.opencaesar.oml.StructuredPropertyReference;
+import io.opencaesar.oml.Type;
 import io.opencaesar.oml.TypePredicate;
 import io.opencaesar.oml.Vocabulary;
+import io.opencaesar.oml.VocabularyImport;
 import io.opencaesar.oml.util.OmlRead;
 import io.opencaesar.oml.util.OmlSearch;
 
@@ -348,15 +357,18 @@ public final class Services {
 	}
 
 	public static String getLabel(Ontology ontology, TypePredicate predicate) {
-		return getLabel(ontology, predicate.getType())+"("+predicate.getVariable()+")";
+		String type = predicate.getType() != null ? getLabel(ontology, predicate.getType()) : "null";
+		return type+"("+predicate.getVariable()+")";
 	}
 	
 	public static String getLabel(Ontology ontology, RelationEntityPredicate predicate) {
-		return getLabel(ontology, predicate.getEntity())+"("+predicate.getVariable1()+", "+predicate.getEntityVariable()+ ", "+predicate.getVariable2()+")";
+		String entity = predicate.getEntity() != null ? getLabel(ontology, predicate.getEntity()) : "null";
+		return entity+"("+predicate.getVariable1()+", "+predicate.getEntityVariable()+ ", "+predicate.getVariable2()+")";
 	}
 
 	public static String getLabel(Ontology ontology, FeaturePredicate predicate) {
-		return getLabel(ontology, predicate.getFeature())+"("+predicate.getVariable1()+", "+predicate.getVariable2()+")";
+		String feature = predicate.getFeature() != null ? getLabel(ontology, predicate.getFeature()) : "null";
+		return feature+"("+predicate.getVariable1()+", "+predicate.getVariable2()+")";
 	}
 
 	public static String getLabel(Ontology ontology, SameAsPredicate predicate) {
@@ -394,4 +406,82 @@ public final class Services {
 		return OmlRead.getLexicalValue(literal);
 	}
 
+	public static Set<Member> getVisualizedMembers(Vocabulary vocabulary) {
+		var members = new LinkedHashSet<Member>();
+		// terms
+		members.addAll(getVisualizedTerms(vocabulary));
+		// named instances
+		members.addAll(getVisualizedNamedInstances(vocabulary));
+		// rules
+		members.addAll(vocabulary.getOwnedStatements().stream()
+				.filter(s -> s instanceof Rule)
+				.map(s -> (Rule)s)
+				.collect(Collectors.toSet()));
+		return members;
+	}
+
+	public static List<Element> getVisualizedElements(DDiagram diagram) {
+		return diagram.getOwnedDiagramElements().stream()
+				.filter(e -> e.getTarget() != null)
+				.map(e -> (Element) e.getTarget())
+				.collect(Collectors.toList());
+	}
+
+	public static List<Element> getExistingElements(Vocabulary vocabulary) {
+		var ontologies = new ArrayList<Ontology>();
+		ontologies.add(vocabulary);
+		ontologies.addAll(OmlRead.getImports(vocabulary).stream()
+				.filter(i -> i.getPrefix() != null)
+				.map(i -> OmlRead.getImportedOntology(i))
+				.collect(Collectors.toList()));
+		var elements = new ArrayList<Element>();
+		elements.addAll(ontologies);
+		elements.addAll(ontologies.stream()
+				.flatMap(o -> OmlRead.getStatements(o).stream())
+				.filter(i -> (i instanceof Type) && !(i instanceof RelationEntity))
+				.map(i -> (Member)i)
+				.collect(Collectors.toList()));
+		return elements;
+	}
+
+    public static String getNewName(Member member) {
+    	var names = OmlRead.getMembers(member.getOntology()).stream()
+    			.map(s -> ((Member)s).getName())
+    			.collect(Collectors.toSet());
+    	String base = member.getClass().getSimpleName().replace("Impl", "");
+    	String name = base;
+    	int i = 0;
+    	while (names.contains(name)) {
+    		name = base + ++i;
+    	}
+    	return name;	
+    }
+
+    public static Member getOrImportMemberByAbbreviatedIri(Ontology ontology, String abbreviatedIri) {
+    	Member member = OmlRead.getMemberByAbbreviatedIri(ontology, abbreviatedIri);
+    	if (member == null) {
+    		member = OmlRead.getMemberByAbbreviatedIri(ontology.eResource().getResourceSet(), abbreviatedIri);
+    		Ontology importedOntology = member.getOntology();
+    		Import newImport = null;
+    		if (ontology instanceof Vocabulary) {
+    			if (importedOntology instanceof Vocabulary) {
+    				newImport = OmlFactory.eINSTANCE.createVocabularyExtension();
+    			} else {
+    				newImport = OmlFactory.eINSTANCE.createVocabularyUsage();
+    			}
+        		((Vocabulary)ontology).getOwnedImports().add((VocabularyImport)newImport);
+    		} else { // if (ontology instanceof Description)
+    			if (importedOntology instanceof Vocabulary) {
+    				newImport = OmlFactory.eINSTANCE.createDescriptionBundleUsage();
+    			} else {
+    				newImport = OmlFactory.eINSTANCE.createDescriptionExtension();
+    			}
+        		((Description)ontology).getOwnedImports().add((DescriptionImport)newImport);
+    		}
+    		newImport.setNamespace(importedOntology.getNamespace());
+    		newImport.setPrefix(importedOntology.getPrefix());
+    	}
+    	return member;
+    }
+	
 }
