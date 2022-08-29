@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
@@ -121,8 +120,7 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		try {
-			IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(filePage.getContainerFullPath());
-			IFile file = folder.getFile(filePage.getFileName());
+			IFile file = filePage.createNewFile();
 			URI uri = URI.createURI(file.getLocationURI().toString());
 
 			Ontology ontology = (Ontology) OmlFactory.eINSTANCE.create(ontologyKind);

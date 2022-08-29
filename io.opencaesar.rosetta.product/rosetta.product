@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Rosetta" uid="rosetta" id="io.opencaesar.rosetta.rcp.product" application="org.eclipse.ui.ide.workbench" version="1.3.1" useFeatures="true" includeLaunchers="true">
+<product name="Rosetta" uid="rosetta" id="io.opencaesar.rosetta.rcp.product" application="org.eclipse.ui.ide.workbench" version="1.3.2" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/io.opencaesar.rosetta.rcp/images/about.png"/>
