@@ -20,15 +20,20 @@ package io.opencaesar.rosetta.oml.wizards;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -120,7 +125,38 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		try {
-			IFile file = filePage.createNewFile();
+			IProject project;
+			IPath path = filePage.getContainerFullPath();
+			if (path.segmentCount() > 1) {
+				IContainer folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
+				project = folder.getProject();
+			} else {
+				project =  ResourcesPlugin.getWorkspace().getRoot().getProject(path.lastSegment());
+			}
+
+			// Create directory structure
+			IFolder srcFolder = project.getFolder("src");
+			if (!srcFolder.exists()) {
+				srcFolder.create(true, true, new NullProgressMonitor());
+			}
+			IFolder omlFolder = srcFolder.getFolder("oml");
+			if (!omlFolder.exists()) {
+				omlFolder.create(true, true, new NullProgressMonitor());
+			}
+			
+			IFolder ontologyFolder = omlFolder;
+			List<String> ontologyPathSegments = getPathSegments(ontologyNamespace);
+			List<String> ontologyFolderSegments = ontologyPathSegments.subList(0, ontologyPathSegments.size()-1);
+			//String ontologyName = ontologyPathSegments.get(ontologyPathSegments.size()-1);
+			for (String pathSegment : ontologyFolderSegments) {
+				IFolder subFolder = ontologyFolder.getFolder(pathSegment);
+				if (!subFolder.exists()) {
+					subFolder.create(true, true, new NullProgressMonitor());
+				}
+				ontologyFolder = subFolder;
+			}
+
+			IFile file = ontologyFolder.getFile(filePage.getFileName());
 			URI uri = URI.createURI(file.getLocationURI().toString());
 
 			Ontology ontology = (Ontology) OmlFactory.eINSTANCE.create(ontologyKind);
@@ -135,12 +171,24 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 			BasicNewResourceWizard.selectAndReveal(file, workbench.getActiveWorkbenchWindow());
 			IDE.openEditor(workbench.getActiveWorkbenchWindow().getActivePage(), file);
 			return true;
-		} catch (IOException | CoreException e) {
+		} catch (IOException | CoreException | URISyntaxException e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}
 		
 	}
 	
+	private static List<String> getPathSegments(String uri) throws URISyntaxException {
+		List<String> pathSegments = new ArrayList<String>();
+		java.net.URI baseUri = new java.net.URI(uri);
+		pathSegments.add(baseUri.getHost());
+		for (String pathSegment : baseUri.getPath().split("/")) {
+			if (!pathSegment.trim().isEmpty()) {
+				pathSegments.add(pathSegment.trim());
+			}
+		}
+		return pathSegments;
+	}
+
 	/**
 	 * Allows the user to configure the ontology, specifying the type (vocabulary,
 	 * bundle, or description), namespace IRI, namespace separator, and namespace

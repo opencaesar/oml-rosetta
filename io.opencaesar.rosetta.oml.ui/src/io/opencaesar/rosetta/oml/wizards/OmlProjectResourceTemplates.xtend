@@ -225,7 +225,9 @@ class OmlProjectResourceTemplates {
 		/*
 		 * A task to delete the build artifacts
 		 */
-		task clean(type: Delete, group: "oml")
+		task clean(type: Delete, group: "oml") {
+			delete 'build'
+		}
 		
 		/*
 		 * Publish artifact to maven
