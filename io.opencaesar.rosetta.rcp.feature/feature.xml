@@ -2,7 +2,7 @@
 <feature
       id="io.opencaesar.rosetta.rcp.feature"
       label="%featureName"
-      version="1.3.4"
+      version="1.4.0"
       provider-name="%providerName">
 
    <description url="https://github.com/opencaesar/oml-rosetta">
@@ -187,6 +187,10 @@ limitations under the License.
 
    <includes
          id="org.eclipse.sirius.diagram.elk.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.emf.ecore.xcore"
          version="0.0.0"/>
 
    <plugin
@@ -415,6 +419,34 @@ limitations under the License.
 
    <plugin
          id="org.objectweb.asm.tree"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.e4.ui.progress"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emf.mwe2.runtime"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.cli"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.io"
          download-size="0"
          install-size="0"
          version="0.0.0"

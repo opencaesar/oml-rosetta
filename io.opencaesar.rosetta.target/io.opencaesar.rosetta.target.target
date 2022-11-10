@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="io.opencaesar.rosetta.target">
+<target includeMode="feature" name="io.opencaesar.rosetta.target">
 	<locations>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.platform.sdk" version="0.0.0"/>
@@ -15,7 +15,7 @@
 			<unit id="org.eclipse.emf.ecore.xcore.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.xtext.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.xtend.sdk.feature.group" version="0.0.0"/>
-			<repository location="http://download.eclipse.org/releases/2022-06"/>
+			<repository location="http://download.eclipse.org/releases/2022-09"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.emfcloud.emfjson-jackson" version="0.0.0"/>
@@ -25,8 +25,8 @@
 			<repository location="https://download.eclipse.org/emfcloud/emfjson-jackson/p2/releases/2.1.0/"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<unit id="org.apache.xalan" version="0.0.0"/>
-			<repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20220531185310/repository"/>
+			<unit id="org.apache.commons.io" version="0.0.0"/>
+			<repository location="https://download.eclipse.org/tools/orbit/downloads/2022-09"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.emf.compare.diagram.sirius.feature.group" version="0.0.0"/>
@@ -51,7 +51,7 @@
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="0.0.0"/>
-			<repository location="https://download.eclipse.org/justj/jres/11/updates/release"/>
+			<repository location="https://download.eclipse.org/justj/jres/17/updates/release"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="io.opencaesar.oml.sdk.feature.feature.group" version="0.0.0"/>
