@@ -294,10 +294,6 @@ class OmlProjectResourceTemplates {
 		    }
 		}
 		
-		tasks.named('wrapper') {
-		   gradleVersion = '6.5.1' //version required
-		}
-		
 		/*
 		 * Integration with the Eclipse IDE
 		 */ 
