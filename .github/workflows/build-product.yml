@@ -1,0 +1,11 @@
+name: build-product
+run-name: ${{ github.actor }} 
+on: [push]
+jobs:
+  build-product:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Dockerized Mavven Build and Deploy
+        uses: actions/checkout@master
+        uses: docker://maven:3.6-openjdk-11
+        run: docker run --rm -v \$(pwd):/root/sources -w /root/sources maven:3.6-openjdk-11 mvn clean verify
