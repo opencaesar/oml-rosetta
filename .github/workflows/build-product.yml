@@ -7,5 +7,5 @@ jobs:
     steps:
       - name: Run Dockerized Mavven Build and Deploy
         uses: actions/checkout@master
-        uses: docker://maven:3.6-openjdk-11
+        run: docker pull maven:3.6-openjdk-11
         run: docker run --rm -v \$(pwd):/root/sources -w /root/sources maven:3.6-openjdk-11 mvn clean verify
