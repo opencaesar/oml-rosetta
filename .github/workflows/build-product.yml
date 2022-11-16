@@ -1,12 +1,32 @@
-name: build-product
-run-name: ${{ github.actor }} 
-on: [push]
+name: Build p2 and OS artifacts
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  # ** means all branches and tags
+  push:
+    branches: "**"
+  pull_request:
+    branches: "master"
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build-product:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Get Docker Image
-        uses: docker://maven:3.6-openjdk-11
-      - name: Run Dockerized Mavven Build and Deploy
-      - uses: actions/checkout@master
-      - run: docker run --rm -v \$(pwd):/root/sources -w /root/sources maven:3.6-openjdk-11 mvn clean verify
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Checks out docker image
+      - uses: docker://maven:3.6-openjdk-11
+
+      # Runs a single command using the runners shell
+      - name: Run Dockerized Maven Build and Deploy
+        run: docker run --rm -v \$(pwd):/root/sources -w /root/sources maven:3.6-openjdk-11 /bin/bash -c mvn clean verify
