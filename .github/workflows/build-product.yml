@@ -30,4 +30,4 @@ jobs:
 
       # Runs build process
       - name: Run Dockerized Maven Build and Deploy
-        run: docker run --rm -v \$(pwd):/root/sources -w /root/sources maven:3.6-openjdk-11 /bin/bash -c mvn clean verify
+        run: docker run --rm -v /$(GITHUB_WORKSPACE):/root/sources -w /root/sources maven:3.6-openjdk-11 /bin/bash -c mvn clean verify
