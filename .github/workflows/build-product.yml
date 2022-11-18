@@ -43,7 +43,7 @@ jobs:
       - run: mvn -B -U verify
       # - run: $GITHUB_WORKSPACE/setversion.sh ${{ env.LATEST_TAG }}
       - run: $GITHUB_WORKSPACE/setversion.sh 1.4.0 # 1.4.0 is a test for now
-      - run: mkdir staging && cp ${{ env.PRODUCTS_PATH }}/* staging 
+      - run: mkdir staging && cp -r ${{ env.PRODUCTS_PATH }}/* staging 
       - uses: actions/upload-artifact@v3
         with: 
           name: Package
