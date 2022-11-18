@@ -5,6 +5,7 @@ on:
   # Triggers the workflow on push or pull request events but only for the "master" branch
   # ** means all branches and tags
   push:
+    # tags: '*' # only push on tags
     branches: "**"
   pull_request:
     branches: "master"
@@ -21,7 +22,10 @@ jobs:
     # Environment variable 
     env:
       PRODUCTS_PATH: io.opencaesar.rosetta.product/target/products/rosetta
-      LATEST_TAG: git describe --tags --abbrev=0
+
+    # Tagged Build
+    # - name: Set tag env variable
+    #   run: echo "LATEST_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -37,7 +41,8 @@ jobs:
         
         # --batch-modes and --update-snapshots
       - run: mvn -B -U verify
-      - run: $GITHUB_WORKSPACE/setversion.sh ${{ env.LATEST_TAG }}
+      # - run: $GITHUB_WORKSPACE/setversion.sh ${{ env.LATEST_TAG }}
+      - run: $GITHUB_WORKSPACE/setversion.sh 1.4.0 # 1.4.0 is a test for now
       - run: mkdir staging && cp ${{ env.PRODUCTS_PATH }}/* staging 
       - uses: actions/upload-artifact@v3
         with: 
