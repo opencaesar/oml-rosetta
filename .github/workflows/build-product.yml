@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     # Environment variable 
     env:
-      PRODUCTS_PATH: io.opencaesar.rosetta.product/target/products/rosetta
+      PRODUCTS_PATH: io.opencaesar.rosetta.product/target/products/rosetta-*
 
     # Tagged Build
     # - name: Set tag env variable
