@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     # Environment variable 
     env:
-      PRODUCTS_PATH: io.opencaesar.rosetta.product/target/products/rosetta/*
+      PRODUCTS_PATH: io.opencaesar.rosetta.product/target/products/*
 
     # Tagged Build
     # - name: Set tag env variable
@@ -40,10 +40,13 @@ jobs:
           distribution: 'zulu'
         
         # --batch-modes and --update-snapshots
-      - run: mvn -B -U verify
+      - name: Build OS binaries and p2 artifacts
+        run: mvn -B -U verify
       # - run: $GITHUB_WORKSPACE/setversion.sh ${{ env.LATEST_TAG }}
-      - run: $GITHUB_WORKSPACE/setversion.sh 1.4.0 # 1.4.0 is a test for now
-      - uses: actions/upload-artifact@v3
-        with: 
-          name: OS Binaries
-          path: ${{ env.PRODUCTS_PATH }}
+      - name: Set version
+        run: $GITHUB_WORKSPACE/setversion.sh 1.4.0 # 1.4.0 is a test for now
+
+
+      - name: Deploy OS binaries and p2 artifacts
+      # settings file encodes credentials needed to write to Github Packages
+        run: mvn -B -e -Prelease-composite -Dp2-composite-dir=${{ env.PRODUCTS_PATH }} -s $GITHUB_WORKSPACE/settings.xml deploy 2>&1
