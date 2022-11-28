@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     # Environment variable 
     env:
-      PRODUCTS_PATH: io.opencaesar.rosetta.product/target/products/rosetta-macosx.cocoa.aarch64.zip
+      PRODUCTS_PATH: io.opencaesar.rosetta.product/target/products/rosetta/*
 
     # Tagged Build
     # - name: Set tag env variable
@@ -37,7 +37,7 @@ jobs:
         with:
           java-version: '17'
           # https://github.com/actions/setup-java#supported-distributions
-          distribution: 'temurin'
+          distribution: 'zulu'
         
         # --batch-modes and --update-snapshots
       - run: mvn -B -U verify
@@ -45,5 +45,5 @@ jobs:
       - run: $GITHUB_WORKSPACE/setversion.sh 1.4.0 # 1.4.0 is a test for now
       - uses: actions/upload-artifact@v3
         with: 
-          name: MacOS aarch64
+          name: OS Binaries
           path: ${{ env.PRODUCTS_PATH }}
