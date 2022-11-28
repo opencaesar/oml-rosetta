@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     # Environment variable 
     env:
-      PRODUCTS_PATH: io.opencaesar.rosetta.product/target/products/rosetta-*
+      PRODUCTS_PATH: io.opencaesar.rosetta.product/target/products/rosetta-rosetta-macosx.cocoa.aarch64.zip
 
     # Tagged Build
     # - name: Set tag env variable
@@ -45,5 +45,5 @@ jobs:
       - run: $GITHUB_WORKSPACE/setversion.sh 1.4.0 # 1.4.0 is a test for now
       - uses: actions/upload-artifact@v3
         with: 
-          name: OS Build Artifacts
+          name: MacOS aarch64
           path: ${{ env.PRODUCTS_PATH }}
