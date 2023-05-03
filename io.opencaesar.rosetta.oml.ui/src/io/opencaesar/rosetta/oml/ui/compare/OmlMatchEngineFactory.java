@@ -36,18 +36,13 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import io.opencaesar.oml.Annotation;
-import io.opencaesar.oml.ConceptInstanceReference;
-import io.opencaesar.oml.ConceptTypeAssertion;
 import io.opencaesar.oml.Element;
 import io.opencaesar.oml.Import;
-import io.opencaesar.oml.LinkAssertion;
 import io.opencaesar.oml.Literal;
 import io.opencaesar.oml.Member;
 import io.opencaesar.oml.Ontology;
-import io.opencaesar.oml.RelationInstanceReference;
-import io.opencaesar.oml.RelationTypeAssertion;
-import io.opencaesar.oml.ScalarPropertyValueAssertion;
-import io.opencaesar.oml.StructuredPropertyValueAssertion;
+import io.opencaesar.oml.PropertyValueAssertion;
+import io.opencaesar.oml.TypeAssertion;
 
 public class OmlMatchEngineFactory extends MatchEngineFactoryImpl {
 
@@ -76,6 +71,8 @@ public class OmlMatchEngineFactory extends MatchEngineFactoryImpl {
 			Member member = (Member)eObject;
 			if (member.getName() != null) {
 				return baseId + "#" + escapeForIdString(member.getName());
+			} else {
+				return baseId + getIdInScope(Member.class, eObject, Member::resolve);
 			}
 		}
 		if (eObject instanceof Literal) {
@@ -90,28 +87,12 @@ public class OmlMatchEngineFactory extends MatchEngineFactoryImpl {
 		if (eObject instanceof Annotation) {
 			return baseId + getIdInScope(Annotation.class, eObject, Annotation::getProperty);
 		}
-		if (eObject instanceof ScalarPropertyValueAssertion) {
-			return baseId + getIdInScope(ScalarPropertyValueAssertion.class, eObject, ScalarPropertyValueAssertion::getProperty);
+		if (eObject instanceof PropertyValueAssertion) {
+			return baseId + getIdInScope(PropertyValueAssertion.class, eObject, PropertyValueAssertion::getProperty);
 		}
-		if (eObject instanceof StructuredPropertyValueAssertion) {
-			return baseId + getIdInScope(StructuredPropertyValueAssertion.class, eObject, StructuredPropertyValueAssertion::getProperty);
+		if (eObject instanceof TypeAssertion) {
+			return baseId + getIdInScope(TypeAssertion.class, eObject, TypeAssertion::getType);
 		}
-		if (eObject instanceof LinkAssertion) {
-			return baseId + getIdInScope(LinkAssertion.class, eObject, LinkAssertion::getRelation);
-		}
-		if (eObject instanceof ConceptTypeAssertion) {
-			return baseId + getIdInScope(ConceptTypeAssertion.class, eObject, ConceptTypeAssertion::getType);
-		}
-		if (eObject instanceof RelationTypeAssertion) {
-			return baseId + getIdInScope(RelationTypeAssertion.class, eObject, RelationTypeAssertion::getType);
-		}
-		if (eObject instanceof ConceptInstanceReference) {
-			return baseId + getIdInScope(ConceptInstanceReference.class, eObject, ConceptInstanceReference::getInstance);
-		}
-		if (eObject instanceof RelationInstanceReference) {
-			return baseId + getIdInScope(RelationInstanceReference.class, eObject, RelationInstanceReference::getInstance);
-		}
-		
 		return baseId + "EObject " + eObject.eContainer().eContents().indexOf(eObject);
 	}	
 
