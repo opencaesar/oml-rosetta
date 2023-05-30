@@ -230,13 +230,6 @@ limitations under the License.
          unpack="false"/>
 
    <plugin
-         id="org.slf4j.api"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="io.github.classgraph"
          download-size="0"
          install-size="0"
@@ -266,20 +259,6 @@ limitations under the License.
 
    <plugin
          id="org.apache.sshd.osgi"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bouncycastle.bcpg"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bouncycastle.bcprov"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -453,11 +432,5 @@ limitations under the License.
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
-         id="org.apache.commons.io"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
 </feature>
