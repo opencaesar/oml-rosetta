@@ -34,7 +34,7 @@ public class SplashHandler extends BasicSplashHandler {
 					
 					String versionString = "Version " + FrameworkUtil.getBundle(getClass()).getVersion();
 					Point textExtent = e.gc.textExtent(versionString);
-					e.gc.drawText(versionString, splashBounds.width/2 - textExtent.x/2, splashBounds.height - textExtent.y - 10, true);
+					e.gc.drawText(versionString, splashBounds.width/2 - textExtent.x/2, splashBounds.height - textExtent.y - 12, true);
 				} finally {
 					foreground.dispose();
 				}
