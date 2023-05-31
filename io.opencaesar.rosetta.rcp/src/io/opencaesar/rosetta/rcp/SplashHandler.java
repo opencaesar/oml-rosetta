@@ -26,7 +26,7 @@ public class SplashHandler extends BasicSplashHandler {
 		overlay.addPaintListener(e -> {
 			Font font = new Font(e.gc.getDevice(), "", 12 * 72 / Display.getDefault().getDPI().y, SWT.BOLD);
 			try {
-				Color foreground = new Color(e.gc.getDevice(), 68, 75, 82);
+				Color foreground = new Color(e.gc.getDevice(), 255, 255, 255);
 				try {
 					e.gc.setFont(font);
 					e.gc.setForeground(foreground);
@@ -34,7 +34,7 @@ public class SplashHandler extends BasicSplashHandler {
 					
 					String versionString = "Version " + FrameworkUtil.getBundle(getClass()).getVersion();
 					Point textExtent = e.gc.textExtent(versionString);
-					e.gc.drawText(versionString, splashBounds.width - textExtent.x - 17, splashBounds.height - textExtent.y - 10, true);
+					e.gc.drawText(versionString, splashBounds.width/2 - textExtent.x/2, splashBounds.height - textExtent.y - 12, true);
 				} finally {
 					foreground.dispose();
 				}

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: io.opencaesar.rosetta.sirius;singleton:=true
-Bundle-Version: 1.4.0
+Bundle-Version: 2.0.0
 Bundle-Localization: plugin
 Automatic-Module-Name: io.opencaesar.rosetta.sirius
 Bundle-RequiredExecutionEnvironment: JavaSE-11

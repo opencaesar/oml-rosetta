@@ -2,7 +2,7 @@
 <feature
       id="io.opencaesar.rosetta.rcp.feature"
       label="%featureName"
-      version="1.4.0"
+      version="2.0.0"
       provider-name="%providerName">
 
    <description url="https://github.com/opencaesar/oml-rosetta">
@@ -193,6 +193,14 @@ limitations under the License.
          id="org.eclipse.emf.ecore.xcore"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.oomph.preferences"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.oomph.setup"
+         version="0.0.0"/>
+
    <plugin
          id="com.google.guava"
          download-size="0"
@@ -216,13 +224,6 @@ limitations under the License.
 
    <plugin
          id="com.google.inject"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.slf4j.api"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -258,20 +259,6 @@ limitations under the License.
 
    <plugin
          id="org.apache.sshd.osgi"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bouncycastle.bcpg"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bouncycastle.bcprov"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -445,11 +432,5 @@ limitations under the License.
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
-         id="org.apache.commons.io"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
 </feature>

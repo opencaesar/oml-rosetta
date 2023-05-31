@@ -125,19 +125,12 @@ class OmlProjectResourceTemplates {
 		configurations {
 		    oml
 		}
-		
-		/*
-		 * Dependency versions
-		 */
-		ext { 
-		    coreVersion = '+'
-		}
-		
+				
 		/*
 		 * The OML dependencies
 		 */
 		dependencies {
-		    oml "io.opencaesar.ontologies:core-vocabularies:$coreVersion"
+		    oml "io.opencaesar.ontologies:core-vocabularies:+"
 		}
 		
 		/*
@@ -195,6 +188,7 @@ class OmlProjectResourceTemplates {
 		 * A task to load an OWL catalog to a Fuseki dataset endpoint
 		 */
 		task owlLoad(type:io.opencaesar.owl.load.OwlLoadTask, group:"oml", dependsOn: owlReason) {
+		    inputs.files(startFuseki.outputFolderPath) // rerun when fuseki restarts
 		    catalogPath = file('build/owl/catalog.xml')
 		    endpointURL = "http://localhost:3030/$dataset.name".toString()
 		    fileExtensions = ['owl', 'ttl']
