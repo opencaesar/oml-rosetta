@@ -2,7 +2,7 @@
 <feature
       id="io.opencaesar.rosetta.rcp.feature"
       label="%featureName"
-      version="2.0.0"
+      version="2.1.0"
       provider-name="%providerName">
 
    <description url="https://github.com/opencaesar/oml-rosetta">
@@ -199,6 +199,10 @@ limitations under the License.
 
    <includes
          id="org.eclipse.oomph.setup"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.sirius.runtime.ide.xtext"
          version="0.0.0"/>
 
    <plugin
@@ -431,6 +435,5 @@ limitations under the License.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
 
 </feature>

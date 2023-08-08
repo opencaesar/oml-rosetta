@@ -12,9 +12,9 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.ui.editor.XtextEditor;
 
 public class UIServices {
 
@@ -25,12 +25,12 @@ public class UIServices {
 		IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(workspaceFile.getName());
 		try {
 			IEditorPart openEditor = page.openEditor(new FileEditorInput(workspaceFile), desc.getId(), true);
-			if (openEditor instanceof AbstractTextEditor) {
+			if (openEditor instanceof XtextEditor) {
 				ICompositeNode node = NodeModelUtils.findActualNodeFor(eObject);
 				if (node != null) {
 					int offset = node.getOffset();
 					int length = node.getTotalEndOffset() - offset;
-					((AbstractTextEditor) openEditor).selectAndReveal(offset, length);
+					((XtextEditor) openEditor).selectAndReveal(offset, length);
 				}
 			} else if (openEditor instanceof ISelectionProvider) {
 				var selection = new StructuredSelection(eObject);

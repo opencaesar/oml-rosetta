@@ -49,6 +49,7 @@
 			<unit id="org.eclipse.sirius.interpreter.feature.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.sirius.aql.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.sirius.diagram.elk.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.sirius.runtime.ide.xtext.feature.group" version="0.0.0"/>
 			<repository location="https://download.eclipse.org/sirius/updates/releases/7.1.0/2021-06"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">

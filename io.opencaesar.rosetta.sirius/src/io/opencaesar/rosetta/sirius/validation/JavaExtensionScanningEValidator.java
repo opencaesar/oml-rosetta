@@ -311,7 +311,7 @@ public class JavaExtensionScanningEValidator implements EValidator {
 		public boolean test(EObject instance) {
 			if (javaType.isInstance(instance)) {
 				var type = OmlRead.getMemberByIri(((Instance)instance).getOntology(), typeIri);
-				return type instanceof Classifier && OmlSearch.findIsOfKind((Instance) instance, (Classifier) type);
+				return type instanceof Classifier && OmlSearch.findIsKindOf((Instance) instance, (Classifier) type);
 			}
 			return false;
 		}
@@ -349,7 +349,7 @@ public class JavaExtensionScanningEValidator implements EValidator {
 		public boolean test(EObject instance) {
 			if (javaType.isInstance(instance)) {
 				var type = OmlRead.getMemberByAbbreviatedIri(((Instance)instance).getOntology(), abbreviatedTypeIri);
-				return type instanceof Classifier && OmlSearch.findIsOfKind((Instance) instance, (Classifier) type);
+				return type instanceof Classifier && OmlSearch.findIsKindOf((Instance) instance, (Classifier) type);
 			}
 			return false;
 		}

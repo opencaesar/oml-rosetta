@@ -20,6 +20,7 @@ package io.opencaesar.rosetta.sirius.viewpoint.internal;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -60,10 +61,14 @@ import io.opencaesar.oml.Scalar;
 import io.opencaesar.oml.ScalarProperty;
 import io.opencaesar.oml.SemanticProperty;
 import io.opencaesar.oml.SpecializableTerm;
+import io.opencaesar.oml.SpecializationAxiom;
+import io.opencaesar.oml.Structure;
+import io.opencaesar.oml.StructuredProperty;
 import io.opencaesar.oml.Term;
-import io.opencaesar.oml.Type;
 import io.opencaesar.oml.TypePredicate;
+import io.opencaesar.oml.UnreifiedRelation;
 import io.opencaesar.oml.Vocabulary;
+import io.opencaesar.oml.util.OmlBuilder;
 import io.opencaesar.oml.util.OmlRead;
 import io.opencaesar.oml.util.OmlSearch;
 
@@ -224,15 +229,6 @@ public final class Services {
 				Collections.emptyList();
 	}
 
-	public static String getLabel(Ontology ontology, RelationEntity entity) {
-		var forward = entity.getForwardRelation();
-		if (forward != null) {
-			return OmlRead.getAbbreviatedIriIn(forward, ontology);
-		} else {
-			return OmlRead.getAbbreviatedIriIn(entity, ontology);
-		}
-	}
-
 	public static String getLabel(Ontology ontology, NamedInstance instance) {
 		var types = getTypes(ontology, instance);
 		return (types != null && types.length()>0 ? "«"+types+"»\n" : "") + OmlRead.getAbbreviatedIriIn(instance, ontology);
@@ -248,7 +244,7 @@ public final class Services {
 	
 	public static String getLabel(Ontology ontology, ScalarProperty property) {
 		return OmlRead.getAbbreviatedIriIn(property, ontology)+" : " +
-				property.getRanges().stream().map(i -> getLabel(ontology, i)).collect(Collectors.joining(" ^ ")) +
+				property.getRanges().stream().map(i -> getLabel(ontology, i)).collect(Collectors.joining(" & ")) +
 				(property.isFunctional()? " [0..1]": "");
 	}
 
@@ -341,35 +337,46 @@ public final class Services {
 		return members;
 	}
 
-	public static List<Element> getVisualizedElements(DDiagram diagram) {
+	public static Set<Element> getVisualizedElements(DDiagram diagram) {
 		return diagram.getOwnedDiagramElements().stream()
 				.filter(e -> e.getTarget() != null)
 				.map(e -> (Element) e.getTarget())
-				.collect(Collectors.toList());
+				.collect(Collectors.toSet());
 	}
 
-	public static List<Element> getExistingElements(Vocabulary vocabulary) {
-		var ontologies = new ArrayList<Ontology>();
-		ontologies.add(vocabulary);
-		ontologies.addAll(vocabulary.getOwnedImports().stream()
-				.filter(i -> i.getPrefix() != null)
-				.map(i -> OmlRead.getImportedOntology(i))
-				.collect(Collectors.toList()));
-		var elements = new ArrayList<Element>();
-		elements.addAll(ontologies);
-		elements.addAll(ontologies.stream()
-				.flatMap(o -> OmlRead.getStatements(o).stream())
-				.filter(i -> (i instanceof Type) && !(i instanceof RelationEntity))
-				.map(i -> (Member)i)
-				.collect(Collectors.toList()));
+    public static List<Ontology> getCandidateOntologies(DDiagram diagram) {
+		return OmlRead.getOntologies(diagram.eResource().getResourceSet());
+    }
+
+	public static Set<Element> getCandidateElements(DDiagram diagram) {
+		var visualized = getVisualizedElements(diagram);
+		var ontologies = getCandidateOntologies(diagram);
+		var map = new HashMap<Ontology, List<Member>>();
+		for (Ontology o : ontologies) {
+			var members = OmlRead.getMembers(o).stream()
+					.filter(i -> !(visualized.contains(i)))
+					.collect(Collectors.toList());
+			map.put(o, members);
+		}
+		var elements = new LinkedHashSet<Element>();
+		for (var entry : map.entrySet()) {
+			if (!entry.getValue().isEmpty()) {
+				elements.add(entry.getKey());
+				elements.addAll(entry.getValue());
+			}
+		}
 		return elements;
 	}
 
     public static String getNewName(Member member) {
-    	var names = OmlRead.getMembers(member.getOntology()).stream()
+    	String base = member.getClass().getSimpleName().replace("Impl", "");
+    	return getNewName(member.getOntology(), base);
+    }
+
+    public static String getNewName(Ontology ontology, String base) {
+    	var names = OmlRead.getMembers(ontology).stream()
     			.map(s -> ((Member)s).getName())
     			.collect(Collectors.toSet());
-    	String base = member.getClass().getSimpleName().replace("Impl", "");
     	String name = base;
     	int i = 0;
     	while (names.contains(name)) {
@@ -382,26 +389,94 @@ public final class Services {
     	Member member = OmlRead.getMemberByAbbreviatedIri(ontology, abbreviatedIri);
     	if (member == null) {
     		member = OmlRead.getMemberByAbbreviatedIri(ontology.eResource().getResourceSet(), abbreviatedIri);
-    		Ontology importedOntology = member.getOntology();
-    		Import newImport = OmlFactory.eINSTANCE.createImport();
-    		if (ontology instanceof Vocabulary) {
-    			if (importedOntology instanceof Vocabulary) {
-    				newImport.setKind(ImportKind.EXTENSION);;
-    			} else {
-    				newImport.setKind(ImportKind.USAGE);
-    			}
-    		} else { // if (ontology instanceof Description)
-    			if (importedOntology instanceof Vocabulary) {
-    				newImport.setKind(ImportKind.USAGE);
-    			} else {
-    				newImport.setKind(ImportKind.EXTENSION);;
-    			}
-    		}
-    		ontology.getOwnedImports().add((Import)newImport);
-    		newImport.setNamespace(importedOntology.getNamespace());
-    		newImport.setPrefix(importedOntology.getPrefix());
+    		addOntologyImport(ontology, member.getOntology());
     	}
     	return member;
     }
-	
+
+    public static void importMemberIfNeeded(Ontology ontology, Member member) {
+    	Member found = OmlRead.getMemberByIri(ontology, member.getIri());
+    	if (found == null) {
+    		addOntologyImport(ontology, member.getOntology());
+    	}
+    }
+
+    public static void addOntologyImport(Ontology ontology, Ontology importedOntology) {
+    	if (!OmlRead.getImportedOntologies(ontology).contains(importedOntology)) {
+			Import newImport = OmlFactory.eINSTANCE.createImport();
+			if (ontology instanceof Vocabulary) {
+				if (importedOntology instanceof Vocabulary) {
+					newImport.setKind(ImportKind.EXTENSION);
+				} else {
+					newImport.setKind(ImportKind.USAGE);
+				}
+			} else { // if (ontology instanceof Description)
+				if (importedOntology instanceof Vocabulary) {
+					newImport.setKind(ImportKind.USAGE);
+				} else {
+					newImport.setKind(ImportKind.EXTENSION);;
+				}
+			}
+			ontology.getOwnedImports().add((Import)newImport);
+			newImport.setNamespace(importedOntology.getNamespace());
+			newImport.setPrefix(importedOntology.getPrefix());
+    	}
+    }
+    
+    public static SpecializationAxiom createSpecializationAxiom(Vocabulary vocabulary, Term source, Term target) {
+    	var builder = new OmlBuilder(vocabulary.eResource().getResourceSet());
+    	var axiom = builder.addSpecializationAxiom(vocabulary, source.getIri(), target.getIri());
+    	builder.finish();
+    	return axiom;
+    }
+
+    public static RelationEntity createRelationEntity(Vocabulary vocabulary, Entity source, Entity target) {
+    	var builder = new OmlBuilder(vocabulary.eResource().getResourceSet());
+    	var entity = builder.addRelationEntity(
+    			vocabulary, 
+    			getNewName(vocabulary, "RelationEntity"), 
+    			Collections.singletonList(source.getIri()),
+    			Collections.singletonList(target.getIri()),
+    			false, false, false, false, false, false, false);
+    	builder.addForwardRelation(entity, getNewName(vocabulary, "relationEntity"));
+    	builder.finish();
+    	return entity;
+    }
+
+    public static UnreifiedRelation createUnreifiedRelation(Vocabulary vocabulary, Entity source, Entity target) {
+    	var builder = new OmlBuilder(vocabulary.eResource().getResourceSet());
+    	var relation = builder.addUnreifiedRelation(
+    			vocabulary, 
+    			getNewName(vocabulary, "UnreifiedRelation"), 
+    			Collections.singletonList(source.getIri()),
+    			Collections.singletonList(target.getIri()),
+    			false, false, false, false, false, false, false); 
+    	builder.finish();
+    	return relation;
+    }
+
+    public static StructuredProperty createStructuredProperty(Vocabulary vocabulary, Classifier source, Structure target) {
+    	var builder = new OmlBuilder(vocabulary.eResource().getResourceSet());
+    	var property = builder.addStructuredProperty(
+    			vocabulary, 
+    			getNewName(vocabulary, "StructuredProperty"), 
+    			Collections.singletonList(source.getIri()),
+    			Collections.singletonList(target.getIri()),
+    			false); 
+    	builder.finish();
+    	return property;
+    }
+
+    public static ScalarProperty createScalarProperty(Vocabulary vocabulary, Classifier classifier) {
+    	var builder = new OmlBuilder(vocabulary.eResource().getResourceSet());
+    	var property = builder.addScalarProperty(
+    			vocabulary, 
+    			getNewName(vocabulary, "ScalarProperty"), 
+    			Collections.singletonList(classifier.getIri()),
+    			Collections.singletonList("http://www.w3.org/2001/XMLSchema#string"),
+    			false); 
+    	builder.finish();
+    	return property;
+    }
+
 }
