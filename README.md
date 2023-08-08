@@ -101,32 +101,3 @@ other/owlQuery: to run the SPARQL queries
 other/stopFuseki: to stop a Fuseki server
 
 > After each Gradle operation above, right click on the relevant project in Project Explorer view and select Refresh and inspect the results in the build folder
-
-## OML Version
-For a list of available Rosetta versions, click [here](https://github.com/opencaesar/oml-rosetta/releases)
-| Rosetta | OML   |
-|---------|-------|
-| 1.3.0   | 1.3.0 |
-| 1.2.1   | 1.2.1 |
-| 1.2.0   | 1.2.0 |
-| 1.1.0   | 1.1.0 |
-| 1.0.7   | 1.0.6 |
-| 1.0.6   | 1.0.6 |
-| 1.0.5   | 1.0.5 |
-| 1.0.4   | 1.0.4 |
-| 1.0.3   | 1.0.3 |
-| 1.0.2   | 1.0.2 |
-| 1.0.1   | 1.0.1 |
-| 1.0.1   | 1.0.1 |
-| 1.0.0   | 1.0.0 |
-| 0.9.2   | 0.9.2 |
-| 0.9.1   | 0.9.1 |
-| 0.9.0   | 0.9.0 |
-| 0.8.x   | 0.8.8 |
-| 0.7.x   | 0.8.8 |
-| 0.6.x   | 0.8.1 |
-| 0.5.x   | 0.7.7 |
-| 0.4.x   | 0.7.5 |
-| 0.3.x   | 0.7.3 |
-| 0.2.x   | 0.7.0 |
-| 0.1.x   | 0.6.2 |
