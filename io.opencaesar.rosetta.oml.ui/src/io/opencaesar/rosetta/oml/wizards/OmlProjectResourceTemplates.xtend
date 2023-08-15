@@ -81,7 +81,8 @@ class OmlProjectResourceTemplates {
 		/* 
 		 * The Gradle plugins 
 		 */
-		apply plugin: 'maven-publish'
+		apply plugin: 'base'
+		apply plugin: 'oml'
 		
 		/* 
 		 * The Gradle task dependencies 
@@ -104,12 +105,12 @@ class OmlProjectResourceTemplates {
 		/*
 		 * Dataset-specific variables
 		 */
-		ext.dataset = [
+		ext {
 		    // Name of dataset (matches one used in .fuseki.ttl file)
-		    name: '«gradleProjectName»',
+		    dataset = '«gradleProjectName»'
 		    // Root ontology IRI of the dataset
-		    rootOntologyIri: '«bundleIri»',
-		]
+		    rootIri = '«bundleIri»'
+		}
 		
 		/*
 		 * The repositories to look up OML dependencies in
@@ -120,31 +121,26 @@ class OmlProjectResourceTemplates {
 		}
 
 		/*
-		 * The configuration of OML dependencies
-		 */
-		configurations {
-		    oml
-		}
-				
-		/*
 		 * The OML dependencies
 		 */
 		dependencies {
-		    oml "io.opencaesar.ontologies:core-vocabularies:+"
+		    oml "io.opencaesar.ontologies:core-vocabularies:5.+"
 		}
 		
 		/*
 		 * A task to extract and merge the OML dependencies
+		 * @seeAlso https://github.com/opencaesar/oml-tools/blob/master/oml-merge/README.md
 		 */
-		task omlDependencies(type:io.opencaesar.oml.merge.OmlMergeTask, group:"oml") {
+		task downloadDependencies(type:io.opencaesar.oml.merge.OmlMergeTask, group:"oml", dependsOn: configurations.oml) {
 		    inputZipPaths = configurations.oml.files
 		    outputCatalogFolder = file('build/oml')
 		}
 		
 		/*
 		 * A task to convert the OML catalog to OWL catalog
+		 * @seeAlso https://github.com/opencaesar/owl-adapter/blob/master/oml2owl/README.md
 		 */
-		task omlToOwl(type:io.opencaesar.oml2owl.Oml2OwlTask, group:"oml", dependsOn: omlDependencies) {
+		task omlToOwl(type:io.opencaesar.oml2owl.Oml2OwlTask, group:"oml", dependsOn: downloadDependencies) {
 		    // OML catalog
 		    inputCatalogPath = file('catalog.xml')
 		    // OWL catalog
@@ -153,17 +149,18 @@ class OmlProjectResourceTemplates {
 		
 		/*
 		 * A task to run the Openllet reasoner on the OWL catalog
+		 * @seeAlso https://github.com/opencaesar/owl-tools/blob/master/owl-reason/README.md
 		 */
 		task owlReason(type:io.opencaesar.owl.reason.OwlReasonTask, group:"oml", dependsOn: omlToOwl) {
 		    // OWL catalog
 		    catalogPath = file('build/owl/catalog.xml')
 		    // Input ontology IRI to reason on
-		    inputOntologyIri = "$dataset.rootOntologyIri".toString()
+		    inputOntologyIri = "$rootIri".toString()
 		    // Entailment statements to generate and the ontologies to persist them in
 		    specs = [
-		        "$dataset.rootOntologyIri/classes = ALL_SUBCLASS".toString(),
-		        "$dataset.rootOntologyIri/properties = INVERSE_PROPERTY | ALL_SUBPROPERTY".toString(),
-		        "$dataset.rootOntologyIri/individuals = ALL_INSTANCE | DATA_PROPERTY_VALUE | OBJECT_PROPERTY_VALUE | SAME_AS".toString()
+		        "$rootIri/classes = ALL_SUBCLASS".toString(),
+		        "$rootIri/properties = INVERSE_PROPERTY | ALL_SUBPROPERTY".toString(),
+		        "$rootIri/individuals = ALL_INSTANCE | DATA_PROPERTY_VALUE | OBJECT_PROPERTY_VALUE | SAME_AS".toString()
 		    ]
 		    // Junit error report
 		    reportPath = file('build/reports/reasoning.xml')
@@ -171,14 +168,17 @@ class OmlProjectResourceTemplates {
 		
 		/*
 		 * Start the headless Fuseki server
+		 * @seeAlso https://github.com/opencaesar/owl-tools/blob/master/owl-doc/README.md
 		 */
 		task startFuseki(type: io.opencaesar.owl.fuseki.StartFusekiTask, group:"oml") {
 		    configurationPath = file('.fuseki.ttl')
 		    outputFolderPath = file('.fuseki')
+		    //webUI = true
 		}
 		
 		/*
 		 * Stop the headless Fuseki server
+		 * @seeAlso https://github.com/opencaesar/owl-tools/blob/master/owl-fuseki/README.md
 		 */
 		task stopFuseki(type: io.opencaesar.owl.fuseki.StopFusekiTask, group:"oml") {
 		    outputFolderPath = file('.fuseki')
@@ -186,45 +186,41 @@ class OmlProjectResourceTemplates {
 		
 		/*
 		 * A task to load an OWL catalog to a Fuseki dataset endpoint
+		 * @seeAlso https://github.com/opencaesar/owl-tools/blob/master/owl-load/README.md
 		 */
 		task owlLoad(type:io.opencaesar.owl.load.OwlLoadTask, group:"oml", dependsOn: owlReason) {
 		    inputs.files(startFuseki.outputFolderPath) // rerun when fuseki restarts
 		    catalogPath = file('build/owl/catalog.xml')
-		    endpointURL = "http://localhost:3030/$dataset.name".toString()
+		    endpointURL = "http://localhost:3030/$dataset".toString()
 		    fileExtensions = ['owl', 'ttl']
 		    iris = [
-		        "$dataset.rootOntologyIri/classes".toString(),
-		        "$dataset.rootOntologyIri/properties".toString(),
-		        "$dataset.rootOntologyIri/individuals".toString()
+		        "$rootIri/classes".toString(),
+		        "$rootIri/properties".toString(),
+		        "$rootIri/individuals".toString()
 		    ]
 		}
 		
 		/*
 		 * A task to run a set of SPARQL queries on a Fuseki dataset endpoint
+		 * @seeAlso https://github.com/opencaesar/owl-tools/blob/master/owl-query/README.md
 		 */
 		task owlQuery(type:io.opencaesar.owl.query.OwlQueryTask, group:"oml", dependsOn: owlLoad) {
-		    endpointURL = "http://localhost:3030/$dataset.name".toString()
+		    endpointURL = "http://localhost:3030/$dataset".toString()
 		    queryPath = file('src/sparql')
 		    resultPath = file('build/results')
 		    format = 'json'
 		}
 
 		/*
-		 * A task to build the project, which executes several tasks together
+		 * A task to check the project's build artifacts
+		 * @seeAlso https://docs.gradle.org/current/userguide/base_plugin.html
 		 */
-		task build(group: "oml") {
+		tasks.named('check') {
 		    dependsOn owlReason
 		}
 		
 		/*
-		 * A task to delete the build artifacts
-		 */
-		task clean(type: Delete, group: "oml") {
-			delete 'build'
-		}
-		
-		/*
-		 * Publish artifact to maven
+		 * Define project's artifacts
 		 */
 		task omlZip(type: Zip, group:"oml") {
 		    from file('src/oml')
@@ -233,6 +229,14 @@ class OmlProjectResourceTemplates {
 		    archiveBaseName = project.name
 		    archiveVersion = project.version
 		}
+
+		artifacts.default omlZip
+		
+		/*
+		 * Publish project artifacts to maven
+		 */
+		apply plugin: 'maven-publish'
+		apply plugin: 'signing'
 		
 		def pomConfig = {
 		    licenses {
@@ -288,13 +292,25 @@ class OmlProjectResourceTemplates {
 		    }
 		}
 		
+		signing {
+		    def pgpSigningKey = project.findProperty('pgpSigningKey')
+		    if (pgpSigningKey != null) { pgpSigningKey = new String(pgpSigningKey.decodeBase64()) }
+		    def pgpSigningPassword = project.findProperty('pgpSigningPassword')
+		    useInMemoryPgpKeys(pgpSigningKey, pgpSigningPassword)
+		    sign publishing.publications.maven
+		}
+		
+		gradle.taskGraph.whenReady { taskGraph ->
+		    signMavenPublication.onlyIf { taskGraph.allTasks.any{it.name == 'publishMavenPublicationToSonatypeRepository'} }
+		}
+		
 		/*
 		 * Integration with the Eclipse IDE
 		 */ 
 		apply plugin: 'eclipse'
 		
 		eclipse {
-		    synchronizationTasks omlDependencies
+		    synchronizationTasks downloadDependencies
 		}
 	'''
 	

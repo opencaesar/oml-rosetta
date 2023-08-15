@@ -231,7 +231,7 @@ public class OmlProjectWizard extends Wizard implements INewWizard {
 							connection.newBuild().forTasks("wrapper").run();
 							configureGradleMonitor.worked(5);
 							// Load OML dependencies
-							connection.newBuild().forTasks("omlDependencies").run();
+							connection.newBuild().forTasks("downloadDependencies").run();
 							configureGradleMonitor.worked(5);
 							return null;
 						}, runGradleWrapperMonitor.split(10));
