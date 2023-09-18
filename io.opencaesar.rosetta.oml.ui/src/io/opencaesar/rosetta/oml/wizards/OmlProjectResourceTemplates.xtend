@@ -205,6 +205,7 @@ class OmlProjectResourceTemplates {
 		 * @seeAlso https://github.com/opencaesar/owl-tools/blob/master/owl-query/README.md
 		 */
 		task owlQuery(type:io.opencaesar.owl.query.OwlQueryTask, group:"oml", dependsOn: owlLoad) {
+		    inputs.files(owlLoad.inputs.files) // rerun when the dataset changes
 		    endpointURL = "http://localhost:3030/$dataset".toString()
 		    queryPath = file('src/sparql')
 		    resultPath = file('build/results')
