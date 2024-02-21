@@ -310,8 +310,9 @@ public class JavaExtensionScanningEValidator implements EValidator {
 		@Override
 		public boolean test(EObject instance) {
 			if (javaType.isInstance(instance)) {
-				var type = OmlRead.getMemberByIri(((Instance)instance).getOntology(), typeIri);
-				return type instanceof Classifier && OmlSearch.findIsKindOf((Instance) instance, (Classifier) type);
+				var ontology = ((Instance)instance).getOntology();
+				var type = (Classifier) OmlRead.getMemberByIri(ontology, typeIri);
+				return type instanceof Classifier && OmlSearch.findIsKindOf((Instance) instance, type, null);
 			}
 			return false;
 		}
@@ -348,8 +349,9 @@ public class JavaExtensionScanningEValidator implements EValidator {
 		@Override
 		public boolean test(EObject instance) {
 			if (javaType.isInstance(instance)) {
-				var type = OmlRead.getMemberByAbbreviatedIri(((Instance)instance).getOntology(), abbreviatedTypeIri);
-				return type instanceof Classifier && OmlSearch.findIsKindOf((Instance) instance, (Classifier) type);
+				var ontology = ((Instance)instance).getOntology();
+				var type = (Classifier) OmlRead.getMemberByAbbreviatedIri(ontology, abbreviatedTypeIri);
+				return type instanceof Classifier && OmlSearch.findIsKindOf((Instance) instance, type, null);
 			}
 			return false;
 		}

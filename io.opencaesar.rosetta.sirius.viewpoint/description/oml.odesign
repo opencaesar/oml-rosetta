@@ -639,10 +639,14 @@
                 <subModelOperations xsi:type="tool_1:CreateInstance" typeName="oml.PropertyRangeRestrictionAxiom" referenceName="ownedPropertyRestrictions" variableName="axiom">
                   <subModelOperations xsi:type="properties:DialogModelOperation" titleExpression="Create">
                     <buttons labelExpression="Cancel" closeDialogOnClick="true" rollbackChangesOnClose="true">
-                      <initialOperation/>
+                      <initialOperation>
+                        <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="self"/>
+                      </initialOperation>
                     </buttons>
                     <buttons labelExpression="OK" default="true" closeDialogOnClick="true">
-                      <initialOperation/>
+                      <initialOperation>
+                        <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="self"/>
+                      </initialOperation>
                     </buttons>
                     <page name="Property Range Restriction" labelExpression="Property Range Restriction" domainClass="oml.PropertyRangeRestrictionAxiom" semanticCandidateExpression="var:self" groups="//@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Editor']/@defaultLayer/@toolSections.4/@ownedTools[name='Range%20Restriction']/@initialOperation/@firstModelOperations/@subModelOperations.0/@subModelOperations.0/@groups.0"/>
                     <groups name="General" labelExpression="General" semanticCandidateExpression="var:self">
@@ -674,10 +678,14 @@
                 <subModelOperations xsi:type="tool_1:CreateInstance" typeName="oml.PropertyCardinalityRestrictionAxiom" referenceName="ownedPropertyRestrictions" variableName="axiom">
                   <subModelOperations xsi:type="properties:DialogModelOperation" titleExpression="Create">
                     <buttons labelExpression="Cancel" closeDialogOnClick="true" rollbackChangesOnClose="true">
-                      <initialOperation/>
+                      <initialOperation>
+                        <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="self"/>
+                      </initialOperation>
                     </buttons>
                     <buttons labelExpression="OK" default="true" closeDialogOnClick="true">
-                      <initialOperation/>
+                      <initialOperation>
+                        <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="self"/>
+                      </initialOperation>
                     </buttons>
                     <page name="Property Cardinality Restriction" labelExpression="Property Cardinality Restriction" domainClass="oml.PropertyCardinalityRestrictionAxiom" semanticCandidateExpression="var:self" groups="//@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Editor']/@defaultLayer/@toolSections.4/@ownedTools[name='Cardinality%20Restriction']/@initialOperation/@firstModelOperations/@subModelOperations.0/@subModelOperations.0/@groups.0"/>
                     <groups name="General" labelExpression="General" semanticCandidateExpression="var:self">
@@ -698,7 +706,7 @@
                       </controls>
                     </groups>
                   </subModelOperations>
-                  <subModelOperations xsi:type="tool_1:If" conditionExpression="aql:axiom.property.findRanges()->excludes(target.oclAsType(oml::Entity))">
+                  <subModelOperations xsi:type="tool_1:If" conditionExpression="aql:axiom.property.findRanges(null)->excludes(target.oclAsType(oml::Entity))">
                     <subModelOperations xsi:type="tool_1:SetValue" featureName="range" valueExpression="var:target"/>
                   </subModelOperations>
                 </subModelOperations>
@@ -716,10 +724,14 @@
                 <subModelOperations xsi:type="tool_1:CreateInstance" typeName="oml.PropertyValueRestrictionAxiom" referenceName="ownedPropertyRestrictions" variableName="axiom">
                   <subModelOperations xsi:type="properties:DialogModelOperation" titleExpression="Create">
                     <buttons labelExpression="Cancel" closeDialogOnClick="true" rollbackChangesOnClose="true">
-                      <initialOperation/>
+                      <initialOperation>
+                        <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="self"/>
+                      </initialOperation>
                     </buttons>
                     <buttons labelExpression="OK" default="true" closeDialogOnClick="true">
-                      <initialOperation/>
+                      <initialOperation>
+                        <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="self"/>
+                      </initialOperation>
                     </buttons>
                     <page name="Property Value Restriction" labelExpression="Property Value Restriction" domainClass="oml.PropertyValueRestrictionAxiom" semanticCandidateExpression="var:self" groups="//@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Editor']/@defaultLayer/@toolSections.4/@ownedTools[name='Value%20Restriction']/@initialOperation/@firstModelOperations/@subModelOperations.0/@subModelOperations.0/@groups.0"/>
                     <groups name="General" labelExpression="General" semanticCandidateExpression="var:self">
@@ -1105,7 +1117,7 @@
               </initialOperation>
             </widget>
           </ifs>
-          <ifs name="sirius_default_rules_enum_if" predicateExpression="aql:property.isEnumeratedProperty() and property.functional">
+          <ifs name="sirius_default_rules_enum_if" predicateExpression="aql:property.findIsEnumeratedProperty(null) and property.functional">
             <widget xsi:type="properties:RadioDescription" name="sirius_default_rules_enum" labelExpression="aql:property.name+':'" valueExpression="aql:let value=self.getPropertyLiteralValue(property) in if value &lt;> null then value.getValue() else false endif" candidatesExpression="aql:property.getEnumeratiomLiteralValues()" candidateDisplayExpression="aql:candidate.toString()" numberOfColumns="5">
               <initialOperation>
                 <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:self.oclAsType(oml::Instance).setPropertyValue(property, newValue)"/>

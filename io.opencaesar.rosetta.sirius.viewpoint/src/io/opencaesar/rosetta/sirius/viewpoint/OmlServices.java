@@ -163,47 +163,103 @@ public class OmlServices {
 
 	//-----------
 
+	/**
+	 * Finds if the given instance is of kind the given classifier by abbreviated iri
+	 * 
+	 * @param instance The given instance
+	 * @param classifierAbbreviatedIri The given classifier by abbreviated iri
+	 * @return true if the instance is of the kind; otherwise false
+	 */
     public static boolean findIsKindOf(NamedInstance instance, String classifierAbbreviatedIri) {
     	var classifier = (Classifier) OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), classifierAbbreviatedIri);
-		return (classifier != null) ? OmlSearch.findIsKindOf(instance, classifier) : false;
+		return (classifier != null) ? OmlSearch.findIsKindOf(instance, classifier, null) : false;
 	}
 
+    /**
+	 * Finds if the given instance is of type the given classifier by abbreviated iri
+     * 
+	 * @param instance The given instance
+	 * @param classifierAbbreviatedIri The given classifier by abbreviated iri
+	 * @return true if the instance is of the type; otherwise false
+     */
     public static boolean findIsTypeOf(NamedInstance instance, String classifierAbbreviatedIri) {
     	var classifier = (Classifier) OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), classifierAbbreviatedIri);
-		return (classifier != null) ? OmlSearch.findIsTypeOf(instance, classifier) : false;
+		return (classifier != null) ? OmlSearch.findIsTypeOf(instance, classifier, null) : false;
 	}
 
+    /**
+	 * Finds if the given assertion references the given property by abbreviated iri or one of its sub properties
+     * 
+	 * @param assertion The given assertion
+	 * @param propertyAbbreviatedIri The given property by abbreviated iri
+	 * @return true if the assertion references the property or a sub property; otherwise false
+     */
     public static boolean findIsKindOf(PropertyValueAssertion assertion, String propertyAbbreviatedIri) {
     	var property = (SemanticProperty) OmlRead.getMemberByAbbreviatedIri(assertion.getOntology(), propertyAbbreviatedIri);
-		return (property != null) ? OmlSearch.findIsSubTermOf(assertion.getProperty(), property) : false;
+		return (property != null) ? OmlSearch.findIsSubTermOf(assertion.getProperty(), property, null) : false;
 	}
 
+    /**
+	 * Finds if the given assertion references the given property by abbreviated iri
+     * 
+	 * @param assertion The given assertion
+	 * @param propertyAbbreviatedIri The given property by abbreviated iri
+	 * @return true if the assertion references the property; otherwise false
+     */
     public static boolean findIsTypeOf(PropertyValueAssertion assertion, String propertyAbbreviatedIri) {
     	var property = (SemanticProperty) OmlRead.getMemberByAbbreviatedIri(assertion.getOntology(), propertyAbbreviatedIri);
 		return (property != null) ? assertion.getProperty() == property : false;
 	}
 
     //--------------
-    
+
+    /**
+     * Finds values of an annotation property with the given abbreviated iri on the given instance
+     * 
+     * @param instance The given instance
+     * @param propertyAbbreviatedIri The given property abbreviated iri
+     * @return A set of elements representing annotation values
+     */
     public static Set<Element> findAnnotationValues(NamedInstance instance, String propertyAbbreviatedIri) {
     	var property = (AnnotationProperty) OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), propertyAbbreviatedIri);
-		Set<Element> values = (property != null) ? OmlSearch.findAnnotationValues(instance, property) : Collections.emptySet();
+		Set<Element> values = (property != null) ? OmlSearch.findAnnotationValues(instance, property, null) : Collections.emptySet();
 		return values;
 	}
 
+    /**
+     * Finds the first value of an annotation property with the given abbreviated iri on the given instance
+     * 
+     * @param instance The given instance
+     * @param propertyAbbreviatedIri The given property abbreviated iri
+     * @return An element representing the first annotation value
+     */
     public static Element findAnnotationValue(NamedInstance instance, String propertyAbbreviatedIri) {
 		Set<Element> values = findAnnotationValues(instance, propertyAbbreviatedIri);
 		return values.iterator().next();
 	}
 
+    /**
+     * Finds if the annotation property with the given abbreviated iri is set on the given instance
+     * 
+     * @param instance The given instance
+     * @param propertyAbbreviatedIri The given property abbreviated iri
+     * @return An element representing the first annotation value
+     */
     public static boolean findIsAnnotatedBy(NamedInstance instance, String propertyAbbreviatedIri) {
     	var property = (AnnotationProperty) OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), propertyAbbreviatedIri);
-		return (property != null) ? OmlSearch.findIsAnnotatedBy(instance, property) : false;
+		return (property != null) ? OmlSearch.findIsAnnotatedBy(instance, property, null) : false;
 	}
 
+    /**
+     * Finds the values of a property with the given abbreviated iri set on the given instance
+     * 
+     * @param instance The given instance
+     * @param propertyAbbreviatedIri The given property abbreviated iri
+     * @return An element representing the first annotation value
+     */
     public static Set<Element> findPropertyValues(NamedInstance instance, String propertyAbbreviatedIri) {
     	var property = (ScalarProperty) OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), propertyAbbreviatedIri);
-		Set<Element> values = (property != null) ? OmlSearch.findPropertyValues(instance, property) : Collections.emptySet();
+		Set<Element> values = (property != null) ? OmlSearch.findPropertyValues(instance, property, null) : Collections.emptySet();
 		return values;
 	}
 
@@ -237,9 +293,9 @@ public class OmlServices {
     	List<NamedInstance> instances = new ArrayList<>();
     	var relation = (Relation) OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), relationyAbbreviatedIri);
 		if (relation != null) {
-			instances.addAll(OmlSearch.findInstancesRelatedAsTargetTo(instance, relation));
+			instances.addAll(OmlSearch.findInstancesRelatedAsTargetTo(instance, relation, null));
 			if (relation.getInverse() != null) {
-				instances.addAll(OmlSearch.findInstancesRelatedAsSourceTo(instance, relation.getInverse()));
+				instances.addAll(OmlSearch.findInstancesRelatedAsSourceTo(instance, relation.getInverse(), null));
 			}
 		}
 		return instances;
@@ -249,9 +305,9 @@ public class OmlServices {
     	List<NamedInstance> instances = new ArrayList<>();
     	var relation = (Relation) OmlRead.getMemberByAbbreviatedIri(instance.eResource().getResourceSet(), relationyAbbreviatedIri);
 		if (relation != null) {
-			instances.addAll(OmlSearch.findInstancesRelatedAsSourceTo(instance, relation));
+			instances.addAll(OmlSearch.findInstancesRelatedAsSourceTo(instance, relation, null));
 			if (relation.getInverse() != null) {
-				instances.addAll(OmlSearch.findInstancesRelatedAsTargetTo(instance, relation.getInverse()));
+				instances.addAll(OmlSearch.findInstancesRelatedAsTargetTo(instance, relation.getInverse(), null));
 			}
 		}
 		return instances;
@@ -259,15 +315,15 @@ public class OmlServices {
 
     public static Set<RelationInstance> findOutgoingRelationInstances(NamedInstance instance, String relationyEntityAbbreviatedIri) {
     	final var relationEntity = (RelationEntity) OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), relationyEntityAbbreviatedIri);
-		Set<RelationInstance> instances = OmlSearch.findRelationInstancesWithSource(instance);
-		instances.removeIf(i -> !OmlSearch.findTypes(i).contains(relationEntity));
+		Set<RelationInstance> instances = OmlSearch.findRelationInstancesWithSource(instance, null);
+		instances.removeIf(i -> !OmlSearch.findTypes(i, null).contains(relationEntity));
 		return instances;
 	}
 
     public static Set<RelationInstance> findIncomingRelationInstances(NamedInstance instance, String relationyEntityAbbreviatedIri) {
     	final var relationEntity = (RelationEntity) OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), relationyEntityAbbreviatedIri);
-		Set<RelationInstance> instances = OmlSearch.findRelationInstancesWithTarget(instance);
-		instances.removeIf(i -> !OmlSearch.findTypes(i).contains(relationEntity));
+		Set<RelationInstance> instances = OmlSearch.findRelationInstancesWithTarget(instance, null);
+		instances.removeIf(i -> !OmlSearch.findTypes(i, null).contains(relationEntity));
 		return instances;
 	}
 
@@ -350,6 +406,13 @@ public class OmlServices {
 		}
     }
     
+	public static void setPropertyValue(Instance instance, ScalarProperty property, Object newValue) {
+		removePropertyValue(instance.getOntology(), instance, property.getAbbreviatedIri());
+		if (newValue != null && newValue.toString().length() > 0) {
+			var newLiteral = OmlWrite.createLiteral(newValue);
+			addPropertyValue(instance.getOntology(), instance, property.getAbbreviatedIri(), newLiteral);
+		}
+	}
     
     // ---------
     
