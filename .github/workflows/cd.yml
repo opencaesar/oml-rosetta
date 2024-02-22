@@ -26,9 +26,15 @@ jobs:
         git config --global user.name "Maged Elaasar"
 
     - name: Publish repository
-      run: mvn deploy -Prelease-composite -Dgithub-update-repo=https://x-access-token:${ACTIONS_TOKEN}@github.com/opencaesar/oml-rosetta-p2
+      #run: mvn deploy -Prelease-composite -Dgithub-update-repo=https://x-access-token:${ACTIONS_TOKEN}@github.com/opencaesar/oml-rosetta-p2
+      run: mvn verify
       env:
         ACTIONS_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
 
-    #- name: Set Version
-    #  run: io.opencaesar.rosetta.product/setversion.sh
+    - name: Set Version
+      run: io.opencaesar.rosetta.product/setversion.sh
+
+    - name: Upload executables
+      uses: actions/upload-artifact@v4
+      with:
+        path: io.opencaesar.rosetta.product/target/products/*
