@@ -26,7 +26,7 @@ jobs:
         git config --global user.name "Maged Elaasar"
 
     - name: Publish repository
-      run: mvn deploy -Prelease-composite -Dgithub-update-repo=https://x-access-token:${ACTIONS_TOKEN}@github.com/opencaesar/oml-p2
+      run: mvn deploy -Prelease-composite -Dgithub-update-repo=https://x-access-token:${ACTIONS_TOKEN}@github.com/opencaesar/oml-rosetta-p2
       env:
         ACTIONS_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
 
