@@ -33,7 +33,7 @@ jobs:
     - name: Set Version
       run: io.opencaesar.rosetta.product/setversion.sh
 
-    - name: Upload executables
+    - name: Publish executables
       uses: softprops/action-gh-release@v1
       with:
         files: io.opencaesar.rosetta.product/target/products/*
