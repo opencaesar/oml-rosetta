@@ -1,7 +1,7 @@
-# Rosetta
+# OML Rosetta
 
-[![Build Status](https://app.travis-ci.com/opencaesar/oml-rosetta.svg?branch=master)](https://app.travis-ci.com/github/opencaesar/oml-rosetta)
-[![Release](https://img.shields.io/github/v/release/opencaesar/oml-rosetta?label=download)](https://github.com/opencaesar/oml-rosetta/releases/latest)
+[![Build Status](https://github.com/opencaesar/oml-rosetta/actions/workflows/ci.yml/badge.svg)](https://github.com/opencaesar/oml-rosetta/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/opencaesar/oml-rosetta?label=Release)](https://github.com/opencaesar/oml-rosetta/releases/latest)
 [![Updatesite](https://img.shields.io/badge/p2-updatesite-yellow.svg?longCache=true)](https://github.com/opencaesar/oml-rosetta-p2)
 
 
