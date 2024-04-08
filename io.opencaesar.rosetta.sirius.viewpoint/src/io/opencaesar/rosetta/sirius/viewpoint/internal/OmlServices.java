@@ -21,6 +21,7 @@ package io.opencaesar.rosetta.sirius.viewpoint.internal;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -53,7 +54,6 @@ import io.opencaesar.oml.RelationBase;
 import io.opencaesar.oml.RelationEntity;
 import io.opencaesar.oml.RelationEntityPredicate;
 import io.opencaesar.oml.RelationInstance;
-import io.opencaesar.oml.Rule;
 import io.opencaesar.oml.SameAsPredicate;
 import io.opencaesar.oml.Scalar;
 import io.opencaesar.oml.ScalarProperty;
@@ -148,7 +148,7 @@ public final class OmlServices extends io.opencaesar.rosetta.sirius.viewpoint.Om
 	}
 
 	public static String getLabel(Ontology ontology, Member member) {
-		return OmlRead.getAbbreviatedIriIn(member, ontology);
+		return member.getAbbreviatedIri();
 	}
 	
 	public static String getLabel(Ontology ontology, NamedInstance instance) {
@@ -330,86 +330,47 @@ public final class OmlServices extends io.opencaesar.rosetta.sirius.viewpoint.Om
 	}
 	
     //--------------
-    
-	public static List<Member> getVisualizableMembers(Vocabulary vocabulary) {
-		var members = new ArrayList<Member>();
-		// terms
-		members.addAll(getVisualizableTerms(vocabulary));
-		// rules
-		members.addAll(getVisualizableRules(vocabulary));
-		// named instances
-		members.addAll(getVisualizableNamedInstances(vocabulary));
-		return members;
+
+	public static Set<Member> getVisualizableMembers(Ontology ontology) {
+		return OmlRead.getImportedOntologyClosure(ontology, true).stream()
+				.flatMap(i -> OmlRead.getMembers(i).stream())
+				.collect(Collectors.toSet());
 	}
 
-	public static Set<Term> getVisualizableTerms(Vocabulary vocabulary) {
-		var terms = new LinkedHashSet<Term>();
-		// direct terms
-		terms.addAll(OmlRead.getMembers(vocabulary).stream()
-				.filter(s -> s instanceof Term)
-				.map(s -> s.isRef() ? (Term)s.resolve() : (Term)s)
+	private static Set<Member> getMembersAndRefs(Ontology ontology) {
+		var all = new HashSet<Member>();
+		all.addAll(OmlRead.getImportedOntologyClosure(ontology, true).stream()
+				.flatMap(i -> OmlRead.getMembers(i).stream())
 				.collect(Collectors.toSet()));
-		// specialized terms
-		terms.addAll(vocabulary.getOwnedStatements().stream()
+		all.addAll(OmlRead.getImportedOntologyClosure(ontology, true).stream()
+				.flatMap(i -> OmlRead.getRefs(i).stream())
+				.collect(Collectors.toSet()));
+		return all;
+	}
+
+	public static Set<PropertyRestrictionAxiom> getVisualizablePropertyRestrictions(Vocabulary vocabulary) {
+		return getMembersAndRefs(vocabulary).stream()
+				.filter(m -> m instanceof Classifier)
+				.map(e -> (Classifier)e)
+				.flatMap(e -> e.getOwnedPropertyRestrictions().stream())
+				.filter(r -> !(r.getProperty() instanceof ScalarProperty))
+				.collect(Collectors.toSet());
+	}
+
+	public static Set<SpecializationAxiom> getVisualizableSpecializations(Vocabulary vocabulary) {
+		return getMembersAndRefs(vocabulary).stream()
 				.filter(s -> s instanceof SpecializableTerm)
 				.map(s -> (SpecializableTerm)s)
 				.flatMap(e -> e.getOwnedSpecializations().stream())
-				.map(s -> s.getSuperTerm())
-				.collect(Collectors.toSet()));
-		// restricted property ranges
-		terms.addAll(vocabulary.getOwnedStatements().stream()
-				.filter(s -> s instanceof Entity)
-				.map(s -> (Entity)s)
-				.flatMap(e -> e.getOwnedPropertyRestrictions().stream())
-				.filter(r -> r instanceof PropertyRangeRestrictionAxiom)
-				.filter(r -> r.getProperty() instanceof Relation)
-				.map(r -> ((PropertyRangeRestrictionAxiom)r).getRange())
-				.collect(Collectors.toSet()));
-		// cardinality restricted property ranges
-		terms.addAll(vocabulary.getOwnedStatements().stream()
-				.filter(s -> s instanceof Entity)
-				.map(s -> (Entity)s)
-				.flatMap(e -> e.getOwnedPropertyRestrictions().stream())
-				.filter(r -> r instanceof PropertyCardinalityRestrictionAxiom)
-				.filter(r -> r.getProperty() instanceof Relation)
-				.map(r -> ((PropertyCardinalityRestrictionAxiom)r).getRange())
-				.collect(Collectors.toSet()));
-		return terms;
+				.collect(Collectors.toSet());
 	}
 
-    public static List<Rule> getVisualizableRules(Vocabulary vocabulary) {
-		return vocabulary.getOwnedStatements().stream()
-				.filter(s -> s instanceof Rule)
-				.map(s -> (Rule)s)
-				.collect(Collectors.toList());
-	}
-
-	public static Set<NamedInstance> getVisualizableNamedInstances(Vocabulary vocabulary) {
-		return vocabulary.getOwnedStatements().stream()
-				.filter(s -> s instanceof Entity)
-				.map(s -> (Entity)s)
-				.flatMap(e -> e.getOwnedPropertyRestrictions().stream())
-				.filter(r -> r instanceof PropertyValueRestrictionAxiom)
-				.filter(r -> r.getProperty() instanceof Relation)
-				.map(r -> (NamedInstance) ((PropertyValueRestrictionAxiom)r).getValue())
-				.collect(Collectors.toCollection(LinkedHashSet::new));
-	}
-
-	public static List<PropertyRestrictionAxiom> getVisualizableRelationRestrictions(Vocabulary vocabulary) {
-		return vocabulary.getOwnedStatements().stream()
-				.filter(s -> s instanceof Entity)
-				.map(s -> (Entity)s)
-				.flatMap(e -> e.getOwnedPropertyRestrictions().stream())
-				.filter(r -> r.getProperty() instanceof Relation)
-				.collect(Collectors.toList());
-	}
-
-	public static List<SemanticProperty> getVisualizableProperties(Vocabulary vocabulary, Classifier classifier) {
-		return vocabulary.getOwnedStatements().stream()
+	public static Set<SemanticProperty> getVisualizableProperties(Vocabulary vocabulary, Classifier classifier) {
+		return getMembersAndRefs(vocabulary).stream()
 			.filter(s -> s instanceof SemanticProperty)
 			.map(s -> (SemanticProperty)s)
 			.filter(p -> p.getDomainList().contains(classifier))
-			.collect(Collectors.toList());
+			.collect(Collectors.toSet());
 	}
 
 	public static List<Literal> getVisualizableLiterals(Vocabulary vocabulary, Scalar scalar) {
@@ -448,7 +409,7 @@ public final class OmlServices extends io.opencaesar.rosetta.sirius.viewpoint.Om
 		return instances;
 	}
 
-    public static List<PropertyValueAssertion> getVisualizableRelationValues(Description description) {
+    public static List<PropertyValueAssertion> getVisualizableLinks(Description description) {
 		return description.getOwnedStatements().stream()
 				.filter(s -> s instanceof NamedInstance)
 				.map(s -> (NamedInstance)s)
