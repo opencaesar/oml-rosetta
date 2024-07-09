@@ -20,20 +20,14 @@ package io.opencaesar.rosetta.oml.wizards;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -61,6 +55,7 @@ import io.opencaesar.oml.OmlFactory;
 import io.opencaesar.oml.OmlPackage;
 import io.opencaesar.oml.Ontology;
 import io.opencaesar.oml.util.OmlConstants;
+import io.opencaesar.oml.util.OmlRead;
 import io.opencaesar.rosetta.oml.ui.OmlUiPlugin;
 
 /**
@@ -88,7 +83,7 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 		
 		// Derive the ontology namespace from the selected folder, or use a default
 		// if not possible.
-		ontologyNamespace = "http://example.com/";
+		ontologyNamespace = "http://";
 		if (selection != null) {
 			if (selection.getFirstElement() instanceof IFile) {
 				folderPath = ((IFile)selection.getFirstElement()).getParent().getFullPath();
@@ -99,8 +94,9 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 			}
 		}
 		if (folderPath != null) {
-			if (folderPath.segmentCount() > 3 && folderPath.segment(1).equals("src") && folderPath.segment(2).equals("oml")) {
-				ontologyNamespace = "http://" + Arrays.stream(folderPath.segments()).skip(3).collect(Collectors.joining("/")) + "/";
+			var uri = OmlRead.getDeresolvedIri(URI.createPlatformResourceURI(folderPath.toString(), false));
+			if (uri != null) {
+				ontologyNamespace = uri.toString();
 			}
 		}
 		
@@ -125,38 +121,8 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 	@Override
 	public boolean performFinish() {
 		try {
-			IProject project;
-			IPath path = filePage.getContainerFullPath();
-			if (path.segmentCount() > 1) {
-				IContainer folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
-				project = folder.getProject();
-			} else {
-				project =  ResourcesPlugin.getWorkspace().getRoot().getProject(path.lastSegment());
-			}
-
-			// Create directory structure
-			IFolder srcFolder = project.getFolder("src");
-			if (!srcFolder.exists()) {
-				srcFolder.create(true, true, new NullProgressMonitor());
-			}
-			IFolder omlFolder = srcFolder.getFolder("oml");
-			if (!omlFolder.exists()) {
-				omlFolder.create(true, true, new NullProgressMonitor());
-			}
-			
-			IFolder ontologyFolder = omlFolder;
-			List<String> ontologyPathSegments = getPathSegments(ontologyNamespace);
-			List<String> ontologyFolderSegments = ontologyPathSegments.subList(0, ontologyPathSegments.size()-1);
-			//String ontologyName = ontologyPathSegments.get(ontologyPathSegments.size()-1);
-			for (String pathSegment : ontologyFolderSegments) {
-				IFolder subFolder = ontologyFolder.getFolder(pathSegment);
-				if (!subFolder.exists()) {
-					subFolder.create(true, true, new NullProgressMonitor());
-				}
-				ontologyFolder = subFolder;
-			}
-
-			IFile file = ontologyFolder.getFile(filePage.getFileName());
+			IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(filePage.getContainerFullPath());
+			IFile file = folder.getFile(filePage.getFileName());
 			URI uri = URI.createURI(file.getLocationURI().toString());
 
 			Ontology ontology = (Ontology) OmlFactory.eINSTANCE.create(ontologyKind);
@@ -171,24 +137,12 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 			BasicNewResourceWizard.selectAndReveal(file, workbench.getActiveWorkbenchWindow());
 			IDE.openEditor(workbench.getActiveWorkbenchWindow().getActivePage(), file);
 			return true;
-		} catch (IOException | CoreException | URISyntaxException e) {
+		} catch (IOException | CoreException e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}
 		
 	}
 	
-	private static List<String> getPathSegments(String uri) throws URISyntaxException {
-		List<String> pathSegments = new ArrayList<String>();
-		java.net.URI baseUri = new java.net.URI(uri);
-		pathSegments.add(baseUri.getHost());
-		for (String pathSegment : baseUri.getPath().split("/")) {
-			if (!pathSegment.trim().isEmpty()) {
-				pathSegments.add(pathSegment.trim());
-			}
-		}
-		return pathSegments;
-	}
-
 	/**
 	 * Allows the user to configure the ontology, specifying the type (vocabulary,
 	 * bundle, or description), namespace IRI, namespace separator, and namespace
@@ -294,26 +248,24 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 					return;
 				}
 				java.net.URI parsed = new java.net.URI(ontologyNamespace);
-				if (parsed.getPath() != null) {
-					String[] pathSegments = parsed.getPath().split("/");
-					if (pathSegments.length == 0) {
-						setPageComplete(false);
-						return;
+				String[] pathSegments = parsed.getSchemeSpecificPart(). split("/");
+				if (pathSegments.length == 0) {
+					setPageComplete(false);
+					return;
+				}
+				String fileName = pathSegments[pathSegments.length - 1];
+				filePage.setFileName(fileName+"."+OmlConstants.OML_EXTENSION);
+				String defaultPrefix = fileName;
+				if (!ontologyPrefixChanged) {
+					ontologyPrefix = defaultPrefix;
+					if (ontologyPrefixInput != null) {
+						ontologyPrefixInput.setText(ontologyPrefix);
 					}
-					String fileName = pathSegments[pathSegments.length - 1];
-					filePage.setFileName(fileName+"."+OmlConstants.OML_EXTENSION);
-					String defaultPrefix = fileName;
-					if (!ontologyPrefixChanged) {
-						ontologyPrefix = defaultPrefix;
-						if (ontologyPrefixInput != null) {
-							ontologyPrefixInput.setText(ontologyPrefix);
-						}
-					}
-					if (ontologyPrefix == null || ontologyPrefix.isEmpty()) {
-						// Ensure an ontology prefix is set
-						setPageComplete(false);
-						return;
-					}
+				}
+				if (ontologyPrefix == null || ontologyPrefix.isEmpty()) {
+					// Ensure an ontology prefix is set
+					setPageComplete(false);
+					return;
 				}
 			} catch (URISyntaxException e) {
 				// Ensure the IRI is valid

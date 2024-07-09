@@ -2,7 +2,7 @@
 <feature
       id="io.opencaesar.rosetta.feature"
       label="%featureName"
-      version="2.6.0"
+      version="2.7.0"
       provider-name="%providerName">
 
    <description url="https://github.com/opencaesar/oml-rosetta">
@@ -55,56 +55,35 @@ limitations under the License.
       <import plugin="org.eclipse.sirius"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
       <import plugin="org.eclipse.xtext"/>
-      <import feature="io.opencaesar.oml.sdk.feature" version="1.3.0" match="greaterOrEqual"/>
+      <import feature="io.opencaesar.oml.sdk.feature"/>
    </requires>
 
    <plugin
          id="io.opencaesar.rosetta.oml.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="io.opencaesar.rosetta.oml.ui.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="io.opencaesar.rosetta.sirius"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="io.opencaesar.rosetta.sirius.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="io.opencaesar.rosetta.sirius.viewpoint"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="io.opencaesar.rosetta.sirius.viewpoint.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="io.opencaesar.rosetta.rcp"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
 </feature>

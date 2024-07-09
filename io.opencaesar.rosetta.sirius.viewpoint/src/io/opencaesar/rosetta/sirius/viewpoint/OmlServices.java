@@ -270,45 +270,39 @@ public class OmlServices {
 
     //------------------
     
-    public static Collection<NamedInstance> findTargetInstancesRecursively(NamedInstance instance, String relationyAbbreviatedIri, boolean includeRoot) {
-		return OmlRead.closure(instance, includeRoot, i -> findTargetInstances(i, relationyAbbreviatedIri));
+    public static Collection<NamedInstance> findTargetInstancesRecursively(Instance source, String relationyAbbreviatedIri, boolean includeRoot) {
+		return OmlRead.closure(source, includeRoot, i -> findTargetInstances(i, relationyAbbreviatedIri));
     }
 
-    public static Collection<NamedInstance> getSourceInstancesRecursively(NamedInstance instance, String relationyAbbreviatedIri, boolean includeRoot) {
-		return OmlRead.closure(instance, includeRoot, i -> findSourceInstances(i, relationyAbbreviatedIri));
+    public static Collection<Instance> getSourceInstancesRecursively(NamedInstance target, String relationyAbbreviatedIri, boolean includeRoot) {
+		return OmlRead.closure(target, includeRoot, i -> findSourceInstances(i, relationyAbbreviatedIri));
     }
 
-    public static NamedInstance findTargetInstance(NamedInstance instance, String relationyAbbreviatedIri) {
-		List<NamedInstance> instances = findTargetInstances(instance, relationyAbbreviatedIri);
+    public static NamedInstance findTargetInstance(Instance source, String relationyAbbreviatedIri) {
+		List<NamedInstance> instances = findTargetInstances(source, relationyAbbreviatedIri);
 		return !instances.isEmpty() ? instances.get(0) : null;
 	}
 
-    public static NamedInstance findSourceInstance(NamedInstance instance, String relationyAbbreviatedIri) {
-		List<NamedInstance> instances = findSourceInstances(instance, relationyAbbreviatedIri);
+    public static Instance findSourceInstance(NamedInstance taget, String relationyAbbreviatedIri) {
+		List<Instance> instances = findSourceInstances(taget, relationyAbbreviatedIri);
 		return !instances.isEmpty() ? instances.get(0) : null;
 	}
 
 
-    public static List<NamedInstance> findTargetInstances(NamedInstance instance, String relationyAbbreviatedIri) {
+    public static List<NamedInstance> findTargetInstances(Instance source, String relationyAbbreviatedIri) {
     	List<NamedInstance> instances = new ArrayList<>();
-    	var relation = (Relation) OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), relationyAbbreviatedIri);
+    	var relation = (Relation) OmlRead.getMemberByAbbreviatedIri(source.getOntology(), relationyAbbreviatedIri);
 		if (relation != null) {
-			instances.addAll(OmlSearch.findInstancesRelatedAsTargetTo(instance, relation, null));
-			if (relation.getInverse() != null) {
-				instances.addAll(OmlSearch.findInstancesRelatedAsSourceTo(instance, relation.getInverse(), null));
-			}
+			instances.addAll(OmlSearch.findInstancesRelatedAsTargetTo(source, relation, null));
 		}
 		return instances;
 	}
 
-    public static List<NamedInstance> findSourceInstances(NamedInstance instance, String relationyAbbreviatedIri) {
-    	List<NamedInstance> instances = new ArrayList<>();
-    	var relation = (Relation) OmlRead.getMemberByAbbreviatedIri(instance.eResource().getResourceSet(), relationyAbbreviatedIri);
-		if (relation != null) {
-			instances.addAll(OmlSearch.findInstancesRelatedAsSourceTo(instance, relation, null));
-			if (relation.getInverse() != null) {
-				instances.addAll(OmlSearch.findInstancesRelatedAsTargetTo(instance, relation.getInverse(), null));
-			}
+    public static List<Instance> findSourceInstances(Instance target, String relationyAbbreviatedIri) {
+    	List<Instance> instances = new ArrayList<>();
+    	var relation = (Relation) OmlRead.getMemberByAbbreviatedIri(target.eResource().getResourceSet(), relationyAbbreviatedIri);
+		if (relation != null && target instanceof NamedInstance) {
+			instances.addAll(OmlSearch.findInstancesRelatedAsSourceTo((NamedInstance)target, relation, null));
 		}
 		return instances;
 	}
