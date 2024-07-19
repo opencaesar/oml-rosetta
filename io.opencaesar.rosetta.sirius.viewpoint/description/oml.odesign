@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:properties="http://www.eclipse.org/sirius/properties/1.0.0" xmlns:properties-ext-widgets-reference="http://www.eclipse.org/sirius/properties/1.0.0/ext/widgets/reference" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:tool="http://www.eclipse.org/sirius/diagram/description/tool/1.1.0" xmlns:tool_1="http://www.eclipse.org/sirius/description/tool/1.1.0" name="oml" version="15.4.0.202401051836">
   <ownedViewpoints name="Descriptions" modelFileExtension="oml">
-    <ownedRepresentations xsi:type="description_1:DiagramDescription" dropDescriptions="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='Diagram%20Drop']" name="Description Diagram" label="Description Viewer" titleExpression="aql:self.prefix.toUpperFirst()+' Viewer'" domainClass="oml.Description" enablePopupBars="true">
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" dropDescriptions="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='Member%20from%20treeview']" name="Description Diagram" label="Description Viewer" titleExpression="aql:self.prefix.toUpperFirst()+' Viewer'" domainClass="oml.Description" enablePopupBars="true">
       <metamodel href="http://opencaesar.io/oml#/"/>
       <layout xsi:type="description_1:CustomLayoutConfiguration" id="org.eclipse.elk.layered" label="ELK Layered" description="Layer-based algorithm provided by the Eclipse Layout Kernel. Arranges as many edges as possible into one direction by placing nodes into subsequent layers. This implementation supports different routing styles (straight, orthogonal, splines); if orthogonal routing is selected, arbitrary port constraints are respected, thus enabling the layout of block diagrams such as actor-oriented models or circuit schematics. Furthermore, full layout of compound graphs with cross-hierarchy edges is supported when the respective option is activated on the top level.">
         <layoutOptions xsi:type="description_1:EnumLayoutOption" id="org.eclipse.elk.direction">
@@ -39,20 +39,25 @@
         </layoutOptions>
       </layout>
       <defaultLayer name="Default">
-        <edgeMappings name="LinkAssertion" deletionDescription="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='Delete']" semanticCandidatesExpression="aql:self.getVisualizableLinks()" doubleClickDescription="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='SelectInEditor']" synchronizationLock="true" sourceMapping="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance'] //@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@edgeMappings[name='RelationInstance']" targetMapping="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance'] //@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@edgeMappings[name='RelationInstance']" targetFinderExpression="aql:self.getObject()" sourceFinderExpression="aql:self.getSubject()" domainClass="oml.PropertyValueAssertion" useDomainElement="true">
-          <style sizeComputationExpression="2" routingStyle="manhattan">
-            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
-            <centerLabelStyleDescription labelSize="12" showIcon="false" labelExpression="aql:view.getSemanticDiagram().getOntology().getLabel(self)">
-              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
-            </centerLabelStyleDescription>
-          </style>
-        </edgeMappings>
-        <edgeMappings name="RelationInstance" deletionDescription="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='Delete']" semanticCandidatesExpression="aql:self.getVisualizableNamedInstances()" doubleClickDescription="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='SelectInEditor']" synchronizationLock="true" sourceMapping="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance']" targetMapping="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance']" targetFinderExpression="aql:self.targets->at(1)" sourceFinderExpression="aql:self.sources->at(1)" domainClass="oml.RelationInstance" useDomainElement="true">
+        <edgeMappings name="LinkAssertion" deletionDescription="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='Delete']" semanticCandidatesExpression="aql:self.getVisualizableLinks()" doubleClickDescription="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='SelectInEditor']" synchronizationLock="true" sourceMapping="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance'] //@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='RelationInstance']" targetMapping="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance'] //@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='RelationInstance']" targetFinderExpression="aql:self.getObject()" sourceFinderExpression="aql:self.getSubject()" domainClass="oml.PropertyValueAssertion" useDomainElement="true">
           <style sizeComputationExpression="2" routingStyle="manhattan">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
             <centerLabelStyleDescription labelSize="12" showIcon="false" labelExpression="aql:diagram.getOntology().getLabel(self)">
               <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="RelationInstanceEdge" deletionDescription="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='Delete']" semanticCandidatesExpression="aql:self.getVisualizableNamedInstances()" doubleClickDescription="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='SelectInEditor']" synchronizationLock="true" sourceMapping="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance'] //@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='RelationInstance']" targetMapping="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance'] //@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='RelationInstance']" targetFinderExpression="aql:self.targets->at(1)" sourceFinderExpression="aql:self.sources->at(1)" domainClass="oml.RelationInstance" useDomainElement="true">
+          <style sizeComputationExpression="2" routingStyle="manhattan">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
+            <centerLabelStyleDescription labelSize="12" showIcon="false" labelExpression="aql:diagram.getOntology().getForwardLabel(self)">
+              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            </centerLabelStyleDescription>
+          </style>
+        </edgeMappings>
+        <edgeMappings name="RelationInstanceTether" semanticCandidatesExpression="aql:self.getVisualizableNamedInstances()" synchronizationLock="true" sourceMapping="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='RelationInstance']" targetMapping="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@edgeMappings[name='RelationInstanceEdge']" targetFinderExpression="aql:self" sourceFinderExpression="aql:self" domainClass="oml.RelationInstance" useDomainElement="true">
+          <style lineStyle="dash" targetArrow="NoDecoration" sizeComputationExpression="2">
+            <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
           </style>
         </edgeMappings>
         <containerMappings name="ConceptInstance" deletionDescription="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='Delete']" semanticCandidatesExpression="aql:self.getVisualizableNamedInstances()" doubleClickDescription="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='SelectInEditor']" domainClass="oml.ConceptInstance" childrenPresentation="List">
@@ -70,8 +75,16 @@
             <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
           </style>
         </containerMappings>
+        <containerMappings name="RelationInstance" deletionDescription="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@toolSections.0/@ownedTools[name='Delete']" semanticCandidatesExpression="aql:self.getVisualizableNamedInstances()" domainClass="oml.RelationInstance" reusedNodeMappings="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance']/@subNodeMappings[name='Property%20Values']" childrenPresentation="List">
+          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelSize="12" showIcon="false" labelExpression="aql:diagram.getOntology().getLabel(self)" iconPath="/io.opencaesar.rosetta.sirius.viewpoint/icons/i-icon.png" tooltipExpression="aql:view.getSemanticDiagram().getOntology().getLabel(self)" backgroundStyle="GradientTopToBottom">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+          </style>
+        </containerMappings>
         <toolSections name="Tools">
-          <ownedTools xsi:type="tool:DoubleClickDescription" name="SelectInEditor" mappings="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance'] //@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance']/@subNodeMappings[name='Property%20Values'] //@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@edgeMappings[name='LinkAssertion'] //@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@edgeMappings[name='RelationInstance']">
+          <ownedTools xsi:type="tool:DoubleClickDescription" name="SelectInEditor" mappings="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance'] //@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance']/@subNodeMappings[name='Property%20Values'] //@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@edgeMappings[name='LinkAssertion'] //@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@edgeMappings[name='RelationInstanceEdge']">
             <element name="element"/>
             <elementView name="elementView"/>
             <initialOperation>
@@ -88,19 +101,36 @@
               <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:self"/>
             </initialOperation>
           </ownedTools>
-          <ownedTools xsi:type="tool:ContainerDropDescription" name="Diagram Drop" precondition="aql:true" mappings="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance']" dragSource="PROJECT_EXPLORER">
+          <ownedTools xsi:type="tool:ContainerDropDescription" name="Member from treeview" precondition="aql:true" mappings="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance'] //@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='RelationInstance']" dragSource="PROJECT_EXPLORER">
             <oldContainer name="oldSemanticContainer"/>
             <newContainer name="newSemanticContainer"/>
             <element name="element"/>
-            <newViewContainer name="newContainerView"/>
+            <newViewContainer name="newContainerView">
+              <subVariables xsi:type="tool_1:AcceleoVariable" name="diagram" computationExpression="aql:newContainerView"/>
+              <subVariables xsi:type="tool_1:AcceleoVariable" name="description" computationExpression="aql:newSemanticContainer.oclAsType(oml::Description)"/>
+            </newViewContainer>
             <initialOperation>
-              <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:self"/>
+              <firstModelOperations xsi:type="tool_1:For" expression="aql:element->collect(i|i.oclAsType(oml::Member).resolve())">
+                <subModelOperations xsi:type="tool_1:Switch">
+                  <cases conditionExpression="aql:i.oclIsKindOf(oml::ConceptInstance)">
+                    <subModelOperations xsi:type="tool:CreateView" mapping="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance']" containerViewExpression="var:diagram">
+                      <subModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:description.makeMemberAccessible(i)"/>
+                    </subModelOperations>
+                  </cases>
+                  <cases conditionExpression="aql:i.oclIsKindOf(oml::RelationInstance)">
+                    <subModelOperations xsi:type="tool:CreateView" mapping="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='RelationInstance']" containerViewExpression="var:diagram">
+                      <subModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:description.makeMemberAccessible(i)"/>
+                    </subModelOperations>
+                  </cases>
+                  <default/>
+                </subModelOperations>
+              </firstModelOperations>
             </initialOperation>
           </ownedTools>
         </toolSections>
         <customization>
-          <vsmElementCustomizations xsi:type="description:VSMElementCustomization" predicateExpression="aql:self.oclAsType(oml::IdentifiedElement).getOntology() &lt;> container">
-            <featureCustomizations xsi:type="description:EReferenceCustomization" appliedOn="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance']/@style" referenceName="foregroundColor">
+          <vsmElementCustomizations xsi:type="description:VSMElementCustomization" predicateExpression="aql:self.oclAsType(oml::Member).resolve().getOntology() &lt;> container">
+            <featureCustomizations xsi:type="description:EReferenceCustomization" appliedOn="//@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='ConceptInstance']/@style //@ownedViewpoints[name='Descriptions']/@ownedRepresentations[name='Description%20Diagram']/@defaultLayer/@containerMappings[name='RelationInstance']/@style" referenceName="foregroundColor">
               <value href="environment:/viewpoint#//@systemColors/@entries[name='light_gray']"/>
             </featureCustomizations>
           </vsmElementCustomizations>

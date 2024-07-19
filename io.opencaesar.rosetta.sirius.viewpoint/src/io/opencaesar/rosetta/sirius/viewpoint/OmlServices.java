@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.sirius.diagram.DDiagram;
 import org.eclipse.sirius.diagram.DDiagramElement;
 import org.eclipse.sirius.diagram.DSemanticDiagram;
@@ -76,6 +77,10 @@ import io.opencaesar.oml.util.OmlWrite;
  */
 public class OmlServices {
 
+	public static Set<Resource> getScope(Element element) {
+		return OmlRead.getImportScope(element.getOntology());
+	}
+	
 	/**
 	 * Gets the ontology that defines the target element of the given semantic decorator
 	 * 
@@ -172,7 +177,7 @@ public class OmlServices {
 	 */
     public static boolean findIsKindOf(NamedInstance instance, String classifierAbbreviatedIri) {
     	var classifier = (Classifier) OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), classifierAbbreviatedIri);
-		return (classifier != null) ? OmlSearch.findIsKindOf(instance, classifier, null) : false;
+		return (classifier != null) ? OmlSearch.findIsKindOf(instance, classifier, getScope(instance)) : false;
 	}
 
     /**
@@ -184,7 +189,7 @@ public class OmlServices {
      */
     public static boolean findIsTypeOf(NamedInstance instance, String classifierAbbreviatedIri) {
     	var classifier = (Classifier) OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), classifierAbbreviatedIri);
-		return (classifier != null) ? OmlSearch.findIsTypeOf(instance, classifier, null) : false;
+		return (classifier != null) ? OmlSearch.findIsTypeOf(instance, classifier, getScope(instance)) : false;
 	}
 
     /**
@@ -196,7 +201,7 @@ public class OmlServices {
      */
     public static boolean findIsKindOf(PropertyValueAssertion assertion, String propertyAbbreviatedIri) {
     	var property = (SemanticProperty) OmlRead.getMemberByAbbreviatedIri(assertion.getOntology(), propertyAbbreviatedIri);
-		return (property != null) ? OmlSearch.findIsSubTermOf(assertion.getProperty(), property, null) : false;
+		return (property != null) ? OmlSearch.findIsSubTermOf(assertion.getProperty(), property, getScope(assertion)) : false;
 	}
 
     /**
@@ -222,7 +227,7 @@ public class OmlServices {
      */
     public static Set<Element> findAnnotationValues(NamedInstance instance, String propertyAbbreviatedIri) {
     	var property = (AnnotationProperty) OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), propertyAbbreviatedIri);
-		Set<Element> values = (property != null) ? OmlSearch.findAnnotationValues(instance, property, null) : Collections.emptySet();
+		Set<Element> values = (property != null) ? OmlSearch.findAnnotationValues(instance, property, getScope(instance)) : Collections.emptySet();
 		return values;
 	}
 
@@ -247,7 +252,7 @@ public class OmlServices {
      */
     public static boolean findIsAnnotatedBy(NamedInstance instance, String propertyAbbreviatedIri) {
     	var property = (AnnotationProperty) OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), propertyAbbreviatedIri);
-		return (property != null) ? OmlSearch.findIsAnnotatedBy(instance, property, null) : false;
+		return (property != null) ? OmlSearch.findIsAnnotatedBy(instance, property, getScope(instance)) : false;
 	}
 
     /**
@@ -259,7 +264,7 @@ public class OmlServices {
      */
     public static Set<Element> findPropertyValues(NamedInstance instance, String propertyAbbreviatedIri) {
     	var property = (ScalarProperty) OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), propertyAbbreviatedIri);
-		Set<Element> values = (property != null) ? OmlSearch.findPropertyValues(instance, property, null) : Collections.emptySet();
+		Set<Element> values = (property != null) ? OmlSearch.findPropertyValues(instance, property, getScope(instance)) : Collections.emptySet();
 		return values;
 	}
 
@@ -293,7 +298,7 @@ public class OmlServices {
     	List<NamedInstance> instances = new ArrayList<>();
     	var relation = (Relation) OmlRead.getMemberByAbbreviatedIri(source.getOntology(), relationyAbbreviatedIri);
 		if (relation != null) {
-			instances.addAll(OmlSearch.findInstancesRelatedAsTargetTo(source, relation, null));
+			instances.addAll(OmlSearch.findInstancesRelatedAsTargetTo(source, relation, getScope(source)));
 		}
 		return instances;
 	}
@@ -302,22 +307,22 @@ public class OmlServices {
     	List<Instance> instances = new ArrayList<>();
     	var relation = (Relation) OmlRead.getMemberByAbbreviatedIri(target.eResource().getResourceSet(), relationyAbbreviatedIri);
 		if (relation != null && target instanceof NamedInstance) {
-			instances.addAll(OmlSearch.findInstancesRelatedAsSourceTo((NamedInstance)target, relation, null));
+			instances.addAll(OmlSearch.findInstancesRelatedAsSourceTo((NamedInstance)target, relation, getScope(target)));
 		}
 		return instances;
 	}
 
     public static Set<RelationInstance> findOutgoingRelationInstances(NamedInstance instance, String relationyEntityAbbreviatedIri) {
     	final var relationEntity = (RelationEntity) OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), relationyEntityAbbreviatedIri);
-		Set<RelationInstance> instances = OmlSearch.findRelationInstancesWithSource(instance, null);
-		instances.removeIf(i -> !OmlSearch.findTypes(i, null).contains(relationEntity));
+		Set<RelationInstance> instances = OmlSearch.findRelationInstancesWithSource(instance, getScope(instance));
+		instances.removeIf(i -> !OmlSearch.findTypes(i, getScope(instance)).contains(relationEntity));
 		return instances;
 	}
 
     public static Set<RelationInstance> findIncomingRelationInstances(NamedInstance instance, String relationyEntityAbbreviatedIri) {
     	final var relationEntity = (RelationEntity) OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), relationyEntityAbbreviatedIri);
-		Set<RelationInstance> instances = OmlSearch.findRelationInstancesWithTarget(instance, null);
-		instances.removeIf(i -> !OmlSearch.findTypes(i, null).contains(relationEntity));
+		Set<RelationInstance> instances = OmlSearch.findRelationInstancesWithTarget(instance, getScope(instance));
+		instances.removeIf(i -> !OmlSearch.findTypes(i, getScope(instance)).contains(relationEntity));
 		return instances;
 	}
 

@@ -87,24 +87,24 @@ import io.opencaesar.oml.util.OmlWrite;
  * @author elaasar
  */
 public final class OmlServices extends io.opencaesar.rosetta.sirius.viewpoint.OmlServices {
-    
+   
 	public static Set<ScalarProperty> allScalarProperties(Instance instance) {
-		var types = OmlSearch.findAllTypes(instance, null);
+		var types = OmlSearch.findAllTypes(instance, getScope(instance));
 		return types.stream()
-				.flatMap(t -> OmlSearch.findScalarPropertiesWithDomain(t, null).stream())
+				.flatMap(t -> OmlSearch.findScalarPropertiesWithDomain(t, getScope(instance)).stream())
 				.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 	public static boolean isStringProperty(ScalarProperty property) {
 		var string = (Scalar) OmlRead.getMemberByAbbreviatedIri(property.eResource().getResourceSet(), "xsd:string");
 		return property.getRanges().stream()
-				.anyMatch(r -> OmlSearch.findIsSubTermOf(r, string, null));
+				.anyMatch(r -> OmlSearch.findIsSubTermOf(r, string, getScope(property)));
 	}
 	
 	public static boolean isBooleanProperty(ScalarProperty property) {
 		var string = (Scalar) OmlRead.getMemberByAbbreviatedIri(property.eResource().getResourceSet(), "xsd:boolean");
 		return property.getRanges().stream()
-				.anyMatch(r -> OmlSearch.findIsSubTermOf(r, string, null));
+				.anyMatch(r -> OmlSearch.findIsSubTermOf(r, string, getScope(property)));
 	}
 
 	public static void setPropertyValue(Instance instance, ScalarProperty property, Object newValue) {
@@ -116,8 +116,8 @@ public final class OmlServices extends io.opencaesar.rosetta.sirius.viewpoint.Om
 	}
 
 	public static Set<Object> getEnumeratiomLiteralValues(ScalarProperty property) {
-		return OmlSearch.findRanges(property, null).stream()
-				.flatMap(r -> OmlSearch.findEnumerationLiterals((Scalar)r, null).stream())
+		return OmlSearch.findRanges(property, getScope(property)).stream()
+				.flatMap(r -> OmlSearch.findEnumerationLiterals((Scalar)r, getScope(property)).stream())
 				.map(l -> l.getValue())
 				.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
@@ -129,7 +129,11 @@ public final class OmlServices extends io.opencaesar.rosetta.sirius.viewpoint.Om
 	}
 
     private static String getAbbreviatedIriIn(Member member, Ontology ontology) {
-		return OmlRead.getAbbreviatedIriIn(member.resolve(), ontology);
+    	var iri = OmlRead.getAbbreviatedIriIn(member.resolve(), ontology);
+    	if (iri == null) {
+    		iri = member.getAbbreviatedIri();
+    	}
+    	return iri;
     }
     
 	public static String getLabel(Ontology ontology, Member member) {
@@ -159,14 +163,14 @@ public final class OmlServices extends io.opencaesar.rosetta.sirius.viewpoint.Om
 	public static String getLabel(Ontology ontology, UnreifiedRelation relation) {
 		var name = getAbbreviatedIriIn(relation, ontology);
 		var cardinality = getCardinality(relation.getSources().iterator().next(), relation);
-		var supers = OmlSearch.findSuperTerms(relation, null).stream().map(r -> getLabel(ontology, r)).collect(Collectors.joining(","));
+		var supers = OmlSearch.findSuperTerms(relation, getScope(ontology)).stream().map(r -> getLabel(ontology, r)).collect(Collectors.joining(","));
 		return String.join(" ", cardinality, name, supers.length()>0 ? "\n{subsets "+supers+"}" : "").trim();
 	}
 
 	public static String getLabel(Ontology ontology, StructuredProperty property) {
 		var name = getAbbreviatedIriIn(property, ontology);
 		var cardinality = getCardinality(property.getDomains().iterator().next(), property);
-		var supers = OmlSearch.findSuperTerms(property, null).stream().map(r -> getLabel(ontology, r)).collect(Collectors.joining(","));
+		var supers = OmlSearch.findSuperTerms(property, getScope(ontology)).stream().map(r -> getLabel(ontology, r)).collect(Collectors.joining(","));
 		return String.join(" ", cardinality, name, supers.length()>0 ? "\n{subsets "+supers+"}" : "").trim();
 	}
 
@@ -174,12 +178,12 @@ public final class OmlServices extends io.opencaesar.rosetta.sirius.viewpoint.Om
 		var name = getAbbreviatedIriIn(property, ontology);
 		var ranges = property.getRangeList().stream().map(i -> getLabel(ontology, i)).collect(Collectors.joining(" & "));
 		var cardinality = getCardinality(classifier, property);
-		var supers = OmlSearch.findSuperTerms(property, null).stream().map(r -> getLabel(ontology, r)).collect(Collectors.joining(","));
+		var supers = OmlSearch.findSuperTerms(property, getScope(ontology)).stream().map(r -> getLabel(ontology, r)).collect(Collectors.joining(","));
 		return String.join(" ", name, ":", ranges, (cardinality.length()>0 ? cardinality : ""), supers.length()>0 ? "\n{subsets "+supers+"}" : "").trim();
 	}
 	
 	public static String getLabel(Ontology ontology, NamedInstance instance) {
-		var types = OmlSearch.findTypeAssertions(instance, null).stream()
+		var types = OmlSearch.findTypeAssertions(instance, getScope(ontology)).stream()
 				.map(a -> getLabel(ontology, a.getType()))
                 .collect(Collectors.joining(", "));
 		
@@ -196,6 +200,15 @@ public final class OmlServices extends io.opencaesar.rosetta.sirius.viewpoint.Om
 	    var centered_iri = " ".repeat(spaces2) + iri;
 		
 		return centered_stereotypes + centered_iri;
+	}
+
+    public static String getForwardLabel(Ontology ontology, RelationInstance instance) {
+		return OmlSearch.findTypeAssertions(instance, getScope(ontology)).stream()
+				.map(a -> a.getType())
+				.filter(t -> t instanceof RelationEntity)
+				.map(r -> ((RelationEntity)r).getForwardRelation())
+				.map(r -> getLabel(ontology, r))
+                .collect(Collectors.joining(", "));
 	}
 
     public static String getLabel(Ontology ontology, PropertyRangeRestrictionAxiom axiom) {
@@ -425,7 +438,7 @@ public final class OmlServices extends io.opencaesar.rosetta.sirius.viewpoint.Om
 				.flatMap(i -> {
 					var list = new ArrayList<NamedInstance>();
 					list.add(i);
-					if (i instanceof RelationEntity) {
+					if (i instanceof RelationInstance) {
 						list.addAll(((RelationInstance)i).getSources());
 						list.addAll(((RelationInstance)i).getTargets());
 					}
