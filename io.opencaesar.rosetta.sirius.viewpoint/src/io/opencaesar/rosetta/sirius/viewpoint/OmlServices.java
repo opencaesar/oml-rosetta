@@ -35,7 +35,6 @@ import org.eclipse.sirius.viewpoint.DSemanticDecorator;
 
 import io.opencaesar.oml.AnnotationProperty;
 import io.opencaesar.oml.AnonymousInstance;
-import io.opencaesar.oml.AnonymousRelationInstance;
 import io.opencaesar.oml.Classifier;
 import io.opencaesar.oml.ConceptInstance;
 import io.opencaesar.oml.Description;
