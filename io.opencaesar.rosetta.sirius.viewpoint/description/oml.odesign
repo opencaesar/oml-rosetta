@@ -548,7 +548,7 @@
               <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:self.oclAsType(oml::ScalarProperty)">
                 <subModelOperations xsi:type="tool_1:SetValue" featureName="name" valueExpression="aql:arg0"/>
                 <subModelOperations xsi:type="tool_1:Unset" featureName="ranges" elementExpression="aql:self.ranges"/>
-                <subModelOperations xsi:type="tool_1:SetValue" featureName="ranges" valueExpression="aql:self.getOntology().makeMemberAccessibleByAbbreiatedIri(arg1).oclAsType(oml::Scalar)"/>
+                <subModelOperations xsi:type="tool_1:SetValue" featureName="ranges" valueExpression="aql:self.getOntology().makeMemberAccessibleByAbbreviatedIri(arg1).oclAsType(oml::Scalar)"/>
               </firstModelOperations>
             </initialOperation>
           </ownedTools>
@@ -652,7 +652,7 @@
             <sourceViewVariable name="sourceView"/>
             <targetViewVariable name="targetView"/>
             <initialOperation>
-              <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:sourceView.getParentDiagram().getVocabulary().createRelationEntity(source, target)">
+              <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:sourceView.getVocabulary().createRelationEntity(source, target)">
                 <subModelOperations xsi:type="tool:CreateView" mapping="//@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Editor']/@defaultLayer/@containerMappings[name='RelationEntity']" containerViewExpression="aql:sourceView.getParentDiagram()"/>
               </firstModelOperations>
             </initialOperation>
@@ -663,7 +663,7 @@
             <sourceViewVariable name="sourceView"/>
             <targetViewVariable name="targetView"/>
             <initialOperation>
-              <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:sourceView.getParentDiagram().getVocabulary().createSpecializationAxiom(source, target)"/>
+              <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:sourceView.getVocabulary().createSpecializationAxiom(source, target)"/>
             </initialOperation>
           </ownedTools>
         </toolSections>
@@ -681,7 +681,7 @@
             <sourceViewVariable name="sourceView"/>
             <targetViewVariable name="targetView"/>
             <initialOperation>
-              <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:sourceView.getParentDiagram().getVocabulary().createStructuredProperty(source, target)"/>
+              <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:sourceView.getVocabulary().createStructuredProperty(source, target)"/>
             </initialOperation>
           </ownedTools>
           <ownedTools xsi:type="tool:EdgeCreationDescription" name="Unreified Relation" edgeMappings="//@ownedViewpoints[name='Vocabularies']/@ownedRepresentations[name='Vocabulary%20Editor']/@defaultLayer/@edgeMappings[name='UnreifiedRelation']" iconPath="/io.opencaesar.rosetta.sirius.viewpoint/icons/association.png">
@@ -690,7 +690,7 @@
             <sourceViewVariable name="sourceView"/>
             <targetViewVariable name="targetView"/>
             <initialOperation>
-              <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:sourceView.getParentDiagram().getVocabulary().createUnreifiedRelation(source, target)"/>
+              <firstModelOperations xsi:type="tool_1:ChangeContext" browseExpression="aql:sourceView.getVocabulary().createUnreifiedRelation(source, target)"/>
             </initialOperation>
           </ownedTools>
         </toolSections>
