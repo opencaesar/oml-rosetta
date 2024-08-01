@@ -35,7 +35,6 @@ import org.eclipse.sirius.viewpoint.DSemanticDecorator;
 
 import io.opencaesar.oml.AnnotationProperty;
 import io.opencaesar.oml.AnonymousInstance;
-import io.opencaesar.oml.Classifier;
 import io.opencaesar.oml.ConceptInstance;
 import io.opencaesar.oml.Description;
 import io.opencaesar.oml.DescriptionMember;
@@ -53,8 +52,6 @@ import io.opencaesar.oml.RelationEntity;
 import io.opencaesar.oml.RelationInstance;
 import io.opencaesar.oml.ScalarProperty;
 import io.opencaesar.oml.SemanticProperty;
-import io.opencaesar.oml.StructureInstance;
-import io.opencaesar.oml.StructuredProperty;
 import io.opencaesar.oml.Vocabulary;
 import io.opencaesar.oml.VocabularyMember;
 import io.opencaesar.oml.util.OmlBuilder;
@@ -77,8 +74,8 @@ import io.opencaesar.oml.util.OmlWrite;
  */
 public class OmlServices {
 
-	public static Set<Resource> getScope(Element element) {
-		return OmlRead.getImportScope(element.getOntology());
+	public static Set<Resource> getScope(Ontology ontology) {
+		return OmlRead.getImportScope(ontology);
 	}
 	
 	/**
@@ -169,27 +166,29 @@ public class OmlServices {
 	//-----------
 
 	/**
-	 * Finds if the given instance is of kind the given classifier by abbreviated iri
+	 * Finds if the given instance is of kind the given entity by abbreviated iri
 	 * 
 	 * @param instance The given instance
-	 * @param classifierAbbreviatedIri The given classifier by abbreviated iri
+	 * @param entityAbbreviatedIri The given entity by abbreviated iri
+	 * @param context the scope
 	 * @return true if the instance is of the kind; otherwise false
 	 */
-    public static boolean findIsKindOf(Instance instance, String classifierAbbreviatedIri) {
-    	var classifier = OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), classifierAbbreviatedIri);
-		return (classifier instanceof Classifier) ? OmlSearch.findIsKindOf(instance, (Classifier) classifier, getScope(instance)) : false;
+    public static boolean findIsKindOf(Instance instance, String entityAbbreviatedIri, Ontology context) {
+    	var entity = OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), entityAbbreviatedIri);
+		return (entity instanceof Entity) ? OmlSearch.findIsKindOf(instance, (Entity) entity, getScope(context)) : false;
 	}
 
     /**
-	 * Finds if the given instance is of type the given classifier by abbreviated iri
+	 * Finds if the given instance is of type the given entity by abbreviated iri
      * 
 	 * @param instance The given instance
-	 * @param classifierAbbreviatedIri The given classifier by abbreviated iri
+	 * @param entityAbbreviatedIri The given entity by abbreviated iri
+     * @param context the scope
 	 * @return true if the instance is of the type; otherwise false
      */
-    public static boolean findIsTypeOf(Instance instance, String classifierAbbreviatedIri) {
-    	var classifier = OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), classifierAbbreviatedIri);
-		return (classifier instanceof Classifier) ? OmlSearch.findIsTypeOf(instance, (Classifier) classifier, getScope(instance)) : false;
+    public static boolean findIsTypeOf(Instance instance, String entityAbbreviatedIri, Ontology context) {
+    	var entity = OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), entityAbbreviatedIri);
+		return (entity instanceof Entity) ? OmlSearch.findIsTypeOf(instance, (Entity) entity, getScope(context)) : false;
 	}
 
     /**
@@ -197,11 +196,12 @@ public class OmlServices {
      * 
 	 * @param assertion The given assertion
 	 * @param propertyAbbreviatedIri The given property by abbreviated iri
+     * @param context The scope
 	 * @return true if the assertion references the property or a sub property; otherwise false
      */
-    public static boolean findIsKindOf(PropertyValueAssertion assertion, String propertyAbbreviatedIri) {
+    public static boolean findIsKindOf(PropertyValueAssertion assertion, String propertyAbbreviatedIri, Ontology context) {
     	var property = OmlRead.getMemberByAbbreviatedIri(assertion.getOntology(), propertyAbbreviatedIri);
-		return (property instanceof SemanticProperty) ? OmlSearch.findIsSubTermOf(assertion.getProperty(), (SemanticProperty) property, getScope(assertion)) : false;
+		return (property instanceof SemanticProperty) ? OmlSearch.findIsSubTermOf(assertion.getProperty(), (SemanticProperty) property, getScope(context)) : false;
 	}
 
     /**
@@ -223,11 +223,12 @@ public class OmlServices {
      * 
      * @param element The given identified element
      * @param propertyAbbreviatedIri The given property abbreviated iri
+     * @param context The context
      * @return A set of elements representing annotation values
      */
-    public static Set<Element> findAnnotationValues(IdentifiedElement element, String propertyAbbreviatedIri) {
+    public static Set<Element> findAnnotationValues(IdentifiedElement element, String propertyAbbreviatedIri, Ontology context) {
     	var property = OmlRead.getMemberByAbbreviatedIri(element.getOntology(), propertyAbbreviatedIri);
-   		return (property instanceof AnnotationProperty) ? OmlSearch.findAnnotationValues(element, (AnnotationProperty) property, getScope(element)) : Collections.emptySet();
+   		return (property instanceof AnnotationProperty) ? OmlSearch.findAnnotationValues(element, (AnnotationProperty) property, getScope(context)) : Collections.emptySet();
 	}
 
     /**
@@ -235,10 +236,11 @@ public class OmlServices {
      * 
      * @param element The given identified element
      * @param propertyAbbreviatedIri The given property abbreviated iri
+     * @param context The scope
      * @return An element representing the first annotation value
      */
-    public static Element findAnnotationValue(IdentifiedElement element, String propertyAbbreviatedIri) {
-		Set<Element> values = findAnnotationValues(element, propertyAbbreviatedIri);
+    public static Element findAnnotationValue(IdentifiedElement element, String propertyAbbreviatedIri, Ontology context) {
+		Set<Element> values = findAnnotationValues(element, propertyAbbreviatedIri, context);
 		return values.iterator().next();
 	}
 
@@ -247,11 +249,12 @@ public class OmlServices {
      * 
      * @param element The given identified element
      * @param propertyAbbreviatedIri The given property abbreviated iri
+     * @param context The scope
      * @return An element representing the first annotation value
      */
-    public static boolean findIsAnnotatedBy(IdentifiedElement element, String propertyAbbreviatedIri) {
+    public static boolean findIsAnnotatedBy(IdentifiedElement element, String propertyAbbreviatedIri, Ontology context) {
     	var property = OmlRead.getMemberByAbbreviatedIri(element.getOntology(), propertyAbbreviatedIri);
-		return (property instanceof AnnotationProperty) ? OmlSearch.findIsAnnotatedBy(element, (AnnotationProperty) property, getScope(element)) : false;
+		return (property instanceof AnnotationProperty) ? OmlSearch.findIsAnnotatedBy(element, (AnnotationProperty) property, getScope(context)) : false;
 	}
 
     /**
@@ -259,11 +262,12 @@ public class OmlServices {
      * 
      * @param instance The given instance
      * @param propertyAbbreviatedIri The given property abbreviated iri
+     * @param context The scope
      * @return A set of elements representing the property value
      */
-    public static Set<Element> findPropertyValues(Instance instance, String propertyAbbreviatedIri) {
+    public static Set<Element> findPropertyValues(Instance instance, String propertyAbbreviatedIri, Ontology context) {
     	var property = OmlRead.getMemberByAbbreviatedIri(instance.getOntology(), propertyAbbreviatedIri);
-		return (property instanceof SemanticProperty) ? OmlSearch.findPropertyValues(instance, (SemanticProperty) property, getScope(instance)) : Collections.emptySet();
+		return (property instanceof SemanticProperty) ? OmlSearch.findPropertyValues(instance, (SemanticProperty) property, getScope(context)) : Collections.emptySet();
 	}
 
     /**
@@ -271,61 +275,62 @@ public class OmlServices {
      * 
      * @param instance The given instance
      * @param propertyAbbreviatedIri The given property abbreviated iri
+     * @param context The scope
      * @return An element representing the first property value
      */
-    public static Element findPropertyValue(Instance instance, String propertyAbbreviatedIri) {
-		Set<Element> values = findPropertyValues(instance, propertyAbbreviatedIri);
+    public static Element findPropertyValue(Instance instance, String propertyAbbreviatedIri, Ontology context) {
+		Set<Element> values = findPropertyValues(instance, propertyAbbreviatedIri, context);
 		return values.iterator().next();
 	}
 
     //------------------
     
-    public static Set<NamedInstance> findTargetInstances(Instance source, String relationyAbbreviatedIri) {
+    public static Set<NamedInstance> findTargetInstances(Instance source, String relationyAbbreviatedIri, Ontology context) {
     	var relation = OmlRead.getMemberByAbbreviatedIri(source.getOntology(), relationyAbbreviatedIri);
-		return (relation instanceof Relation) ? OmlSearch.findInstancesRelatedAsTargetTo(source, (Relation) relation, getScope(source)) : Collections.emptySet();
+		return (relation instanceof Relation) ? OmlSearch.findInstancesRelatedAsTargetTo(source, (Relation) relation, getScope(context)) : Collections.emptySet();
 	}
 
-    public static Collection<NamedInstance> findTargetInstancesRecursively(Instance source, String relationyAbbreviatedIri, boolean includeRoot) {
-		return OmlRead.closure(source, includeRoot, i -> findTargetInstances(i, relationyAbbreviatedIri));
+    public static Collection<NamedInstance> findTargetInstancesRecursively(Instance source, String relationyAbbreviatedIri, boolean includeRoot, Ontology context) {
+		return OmlRead.closure(source, includeRoot, i -> findTargetInstances(i, relationyAbbreviatedIri, context));
     }
 
-    public static NamedInstance findTargetInstance(Instance source, String relationyAbbreviatedIri) {
-		Set<NamedInstance> instances = findTargetInstances(source, relationyAbbreviatedIri);
+    public static NamedInstance findTargetInstance(Instance source, String relationyAbbreviatedIri, Ontology context) {
+		Set<NamedInstance> instances = findTargetInstances(source, relationyAbbreviatedIri, context);
 		return instances.iterator().next();
 	}
 
-    public static Set<Instance> findSourceInstances(Instance target, String relationyAbbreviatedIri) {
+    public static Set<Instance> findSourceInstances(Instance target, String relationyAbbreviatedIri, Ontology context) {
     	var relation = OmlRead.getMemberByAbbreviatedIri(target.eResource().getResourceSet(), relationyAbbreviatedIri);
 		if (relation instanceof Relation && target instanceof NamedInstance) {
-			return OmlSearch.findInstancesRelatedAsSourceTo((NamedInstance)target, (Relation) relation, getScope(target));
+			return OmlSearch.findInstancesRelatedAsSourceTo((NamedInstance)target, (Relation) relation, getScope(context));
 		}
 		return Collections.emptySet();
 	}
 
-    public static Collection<Instance> findSourceInstancesRecursively(NamedInstance target, String relationyAbbreviatedIri, boolean includeRoot) {
-		return OmlRead.closure(target, includeRoot, i -> findSourceInstances(i, relationyAbbreviatedIri));
+    public static Collection<Instance> findSourceInstancesRecursively(NamedInstance target, String relationyAbbreviatedIri, boolean includeRoot, Ontology context) {
+		return OmlRead.closure(target, includeRoot, i -> findSourceInstances(i, relationyAbbreviatedIri, context));
     }
 
-    public static Instance findSourceInstance(NamedInstance taget, String relationyAbbreviatedIri) {
-		Set<Instance> instances = findSourceInstances(taget, relationyAbbreviatedIri);
+    public static Instance findSourceInstance(NamedInstance taget, String relationyAbbreviatedIri, Ontology context) {
+		Set<Instance> instances = findSourceInstances(taget, relationyAbbreviatedIri, context);
 		return instances.iterator().next();
 	}
 
-    public static Set<RelationInstance> findOutgoingRelationInstances(NamedInstance source, String relationyEntityAbbreviatedIri) {
+    public static Set<RelationInstance> findOutgoingRelationInstances(NamedInstance source, String relationyEntityAbbreviatedIri, Ontology context) {
     	final var relationEntity = (RelationEntity) OmlRead.getMemberByAbbreviatedIri(source.getOntology(), relationyEntityAbbreviatedIri);
     	if (relationEntity instanceof RelationEntity) {
-			var relationInstances = OmlSearch.findRelationInstancesWithSource(source, getScope(source));
-			relationInstances.removeIf(i -> !OmlSearch.findTypes(i, getScope(source)).contains(relationEntity));
+			var relationInstances = OmlSearch.findRelationInstancesWithSource(source, getScope(context));
+			relationInstances.removeIf(i -> !OmlSearch.findTypes(i, getScope(context)).contains(relationEntity));
 			return relationInstances;
     	}
     	return Collections.emptySet();
 	}
 
-    public static Set<RelationInstance> findIncomingRelationInstances(NamedInstance target, String relationyEntityAbbreviatedIri) {
+    public static Set<RelationInstance> findIncomingRelationInstances(NamedInstance target, String relationyEntityAbbreviatedIri, Ontology context) {
     	final var relationEntity = (RelationEntity) OmlRead.getMemberByAbbreviatedIri(target.getOntology(), relationyEntityAbbreviatedIri);
     	if (relationEntity instanceof RelationEntity) {
-			var relationInstances = OmlSearch.findRelationInstancesWithTarget(target, getScope(target));
-			relationInstances.removeIf(i -> !OmlSearch.findTypes(i, getScope(target)).contains(relationEntity));
+			var relationInstances = OmlSearch.findRelationInstancesWithTarget(target, getScope(context));
+			relationInstances.removeIf(i -> !OmlSearch.findTypes(i, getScope(context)).contains(relationEntity));
 			return relationInstances;
     	}
     	return Collections.emptySet();
@@ -389,7 +394,7 @@ public class OmlServices {
     	return null;
     }
 
-    public static PropertyValueAssertion createPropertyValueAssertion(Ontology context, Instance instance, Element value, String propertyAbbreviatedIri) {
+    public static PropertyValueAssertion createPropertyValueAssertion(Instance instance, Element value, String propertyAbbreviatedIri, Ontology context) {
     	var property = OmlRead.getMemberByAbbreviatedIri(context, propertyAbbreviatedIri);
     	if (property instanceof SemanticProperty) {
 	    	var builder = new OmlBuilder(context.eResource().getResourceSet());
@@ -408,7 +413,7 @@ public class OmlServices {
     	return null;
     }
 
-    public static void addPropertyValue(Ontology context, Instance subject, String relationAbbreviatedIri, NamedInstance object) {
+    public static void addPropertyValue(Instance subject, String relationAbbreviatedIri, NamedInstance object, Ontology context) {
     	var relation = OmlRead.getMemberByAbbreviatedIri(context, relationAbbreviatedIri);
     	if (relation instanceof Relation) {
 	    	var builder = new OmlBuilder(context.eResource().getResourceSet());
@@ -422,9 +427,9 @@ public class OmlServices {
     	}
     }
 
-    public static void addPropertyValue(Ontology context, Instance subject, String propertyAbbreviatedIri, StructureInstance object) {
+    public static void addPropertyValue(Instance subject, String propertyAbbreviatedIri, AnonymousInstance object, Ontology context) {
     	var property = OmlRead.getMemberByAbbreviatedIri(context, propertyAbbreviatedIri);
-    	if (property instanceof StructuredProperty) {
+    	if (property instanceof Relation) {
 	    	var builder = new OmlBuilder(context.eResource().getResourceSet());
 	    	var owner = (subject instanceof NamedInstance) ? ((NamedInstance)subject).getIri() : subject;
 	    	builder.addPropertyValueAssertion(
@@ -436,7 +441,7 @@ public class OmlServices {
     	}
     }
 
-    public static void addPropertyValue(Ontology context, Instance subject, String propertyAbbreviatedIri, Literal object) {
+    public static void addPropertyValue(Instance subject, String propertyAbbreviatedIri, Literal object, Ontology context) {
     	var property = OmlRead.getMemberByAbbreviatedIri(context, propertyAbbreviatedIri);
     	if (property instanceof ScalarProperty) {
 	    	var builder = new OmlBuilder(context.eResource().getResourceSet());
@@ -450,7 +455,7 @@ public class OmlServices {
     	}
     }
 
-    public static void removePropertyValue(Ontology context, Instance subject, String propertyAbbreviatedIri) {
+    public static void removePropertyValue(Instance subject, String propertyAbbreviatedIri, Ontology context) {
     	var property = OmlRead.getMemberByAbbreviatedIri(context, propertyAbbreviatedIri);
     	if (property instanceof SemanticProperty) {
 	        subject.getOwnedPropertyValues().stream()
@@ -460,10 +465,10 @@ public class OmlServices {
     }
     
 	public static void setPropertyValue(Instance instance, ScalarProperty property, Object newValue) {
-		removePropertyValue(instance.getOntology(), instance, property.getAbbreviatedIri());
+		removePropertyValue(instance, property.getAbbreviatedIri(), instance.getOntology());
 		if (newValue != null && newValue.toString().length() > 0) {
 			var newLiteral = OmlWrite.createLiteral(newValue);
-			addPropertyValue(instance.getOntology(), instance, property.getAbbreviatedIri(), newLiteral);
+			addPropertyValue(instance, property.getAbbreviatedIri(), newLiteral, instance.getOntology());
 		}
 	}
     

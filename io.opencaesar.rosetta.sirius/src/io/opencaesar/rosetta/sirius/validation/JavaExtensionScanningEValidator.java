@@ -42,7 +42,7 @@ import org.eclipse.sirius.common.tools.api.interpreter.JavaExtensionsManager;
 import org.eclipse.sirius.common.tools.internal.interpreter.ClassLoadingService;
 import org.eclipse.sirius.viewpoint.description.Viewpoint;
 
-import io.opencaesar.oml.Classifier;
+import io.opencaesar.oml.Entity;
 import io.opencaesar.oml.Instance;
 import io.opencaesar.oml.util.OmlRead;
 import io.opencaesar.oml.util.OmlSearch;
@@ -311,8 +311,8 @@ public class JavaExtensionScanningEValidator implements EValidator {
 		public boolean test(EObject instance) {
 			if (javaType.isInstance(instance)) {
 				var ontology = ((Instance)instance).getOntology();
-				var type = (Classifier) OmlRead.getMemberByIri(ontology, typeIri);
-				return type instanceof Classifier && OmlSearch.findIsKindOf((Instance) instance, type, null);
+				var type = (Entity) OmlRead.getMemberByIri(ontology, typeIri);
+				return OmlSearch.findIsKindOf((Instance) instance, type, null);
 			}
 			return false;
 		}
@@ -350,8 +350,8 @@ public class JavaExtensionScanningEValidator implements EValidator {
 		public boolean test(EObject instance) {
 			if (javaType.isInstance(instance)) {
 				var ontology = ((Instance)instance).getOntology();
-				var type = (Classifier) OmlRead.getMemberByAbbreviatedIri(ontology, abbreviatedTypeIri);
-				return type instanceof Classifier && OmlSearch.findIsKindOf((Instance) instance, type, null);
+				var type = (Entity) OmlRead.getMemberByAbbreviatedIri(ontology, abbreviatedTypeIri);
+				return OmlSearch.findIsKindOf((Instance) instance, type, null);
 			}
 			return false;
 		}
