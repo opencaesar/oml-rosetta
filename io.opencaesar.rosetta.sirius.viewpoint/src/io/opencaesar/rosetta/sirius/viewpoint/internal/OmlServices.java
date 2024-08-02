@@ -105,10 +105,10 @@ public final class OmlServices extends io.opencaesar.rosetta.sirius.viewpoint.Om
 	}
 
 	public static void setPropertyValue(Instance instance, ScalarProperty property, Object newValue) {
-		removePropertyValue(instance, property.getAbbreviatedIri(), instance.getOntology());
+		removePropertyValue(instance.getOntology(), instance, property.getAbbreviatedIri());
 		if (newValue != null && newValue.toString().length() > 0) {
 			var newLiteral = OmlWrite.createLiteral(newValue);
-			addPropertyValue(instance, property.getAbbreviatedIri(), newLiteral, instance.getOntology());
+			addPropertyValue(instance.getOntology(), instance, property.getAbbreviatedIri(), newLiteral);
 		}
 	}
 
