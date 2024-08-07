@@ -2,7 +2,7 @@
 <feature
       id="io.opencaesar.rosetta.rcp.feature"
       label="%featureName"
-      version="2.8.0"
+      version="2.9.0"
       provider-name="%providerName">
 
    <description url="https://github.com/opencaesar/oml-rosetta">

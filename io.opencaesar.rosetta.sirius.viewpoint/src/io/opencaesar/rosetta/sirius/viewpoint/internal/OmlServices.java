@@ -219,7 +219,7 @@ public final class OmlServices extends io.opencaesar.rosetta.sirius.viewpoint.Om
     public static String getLabel(Ontology ontology, PropertyValueAssertion assertion) {
 		var property = getAbbreviatedIriIn(assertion.getProperty(), ontology);
 		if (assertion.getProperty() instanceof ScalarProperty) {
-			var value = assertion.getLiteralValue().stream().map(v -> v.getLexicalValue()).collect(Collectors.joining(", "));
+			var value = assertion.getLiteralValues().stream().map(v -> v.getLexicalValue()).collect(Collectors.joining(", "));
 			return property+" = "+value;
 		} else if (assertion.getProperty() instanceof Relation) {
 			return getAbbreviatedIriIn(assertion.getProperty(), ontology);

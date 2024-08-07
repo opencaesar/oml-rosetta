@@ -339,7 +339,7 @@ public class OmlServices {
 	public static List<Element> getPropertyValues(Instance instance, String propertyAbbreviatedIri) {
 		return instance.getOwnedPropertyValues().stream()
     		.filter(a -> a.getProperty().getAbbreviatedIri().equals(propertyAbbreviatedIri))
-    		.flatMap(a -> a.getValue().stream())
+    		.flatMap(a -> a.getValues().stream())
             .collect(Collectors.toList());
 	}
 
