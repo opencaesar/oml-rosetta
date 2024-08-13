@@ -21,23 +21,23 @@
 	<properties>
 		<xtextVersion>2.35.0</xtextVersion>
 		<mwe2Version>2.18.0</mwe2Version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-	    <!-- Tycho settings -->
-	    <tycho-version>4.0.7</tycho-version>
-	    <!-- Define overridable properties for tycho-surefire-plugin -->
-	    <tycho-extras-version>${tycho-version}</tycho-extras-version>
+        	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        	<maven.compiler.source>17</maven.compiler.source>
+        	<maven.compiler.target>17</maven.compiler.target>
+	    	<!-- Tycho settings -->
+	    	<tycho-version>4.0.7</tycho-version>
+	    	<!-- Define overridable properties for tycho-surefire-plugin -->
+	    	<tycho-extras-version>${tycho-version}</tycho-extras-version>
 		<maven.resources.version>3.1.0</maven.resources.version>
-	    <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
-        <eclipse-version>2022-09</eclipse-version>
-        <!-- Required properties for releasing -->
-        <github-update-repo>git@github.com:opencaesar/oml-rosetta-p2.git</github-update-repo>
-        <github-local-clone>${project.build.directory}/checkout</github-local-clone>
-        <releases-directory>${github-local-clone}/releases</releases-directory>
-        <current-release-directory>${releases-directory}/${qualifiedVersion}</current-release-directory>
-        <!-- The label for the Composite sites -->
-        <site.label>Rosetta Repository</site.label>
+	    	<maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
+        	<eclipse-version>2022-09</eclipse-version>
+        	<!-- Required properties for releasing -->
+        	<github-update-repo>git@github.com:opencaesar/oml-rosetta-p2.git</github-update-repo>
+        	<github-local-clone>${project.build.directory}/checkout</github-local-clone>
+        	<releases-directory>${github-local-clone}/releases</releases-directory>
+        	<current-release-directory>${releases-directory}/${qualifiedVersion}</current-release-directory>
+        	<!-- The label for the Composite sites -->
+        	<site.label>Rosetta Repository</site.label>
 	</properties>
 
 	<build>
