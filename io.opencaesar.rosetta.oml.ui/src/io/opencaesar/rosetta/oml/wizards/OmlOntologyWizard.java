@@ -22,12 +22,13 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -42,12 +43,12 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 
@@ -55,7 +56,7 @@ import io.opencaesar.oml.OmlFactory;
 import io.opencaesar.oml.OmlPackage;
 import io.opencaesar.oml.Ontology;
 import io.opencaesar.oml.util.OmlConstants;
-import io.opencaesar.oml.util.OmlRead;
+import io.opencaesar.oml.util.OmlResolve;
 import io.opencaesar.rosetta.oml.ui.OmlUiPlugin;
 
 /**
@@ -68,43 +69,41 @@ import io.opencaesar.rosetta.oml.ui.OmlUiPlugin;
 public class OmlOntologyWizard extends Wizard implements INewWizard {
 	
 	private IWorkbench workbench;
+	private IContainer container;
 	
 	private OntologySetupPage ontologySetupPage;
-	private FilePage filePage;
 
 	private EClass ontologyKind;
 	private String ontologyNamespace;
 	private String ontologyPrefix;
+	private String ontologyExtension;
 	
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		this.workbench = workbench;
-		IPath folderPath = null;
 		
-		// Derive the ontology namespace from the selected folder, or use a default
-		// if not possible.
-		ontologyNamespace = "http://";
 		if (selection != null) {
 			if (selection.getFirstElement() instanceof IFile) {
-				folderPath = ((IFile)selection.getFirstElement()).getParent().getFullPath();
+				container = ((IFile)selection.getFirstElement()).getParent();
 			} else if (selection.getFirstElement() instanceof IFolder) {
-				folderPath = ((IFolder)selection.getFirstElement()).getFullPath();
+				container = ((IFolder)selection.getFirstElement());
 			} else if (selection.getFirstElement() instanceof IProject) {
-				folderPath = ((IProject)selection.getFirstElement()).getFolder("src").getFolder("oml").getFullPath();
+				container = (IProject)selection.getFirstElement();
 			}
 		}
-		if (folderPath != null) {
-			var uri = OmlRead.getDeresolvedIri(URI.createPlatformResourceURI(folderPath.toString(), false));
-			if (uri != null) {
-				ontologyNamespace = uri.toString();
+
+		// Derive the ontology namespace from the selected folder, or use a default if not possible.
+		if (container != null) {
+			var uri = URI.createPlatformResourceURI(container.getFullPath().toString()+"/", true);
+			var iri = OmlResolve.deresolveUri(uri);
+			if (iri != null) {
+				ontologyNamespace = iri.toString();
+			} else {
+				ontologyNamespace = "http://";
 			}
 		}
 		
 		ontologySetupPage = new OntologySetupPage();
-		filePage = new FilePage(selection);
-		if (folderPath != null) {
-			filePage.setContainerFullPath(folderPath);
-		}
 		
 		ontologyNamespace += "newOntology#";
 		
@@ -115,15 +114,17 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 	public void addPages() {
 		super.addPages();
 		addPage(ontologySetupPage);
-		addPage(filePage);
 	}
 	
 	@Override
 	public boolean performFinish() {
 		try {
-			IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(filePage.getContainerFullPath());
-			IFile file = folder.getFile(filePage.getFileName());
-			URI uri = URI.createURI(file.getLocationURI().toString());
+			URI context = URI.createPlatformResourceURI(container.getFullPath().toString(), true);
+			String iri = ontologyNamespace.substring(0, ontologyNamespace.length()-1);
+			URI uri = OmlResolve.resolveUri(context, iri);
+			if (uri != null) {
+				uri = uri.appendFileExtension(ontologyExtension);
+			}
 
 			Ontology ontology = (Ontology) OmlFactory.eINSTANCE.create(ontologyKind);
 			ontology.setNamespace(ontologyNamespace);
@@ -134,6 +135,7 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 			resource.getContents().add(ontology);
 			resource.save(Collections.EMPTY_MAP);
 
+			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(uri.toPlatformString(true)));
 			BasicNewResourceWizard.selectAndReveal(file, workbench.getActiveWorkbenchWindow());
 			IDE.openEditor(workbench.getActiveWorkbenchWindow().getActivePage(), file);
 			return true;
@@ -155,6 +157,7 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 		
 		private boolean ontologyPrefixChanged = false;
 		private Text ontologyPrefixInput;
+		private Combo ontologyExtensionInput;
 		
 		protected OntologySetupPage() {
 			super("Model Setup");
@@ -172,6 +175,7 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 			addOntologyKindSelector(body);
 			addNamespaceInput(body);
 			addPrefixInput(body);
+			addExtensionInput(body);
 			
 			setControl(body);
 		}
@@ -240,6 +244,20 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 			}
 		}
 		
+		private void addExtensionInput(Composite body) {
+			new Label(body, SWT.NONE).setText("File Extension");
+			ontologyExtensionInput = new Combo(body, SWT.BORDER | SWT.READ_ONLY);
+			OmlConstants.OML_EXTENSION_LIST.forEach(i -> ontologyExtensionInput.add(i));
+			ontologyExtensionInput.setLayoutData(new GridData(SWT.LEFT, SWT.BEGINNING, true, false));
+			ontologyExtensionInput.addModifyListener(event -> {
+				ontologyExtension = ontologyExtensionInput.getText();
+				if (ontologyExtensionInput.isFocusControl()) {
+					onPageUpdated();
+				}
+			});
+			ontologyExtensionInput.select(0);
+		}
+
 		private void onPageUpdated() {
 			try {
 				if (!(ontologyNamespace.endsWith("/") || ontologyNamespace.endsWith("#"))) {
@@ -254,7 +272,6 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 					return;
 				}
 				String fileName = pathSegments[pathSegments.length - 1];
-				filePage.setFileName(fileName+"."+OmlConstants.OML_EXTENSION);
 				String defaultPrefix = fileName;
 				if (!ontologyPrefixChanged) {
 					ontologyPrefix = defaultPrefix;
@@ -265,6 +282,14 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 				if (ontologyPrefix == null || ontologyPrefix.isEmpty()) {
 					// Ensure an ontology prefix is set
 					setPageComplete(false);
+					return;
+				}
+				URI context = URI.createPlatformResourceURI(container.getFullPath().toString(), true);
+				String iri = ontologyNamespace.substring(0, ontologyNamespace.length()-1);
+				URI uri = OmlResolve.resolveUri(context, iri);
+				if (uri == null) {
+					setPageComplete(false);
+					setErrorMessage("No catalog.xml can be found in this project");
 					return;
 				}
 			} catch (URISyntaxException e) {
@@ -280,36 +305,4 @@ public class OmlOntologyWizard extends Wizard implements INewWizard {
 		}
 	}
 
-	/**
-	 * File Creation Page
-	 * 
-	 * Lets the user select a folder (by default the folder selected by the user when launching
-	 * the wizard) and filename (by default the last segment of the namespace IRI, with a .oml
-	 * extension for vocabularies and bundles or a .omlxmi extension for descriptions.)
-	 */
-	private class FilePage extends WizardNewFileCreationPage {
-
-		protected FilePage(IStructuredSelection selection) {
-			super("FilePage", selection);
-			setTitle("Ontology File");
-			setDescription("Specify the ontology file location and type");
-			setImageDescriptor(OmlUiPlugin.OML_LOGO);
-		}
-
-		@Override
-		public boolean validatePage() {
-			if (!super.validatePage()) {
-				return false;
-			}
-			String fileName = this.getFileName();
-			if (fileName == null) {
-				return false;
-			}
-			if (!getFileName().endsWith(".oml") && !getFileName().endsWith(".omlxmi")) {
-				return false;
-			}
-			return true;
-		}
-		
-	}
 }
