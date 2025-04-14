@@ -60,6 +60,28 @@
                tooltip="Select element in editor">
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.sirius.table.ui.CrossTableEditorID?before=hideGroup">
+         <command
+               commandId="io.opencaesar.rosetta.sirius.handlers.CollapseLineHandler"
+               label="Collapse"
+               style="push"
+               tooltip="Collapse the selected element">
+         </command>
+         <command
+               commandId="io.opencaesar.rosetta.sirius.handlers.ExpandLineHandler"
+               label="Expand"
+               style="push"
+               tooltip="Expand the selected element">
+         </command>
+         <command
+               commandId="io.opencaesar.rosetta.sirius.handlers.ValidateLineHandler"
+               label="Validate"
+               style="push"
+               tooltip="Validate the selected element">
+         </command>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
