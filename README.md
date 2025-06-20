@@ -17,7 +17,7 @@ An Eclipse RCP (and plugin) that supports working with the [Ontological Modeling
 
 ## Build
 
-Requirements: Java 11, maven 3.6+
+Requirements: Java 21, maven 3.9+
 ```
   mvn verify
 ```
@@ -28,7 +28,7 @@ To setup a development environment for oml-rosetta:
 
 Preparation:
 
-- Install/use a recent version of Eclipse IDE for Java and DSL Developers (e.g., 2021-09)
+- Install/use a recent version of Eclipse IDE for Java and DSL Developers
 - Launch the Eclipse IDE and create a new workspace (recommended)
 - Switch to the Java perspective from Window -> Perspective -> Open Perspective -> Other -> Java
 - Show the Project Explorer view (if hidden) by selecting Window -> Show View -> Project Explorer
