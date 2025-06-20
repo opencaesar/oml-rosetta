@@ -18,7 +18,7 @@
 			<unit id="org.eclipse.oomph.preferences.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.oomph.setup.sdk.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.acceleo.query.source.feature.group" version="0.0.0"/>
-			<repository location="https://download.eclipse.org/releases/2024-06"/>
+			<repository location="https://download.eclipse.org/releases/2025-06"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.emfcloud.emfjson-jackson" version="0.0.0"/>
@@ -49,8 +49,12 @@
 			<repository location="https://download.eclipse.org/sirius/updates/releases/7.4.0/2023-03/"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<unit id="org.eclipse.gef.sdk.feature.group" version="0.0.0"/>
+			<repository location="https://download.eclipse.org/tools/gef/classic/release/3.22.0//"/>
+		</location>
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="0.0.0"/>
-			<repository location="https://download.eclipse.org/justj/jres/17/updates/release"/>
+			<repository location="https://download.eclipse.org/justj/jres/21/updates/release"/>
 		</location>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<unit id="io.opencaesar.oml.sdk.feature.feature.group" version="0.0.0"/>

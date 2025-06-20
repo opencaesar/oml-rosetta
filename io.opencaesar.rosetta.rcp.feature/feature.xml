@@ -2,7 +2,7 @@
 <feature
       id="io.opencaesar.rosetta.rcp.feature"
       label="%featureName"
-      version="2.12.0"
+      version="2.13.0"
       provider-name="%providerName">
 
    <description url="https://github.com/opencaesar/oml-rosetta">
@@ -239,10 +239,6 @@ limitations under the License.
 
    <plugin
          id="org.apache.httpcomponents.httpcore"
-         version="0.0.0"/>
-
-   <plugin
-         id="net.i2p.crypto.eddsa"
          version="0.0.0"/>
 
    <plugin

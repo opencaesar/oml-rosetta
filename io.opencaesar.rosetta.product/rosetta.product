@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Rosetta" uid="rosetta" id="io.opencaesar.rosetta.rcp.product" application="org.eclipse.ui.ide.workbench" version="2.12.0" type="features" includeLaunchers="true" autoIncludeRequirements="true">
+<product name="Rosetta" uid="rosetta" id="io.opencaesar.rosetta.rcp.product" application="org.eclipse.ui.ide.workbench" version="2.13.0" type="features" includeLaunchers="true" autoIncludeRequirements="true">
 
    <aboutInfo>
       <image path="/io.opencaesar.rosetta.rcp/images/about.png"/>
@@ -32,15 +32,15 @@
    </launcher>
 
    <vm>
-      <linux include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17</linux>
-      <macos include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17</macos>
-      <windows include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17</windows>
+      <linux include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-21</linux>
+      <macos include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-21</macos>
+      <windows include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-21</windows>
    </vm>
 
    <license>
         <url>http://www.apache.org/licenses/LICENSE-2.0</url>
         <text>
-   Copyright © 2020-2023 California Institute of Technology. Government Sponsorship Acknowledged.
+   Copyright © 2020-2025 California Institute of Technology. Government Sponsorship Acknowledged.
 
 Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
 you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ limitations under the License.
 
    <repositories>
       <repository location="https://www.opencaesar.io/oml-p2/" name="OML" enabled="true" />
-      <repository location="http://download.eclipse.org/releases/2024-06" name="Eclipse" enabled="true" />
+      <repository location="http://download.eclipse.org/releases/2025-06" name="Eclipse" enabled="true" />
       <repository location="https://www.opencaesar.io/oml-rosetta-p2/" name="Rosetta" enabled="true" />
    </repositories>
 

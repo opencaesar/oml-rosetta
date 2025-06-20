@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.opencaesar.rosetta</groupId>
 	<artifactId>io.opencaesar.rosetta.parent</artifactId>
-	<version>2.12.0</version>
+	<version>2.13.0</version>
 	<packaging>pom</packaging>
 	
 	<modules>
@@ -19,18 +19,17 @@
 	</modules>
 	
 	<properties>
-		<xtextVersion>2.35.0</xtextVersion>
-		<mwe2Version>2.18.0</mwe2Version>
+		<xtextVersion>2.39.0</xtextVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
 		<!-- Tycho settings -->
-		<tycho-version>4.0.7</tycho-version>
+		<tycho-version>4.0.13</tycho-version>
 		<!-- Define overridable properties for tycho-surefire-plugin -->
 		<tycho-extras-version>${tycho-version}</tycho-extras-version>
 		<maven.resources.version>3.1.0</maven.resources.version>
 		<maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
-		<eclipse-version>2022-09</eclipse-version>
+		<eclipse-version>2025-06</eclipse-version>
 		<!-- Required properties for releasing -->
 		<github-update-repo>git@github.com:opencaesar/oml-rosetta-p2.git</github-update-repo>
 		<github-local-clone>${project.build.directory}/checkout</github-local-clone>
