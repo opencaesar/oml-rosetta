@@ -153,6 +153,7 @@
         </layoutOptions>
         <layoutOptions xsi:type="description_1:EnumLayoutOption" id="org.eclipse.elk.direction">
           <targets>PARENT</targets>
+          <value name="UP"/>
         </layoutOptions>
         <layoutOptions xsi:type="description_1:DoubleLayoutOption" id="org.eclipse.elk.layered.spacing.edgeEdgeBetweenLayers" value="15.0">
           <targets>PARENT</targets>

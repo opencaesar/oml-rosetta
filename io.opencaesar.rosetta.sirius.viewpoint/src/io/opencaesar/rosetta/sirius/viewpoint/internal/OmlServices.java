@@ -424,6 +424,7 @@ public final class OmlServices extends io.opencaesar.rosetta.sirius.viewpoint.Om
 				.flatMap(i -> i.getOwnedPropertyValues().stream())
 				.filter(i -> i.getProperty() instanceof Relation)
 				.flatMap(i -> i.getObject().stream())
+				.filter(i -> i instanceof NamedInstance)
 				.map(i -> (NamedInstance) i)
 				.flatMap(i -> {
 					var list = new ArrayList<NamedInstance>();
